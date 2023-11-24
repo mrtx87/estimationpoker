@@ -1,0 +1,65 @@
+# compiled output
+/**/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
+/images
+
+/backendDeploy
+/**/backendDeploy
+
+# dependencies
+/**/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+.angulardoc.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+sessionreg.sh
+
+
+# System Files
+.DS_Store
+Thumbs.db
+*.db
+
+*.iml
+
+# config File
+/backend/backend.iml
+
+
+### CURVIEW ###
+/roomfs.curview
+/ListOfNames.txt
+/initVideoChoices.curview
+/appSecrets.sec
+/roomAuthorizations.curview
