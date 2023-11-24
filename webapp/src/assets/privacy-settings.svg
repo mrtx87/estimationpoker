@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="24" viewBox="0 0 30 24">
+    <g id="Gruppe_1" transform="translate(0.726)">
+        <path id="iconmonstr-gear-1"
+              d="M22.96,8.126V5.64H0V8.126c1.561.446,2.575.576,3.08,1.553s-.109,1.666-.81,2.852L4.455,14.29C5.95,13.718,6.784,13.232,8,13.638H8c1.215.4,1.374,1.215,1.932,2.477h3.092c.557-1.259.718-2.07,1.939-2.479h0c1.207-.4,2.028.078,3.538.655l2.186-1.759c-.712-1.2-1.315-1.872-.811-2.851S21.4,8.573,22.96,8.126Zm-11.5.527c-2.113,0-4.322-1.314-4.322-3.013h8.527C15.662,7.339,13.57,8.653,11.457,8.653Z"
+              transform="translate(2.768 7.885)" fill="#fff"/>
+        <rect id="Rechteck_2" width="30" height="2" transform="translate(-0.726 11)"
+              fill="#fff"/>
+        <rect id="Rechteck_3" width="22.96" height="2.5" transform="translate(2.794 7.6)"
+              fill="#fff"/>
+        <path id="Pfad_1" d="M3.7,0l8.684.95,8.8-.95,2.5,6.233H.724Z"
+              transform="translate(2.044)" fill="#fff"/>
+    </g>
+</svg>

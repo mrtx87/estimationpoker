@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="19.754" height="19.79" viewBox="0 0 19.754 19.79">
+    <g id="sword" transform="translate(-3.835 -3.268)">
+        <g id="Pfad_1" data-name="Pfad 1" transform="translate(20.519 3.268) rotate(45)" fill="#7c4ee9">
+            <path d="M 3.840977668762207 16.24702262878418 L 0.4999976456165314 16.24702262878418 L 0.4999976456165314 2.212288618087769 L 2.226493835449219 0.6780687570571899 L 3.840977668762207 2.203202724456787 L 3.840977668762207 16.24702262878418 Z" stroke="none"/>
+            <path d="M 2.216164588928223 1.356139183044434 L 0.999997615814209 2.436863899230957 L 0.999997615814209 15.7470235824585 L 3.340977668762207 15.7470235824585 L 3.340977668762207 2.418701171875 L 2.216164588928223 1.356139183044434 M 2.236817598342896 3.814697265625e-06 L 4.340977668762207 1.987712860107422 L 4.340977668762207 16.74702262878418 L -2.384185791015625e-06 16.74702262878418 L -2.384185791015625e-06 1.987712860107422 L 2.236817598342896 3.814697265625e-06 Z" stroke="none" fill="#7c4ee9"/>
+        </g>
+        <g id="Rechteck_4" data-name="Rechteck 4" transform="translate(8.087 13.296) rotate(45)" fill="none" stroke="#7c4ee9" stroke-width="1">
+            <rect width="7.814" height="1.736" rx="0.868" stroke="none"/>
+            <rect x="0.5" y="0.5" width="6.814" height="0.736" rx="0.368" fill="none"/>
+        </g>
+        <g id="Rechteck_5" data-name="Rechteck 5" transform="translate(9.36 15.723) rotate(45)" fill="#7c4ee9" stroke="#7c4ee9" stroke-width="1">
+            <rect width="2.558" height="7.814" rx="1" stroke="none"/>
+            <rect x="0.5" y="0.5" width="1.558" height="6.814" rx="0.5" fill="none"/>
+        </g>
+    </g>
+</svg>
+
+

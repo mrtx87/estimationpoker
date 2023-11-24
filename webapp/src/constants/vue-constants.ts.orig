@@ -1,0 +1,37 @@
+export const GameSection = {
+    LOBBY_SECTION_ID: 'lobby',
+    TERM_ASSIGMENT_SECTION_ID: 'term-assignment',
+    GAME_SECTION_ID: 'game'
+}
+
+export const RequestMessageType = {
+    CREATE_GAME: 'creategame',
+    JOIN_GAME: 'join-game-session',
+    PLAYER_IN_LOBBY_READY: 'player-in-lobby-ready',
+    UPDATE_PLAYER_IN_LOBBY: 'update-player-in-lobby',
+    HOST_UPDATE_GAME_CONFIG_IN_LOBBY: 'host-update-game-config-in-lobby',
+    START_GAME_IN_LOBBY: 'start-game-in-lobby',
+<<<<<<< HEAD
+    BAN_PLAYER: 'ban-player'
+=======
+    LOCK_ASSIGNEE: 'lock-assignee'
+>>>>>>> main
+}
+
+export const ResponseMessageTypes = {
+    CREATED_NEW_SESSION: 'new-session-created',
+    JOINED_GAME_SESSION: 'joined-game-session',
+    OPPONENT_JOINED_GAME_SESSION: 'opponent-joined-game-session',
+    UPDATED_LOBBY: 'updated-lobby',
+    SESSION_CLOSED: 'session-closed',
+    SESSION_DOES_NOT_EXISTS:'session-does-not-exists',
+    TERM_ASSIGNMENT_STARTED: 'term-assignment-started',
+    NOTIFY_BANNED_PLAYER: 'notify-banned-player',
+    NOTIFY_OTHERS_ABOUT_BAN: 'notify-others-about-ban'
+}
+
+export const AssignmentModes = {
+    FULL_RANDOM : 'full-random',
+    ASSIGNEE_KNOWN: 'assignee-known',
+    SELECT_ASSIGNEE: 'select-assignee',
+}

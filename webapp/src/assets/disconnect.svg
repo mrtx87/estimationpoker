@@ -1,0 +1,33 @@
+<svg id="Gruppe_4" data-name="Gruppe 4" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+    <path id="Pfad_21" data-name="Pfad 21" d="M1.092,0H12.009A1.021,1.021,0,0,1,13.1.931v9.306a1.282,1.282,0,0,1-1.15,1.169H1.085A1.219,1.219,0,0,1,0,10.237V.931A1.021,1.021,0,0,1,1.092,0Z" transform="translate(7.899 10)" fill="#e7b8f8"/>
+    <path id="Differenzmenge_1" data-name="Differenzmenge 1" d="M7.115,6.215H.8C.251,6.215,0,4.9,0,4.5V4.021H2V3.351H0v-.67H2v-.67H0v-.67H2V.67H0V0H8V.67H6v.671H8v.67H6v.67H8v.67H6v.671H8V4.5C8,4.939,7.652,6.215,7.115,6.215Z" transform="translate(10.449 21.285)" fill="#e7b8f8"/>
+    <g id="Rechteck_16" data-name="Rechteck 16" transform="translate(9 1.585)" fill="none" stroke="#e7b8f8" stroke-width="1">
+      <rect width="11" height="11" rx="2" stroke="none"/>
+      <rect x="0.5" y="0.5" width="10" height="10" rx="1.5" fill="none"/>
+    </g>
+    <rect id="Rechteck_17" data-name="Rechteck 17" width="3" height="5" transform="translate(13 6)" fill="#e7b8f8"/>
+    <rect id="Rechteck_18" data-name="Rechteck 18" width="2.5" height="5" transform="translate(13.199 25)" fill="#e7b8f8"/>
+    <g id="Rechteck_19" data-name="Rechteck 19" transform="translate(11 3)" fill="none" stroke="#e7b8f8" stroke-width="1">
+      <rect width="1" height="2" stroke="none"/>
+      <rect x="0.5" y="0.5" height="1" fill="none"/>
+    </g>
+    <g id="Rechteck_20" data-name="Rechteck 20" transform="translate(15 3)" fill="none" stroke="#e7b8f8" stroke-width="1">
+      <rect width="1" height="2" stroke="none"/>
+      <rect x="0.5" y="0.5" height="1" fill="none"/>
+    </g>
+    <g id="Rechteck_22" data-name="Rechteck 22" transform="translate(13 3)" fill="none" stroke="#e7b8f8" stroke-width="1">
+      <rect width="1" height="2" stroke="none"/>
+      <rect x="0.5" y="0.5" height="1" fill="none"/>
+    </g>
+    <g id="Rechteck_21" data-name="Rechteck 21" transform="translate(17 3)" fill="none" stroke="#e7b8f8" stroke-width="1">
+      <rect width="1" height="2" stroke="none"/>
+      <rect x="0.5" y="0.5" height="1" fill="none"/>
+    </g>
+    <g id="Ellipse_20" data-name="Ellipse 20" transform="translate(18 15)" fill="#d96484" stroke="#d4a0e6" stroke-width="1">
+      <circle cx="5.5" cy="5.5" r="5.5" stroke="none"/>
+      <circle cx="5.5" cy="5.5" r="5" fill="none"/>
+    </g>
+    <line id="Linie_3" data-name="Linie 3" x2="4" y2="4" transform="translate(21.5 18.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>
+    <line id="Linie_4" data-name="Linie 4" x1="4" y2="4" transform="translate(21.5 18.5)" fill="none" stroke="#fff" stroke-linecap="round" stroke-width="1"/>
+    <rect id="Rechteck_24" data-name="Rechteck 24" width="30" height="30" fill="#fff" opacity="0"/>
+  </svg>

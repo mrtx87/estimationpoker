@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1030.997" height="1263.998" viewBox="0 0 1030.997 1263.998">
+    <defs>
+        <radialGradient id="radial-gradient" cx="0.5" cy="0.425" r="0.93" gradientTransform="matrix(0.722, 0.692, -0.655, 0.683, 0.418, -0.211)" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#5f4e97"/>
+            <stop offset="1" stop-color="#30274c"/>
+        </radialGradient>
+    </defs>
+    <g id="Gruppe_2" data-name="Gruppe 2" transform="translate(-1247.074 830.354)">
+        <ellipse id="Ellipse_45" data-name="Ellipse 45" cx="20.5" cy="6.5" rx="20.5" ry="6.5" transform="translate(1774 289)" fill="#ffd677"/>
+        <path id="Path_138" data-name="Path 138" d="M-335.926-830.354h1031L230.767,297.831H191.128Z" transform="translate(1583)" fill="#fff" opacity="0.1"/>
+        <path id="Path_134" data-name="Path 134" d="M9,0s7.93,4.058,23.263,4.058S56,0,56,0c4.971,0,9,3.476,9,7.764V129.4c0,4.288-4.029,7.764-9,7.764,0,0-1.73,5.48-23.737,5.48S9,137.169,9,137.169c-4.971,0-9-3.476-9-7.764V7.764C0,3.476,4.029,0,9,0Z" transform="translate(1762 291)" fill="url(#radial-gradient)"/>
+    </g>
+</svg>

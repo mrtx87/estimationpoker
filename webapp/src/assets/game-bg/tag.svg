@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="816" height="533" viewBox="0 0 816 533">
+  <g id="Gruppe_8" data-name="Gruppe 8" transform="translate(-765 -49)">
+    <rect id="Rechteck_23" data-name="Rechteck 23" width="816" height="533" transform="translate(765 49)" fill="#e3eaf8"/>
+    <g id="Gruppe_2" data-name="Gruppe 2" transform="translate(-233 -153)">
+      <circle id="Ellipse_1" data-name="Ellipse 1" cx="129.5" cy="129.5" r="129.5" transform="translate(1053 290)" fill="#e5d0aa"/>
+      <path id="Differenzmenge_4" data-name="Differenzmenge 4" d="M129.5,352a130.459,130.459,0,0,1-26.1-2.631A128.791,128.791,0,0,1,57.1,329.883a129.877,129.877,0,0,1-46.919-56.976A128.846,128.846,0,0,1,2.631,248.6a130.435,130.435,0,0,1,3.608-65.923C10.776,269.8,79.807,340.252,166.813,346.544A129.625,129.625,0,0,1,129.5,352Z" transform="translate(1053.187 197)" fill="#f2cf8f"/>
+    </g>
+    <g id="Gruppe_3" data-name="Gruppe 3" transform="translate(-210 32)">
+      <circle id="Ellipse_42" data-name="Ellipse 42" cx="30.5" cy="30.5" r="30.5" transform="translate(1148 250)" fill="#fff"/>
+      <circle id="Ellipse_43" data-name="Ellipse 43" cx="42" cy="42" r="42" transform="translate(1179 221)" fill="#fff"/>
+      <circle id="Ellipse_44" data-name="Ellipse 44" cx="31" cy="31" r="31" transform="translate(1239 246)" fill="#fff"/>
+      <circle id="Ellipse_45" data-name="Ellipse 45" cx="47" cy="47" r="47" transform="translate(1289 218)" fill="#fff"/>
+      <path id="Rechteck_24" data-name="Rechteck 24" d="M6,0H209a0,0,0,0,1,0,0V11a24,24,0,0,1-24,24H29A29,29,0,0,1,0,6V6A6,6,0,0,1,6,0Z" transform="translate(1148 277)" fill="#fff"/>
+    </g>
+    <g id="Gruppe_4" data-name="Gruppe 4" transform="translate(718 186)">
+      <circle id="Ellipse_42-2" data-name="Ellipse 42" cx="30.5" cy="30.5" r="30.5" transform="translate(174 32)" fill="#fff"/>
+      <circle id="Ellipse_43-2" data-name="Ellipse 43" cx="42" cy="42" r="42" transform="translate(120 3)" fill="#fff"/>
+      <circle id="Ellipse_44-2" data-name="Ellipse 44" cx="31" cy="31" r="31" transform="translate(82 28)" fill="#fff"/>
+      <path id="Pfad_18" data-name="Pfad 18" d="M47,0a47,47,0,0,1,0,94Z" fill="#fff"/>
+      <path id="Pfad_19" data-name="Pfad 19" d="M21.261,1.561,203,0a6,6,0,0,1,6,6,29,29,0,0,1-29,29H24c-.133,0-.265,0-.7-.01Z" transform="translate(26 59)" fill="#fff"/>
+    </g>
+    <path id="Pfad_21" data-name="Pfad 21" d="M10.213,3.218S20.174,1.277,27.1,7.271a31.752,31.752,0,0,1,9.117,14.182S34.783,10.27,43.98,4.907C51.54.5,56.811.855,56.811.855" transform="translate(1186.5 130.5)" fill="none" stroke="#000" stroke-width="3"/>
+    <path id="Pfad_22" data-name="Pfad 22" d="M10.213,2.2s5.7-1.112,9.665,2.32A18.177,18.177,0,0,1,25.1,12.643s-.819-6.4,4.446-9.472C33.871.648,36.889.852,36.889.852" transform="translate(1287.423 159.914)" fill="none" stroke="#000" stroke-width="3"/>
+    <g id="Gruppe_9" data-name="Gruppe 9">
+      <path id="Polygon_14" data-name="Polygon 14" d="M78,0l78,147H0Z" transform="translate(1281 382)" fill="#409555"/>
+      <path id="Polygon_15" data-name="Polygon 15" d="M89,0l89,168H0Z" transform="translate(1270 414)" fill="#409555"/>
+      <path id="Polygon_13" data-name="Polygon 13" d="M55.5,0,111,105H0Z" transform="translate(1303 329)" fill="#409555"/>
+      <path id="Pfad_20" data-name="Pfad 20" d="M44.5-1.324l23.774,45.2L44.5,24.955,35.627,75.173,32.2,38.651-.571,84.073Z" transform="translate(1314 330)" fill="#d8e1db"/>
+    </g>
+  </g>
+</svg>
