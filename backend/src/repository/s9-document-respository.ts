@@ -7,7 +7,7 @@ import {
     DELETE_DOCUMENT_ERROR,
     DOCUMENT_DOES_NOT_EXIST,
     DOCUMENT_TO_BE_RESTORED_NOT_EXIST,
-    DOCUMENT_TO_BE_STORED_NOT_EXIST,
+    ROOM_TO_BE_STORED_NOT_EXIST,
     ERROR_ON_DOCUMENT_SEARCH,
     LOCKING_DOCUMENT_CHANGED,
     NOT_AUTHORIZED_TO_DELETE_DOCUMENT,
@@ -325,7 +325,7 @@ export class S9DocumentRepository {
     private async executeDocumentUpdate(userId: any, previousDocument: S9Document, updatedDocument: S9Document, storedS9DocumentModel: any) {
         try {
             if(!storedS9DocumentModel) {
-                return getNotFoundErrorResponseHandling(DOCUMENT_TO_BE_STORED_NOT_EXIST);
+                return getNotFoundErrorResponseHandling(ROOM_TO_BE_STORED_NOT_EXIST);
             }
             //check if request user is author or editor of this document
             if (this.isAuthor(userId, storedS9DocumentModel) || await this.isEditor(userId, storedS9DocumentModel)) {

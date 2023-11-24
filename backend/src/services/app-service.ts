@@ -109,20 +109,15 @@ export class AppService {
     }
 
 
-    public processPlaylistCommand(roomId: string, playlistCmd: PlaylistCommand) {
-        const room = this.getRoom(roomId);
-        return playlistService.executePlaylistCommand(room, playlistCmd);
-    }
 
     public processDisconnectClient(roomId: string, userId: string) {
-        const room = this.getRoom(roomId);
+        const room = estimationPokerRoomRepository.getDocumentById(roomId);
         if (room) {
             const removedUser = room.removeUser(userId);
             if (removedUser) {
                 room.removeUserConnection(removedUser.id);
                 logger.info(LEFT_ROOM, removedUser.getId(), room.getId());
                 room.removeUserFromVoiceChatPeers(userId);
-                this.removeDrawnLinesIfNeeded(room, removedUser);
                 if (room.isEmpty()) {
                     this.processRoomIsEmptyAfterDisconnect(room);
                 } else {
@@ -132,179 +127,4 @@ export class AppService {
         }
     }
 
-    public enforceRoomCleanUpForRoom(room: Room) {
-        this.processRoomIsEmptyAfterDisconnect(room);
-    }
-
-    private removeDrawnLinesIfNeeded(room: Room, removedUser: User) {
-        if (!removedUser.getAuthorization().hasEntitlement(Entitlement.HOST)) {
-            room.clearDrawnLinesFromUser(removedUser.getId());
-        }
-    }
-
-    private processRoomIsEmptyAfterDisconnect(room: Room) {
-        if (room.getVideoPlayerSettings().getState() == PLAYING) {
-            room.getVideoPlayerSettings().setState(PAUSED);
-        }
-
-        const cleanupTimeout = setTimeout(function () {
-            try {
-                roomRepository.removeRoom(room.getId());
-                userService.removeRoomAuthorizations(room.getId());
-            } catch (e) {
-                logger.error(e);
-            }
-        }, ROOM_CLEANUP_TIMEOUT)
-        room.setCleanUpTimeout(cleanupTimeout);
-        logger.log('armed cleanup timeout - room: ' + room.getId());
-    }
-
-    public toggleRoomHostedState(roomId: string, from: string) {
-        const room = this.getRoom(roomId);
-        if (room) {
-            const roomIsHosted = userService.toggleRoomHostedState(roomId);
-            if (roomIsHosted) {
-                AppServiceUtil.clearAllDrawnLinesFromUsersWithoutDrawEntitlement(room);
-                AppServiceUtil.clearAllUsersFromVoiceChatWithoutVoiceChatEntitlement(room);
-            }
-            const toggleRoomHostedResponse = new ToggleRoomHostedResponse(from, PURPOSE_HOSTED_ROOM_TOGGLE, roomIsHosted, room.voiceChatPeers);
-            websocketService.notifyAllUsersInRoom(roomId, toggleRoomHostedResponse);
-        }
-    }
-
-    public getInitialRoomData(roomId: string): InitialRoomData {
-        return AppServiceUtil.createInitialRoomData(this.getRoom(roomId));
-    }
-
-    public getInitialUserList(roomId: string): User[] {
-        return this.getRoom(roomId).getUserList();
-    }
-
-    public getInitialVideoPlayerAction(roomId: string): VideoPlayerAction {
-        return AppServiceUtil.getVideoPlayerAction(this.getRoom(roomId));
-    }
-
-    public getNextVideo(roomId: string): Video {
-        return this.getRoom(roomId).getNextVideo();
-    }
-
-    public getDrawnLines(roomId: string): Map<string, Line[]> {
-        return this.getRoom(roomId).getDrawnLinesByUserId();
-    }
-
-
-    public processSyncRequest(roomId: string, videoPlayerAction: VideoPlayerAction) {
-        const room = this.getRoom(roomId);
-        playlistService.executeSyncRequestFromUser(room, videoPlayerAction);
-    }
-
-
-    public processChatmessage(roomId: string, chatMessage: ChatMessage) {
-        const room = this.getRoom(roomId);
-        const user = room.getUserById(chatMessage.getFrom());
-        if (AppServiceUtil.isFlooding(user)) {
-            const timestampForNextPossibleMessage = Util.getNowMillis() + CHAT_DISABLED_TIME;
-            const floodingResponse = new ChatMessageResponse(chatMessage.getFrom(), PURPOSE_USER_FLOODING, null, timestampForNextPossibleMessage);
-            websocketService.notifyUserById(room.getId(), user.getId(), floodingResponse);
-        } else {
-            chatMessage.setId(UUID());
-            chatMessage.setCreatedAt(new Date());
-            const chatMessageResponse = new ChatMessageResponse(chatMessage.getFrom(), PURPOSE_SEND_CHATMESSAGE, chatMessage, -1);
-            websocketService.notifyAllUsersInRoom(roomId, chatMessageResponse);
-        }
-    }
-
-
-    public changeUserName(roomId: string, from: string, updatedUser: User) {
-        const room = this.getRoom(roomId);
-        updatedUser = room.changeUserName(updatedUser);
-        const userUpdateResponse = new UserUpdateResponse(from, PURPOSE_UPDATE_USERNAME, updatedUser);
-        websocketService.notifyAllUsersInRoom(room.getId(), userUpdateResponse);
-    }
-
-    public changeUserIcon(roomId: string, from: string, userUpdate: User) {
-        const room = this.getRoom(roomId);
-        const user = room.getUserById(userUpdate.id);
-        const userUpdateResponse = new UserUpdateResponse(from, PURPOSE_UPDATE_USERICON, user);
-        websocketService.notifyAllUsersInRoom(room.getId(), userUpdateResponse);
-    }
-
-
-    public updateDrawingCanvasByUser(roomId: string, userId: string, lineId: string, updatedLine: Line, segment: Segment) {
-        if (updatedLine) {
-            this.updateDrawingCanvasLineByUser(roomId, userId, lineId, updatedLine);
-        } else if (segment) {
-            this.updateDrawingCanvasSegmentByUser(roomId, userId, lineId, segment);
-        }
-    }
-
-    public updateDrawingCanvasLineByUser(roomId: string, userId: string, lineId: string, updatedLine: Line) {
-        const room = this.getRoom(roomId);
-        room.createLineByUserId(userId, updatedLine);
-        const drawingUpdateResponse = new DrawingUpdateResponse(userId, PURPOSE_DRAWING_CANVAS_UPDATE, lineId, updatedLine);
-        websocketService.notifyAllUsersInRoom(roomId, drawingUpdateResponse);
-    }
-
-    public updateDrawingCanvasSegmentByUser(roomId: string, userId: string, lineId: string, segment: Segment) {
-        const room = this.getRoom(roomId);
-        room.updateLineByUserId(userId, lineId, segment);
-        const drawingUpdateResponse = DrawingUpdateResponse.of({
-            from: userId,
-            purpose: PURPOSE_DRAWING_CANVAS_UPDATE,
-            lineId: lineId,
-            segment: segment
-        });
-        websocketService.notifyAllUsersInRoom(roomId, drawingUpdateResponse);
-    }
-
-    public undoLatestDrawingUpdate(roomId: string, userId: string) {
-        const room = this.getRoom(roomId);
-        room.undoLatestDrawingUpdateByUser(userId);
-        const drawingUpdateResponse = DrawingUpdateResponse.of({
-            from: userId,
-            purpose: PURPOSE_UNDO_USER_CANVAS_UPDATE
-        });
-        websocketService.notifyAllUsersInRoom(roomId, drawingUpdateResponse);
-    }
-
-    public deleteLinesDrawnByUser(roomId: string, userId: string) {
-        const room = this.getRoom(roomId);
-        room.clearDrawnLinesFromUser(userId);
-        const drawingUpdateResponse = DrawingUpdateResponse.of({
-            from: userId,
-            purpose: PURPOSE_CLEAR_DRAWN_LINES_BY_USER
-        });
-        websocketService.notifyAllUsersInRoom(roomId, drawingUpdateResponse);
-    }
-
-    private getRoom(roomId: string): Room {
-        return estimationPokerRoomRepository.getRoomById(roomId);
-    }
-
-    public processUpdateInitTimeOfCurrentVideo(roomId: string, updatedInitTime: number) {
-        const room = this.getRoom(roomId);
-        if (room.getVideoPlayerSettings().getVideo().getInitTime() == -1) {
-            room.getVideoPlayerSettings().getVideo().setInitTime(updatedInitTime);
-        }
-    }
-
-    public processPlaylistAutoPlayUpdate(roomId: string, userId: string, usePlaylist: boolean) {
-        const room = this.getRoom(roomId);
-        room.getVideoPlayerSettings().setAutoPlay(usePlaylist);
-        const usePlaylistUpdateResponse = new PlaylistAutoPlayUpdateResponse(userId, PURPOSE_UPDATE_PLAYLIST_AUTO_PLAY, usePlaylist);
-        websocketService.notifyAllUsersInRoom(roomId, usePlaylistUpdateResponse);
-    }
-
-
-    public onReceiveRequestingVoiceChatSignal(signal: string, targetPeerId: string, roomId: string, userId: string) {
-        voiceChatSignalingService.handleSignalUpdate(signal, targetPeerId, this.getRoom(roomId), userId);
-    }
-
-    public onReceiveRequestingVoiceChatEnter(roomId: string, userId: string) {
-        voiceChatSignalingService.handleVoiceChatEnter(this.getRoom(roomId), userId);
-    }
-
-    public onReceiveRequestingVoiceChatLeave(roomId: string, userId: string) {
-        voiceChatSignalingService.handleVoiceChatLeave(this.getRoom(roomId), userId);
-    }
 }

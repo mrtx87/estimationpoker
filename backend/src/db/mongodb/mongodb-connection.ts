@@ -1,7 +1,7 @@
 import {InitAppProcess} from "../../model/init-app-process";
 import {logger} from "../../services/s9logger";
 import mongoose from "mongoose";
-import {s9UserService} from "../../server";
+import {userService} from "../../server";
 import {DBUser} from "../../model/user";
 import {randomDoc} from "../../util/util";
 import {S9DocumentModel} from "./db-schemas";
@@ -48,7 +48,7 @@ export function connectToDB(init: InitAppProcess) {
 export function updateSuperUserCredentials(init: InitAppProcess) {
     try {
         const superUser = DBUser.of(JSON.parse(process.env.SUPER_USER));
-        s9UserService.registerUserFromConfig(superUser)
+        userService.registerUserFromConfig(superUser)
         init.steps.registerSuperUser = 1;
         return Promise.resolve(init);
     }catch (e) {
@@ -61,7 +61,7 @@ export async function addTestUsers(init: InitAppProcess) {
     try {
         if (process.env.TEST_USERS) {
             const testUsers = JSON.parse(process.env.TEST_USERS);
-            await s9UserService.registerTestUsers(testUsers.users.map(DBUser.of));
+            await userService.registerTestUsers(testUsers.users.map(DBUser.of));
             init.steps.registerTestUser = 1;
         }
         return Promise.resolve(init);

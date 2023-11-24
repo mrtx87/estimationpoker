@@ -3,9 +3,7 @@ import {DBUser, DeletedDBUser, User} from "../model/user";
 import {logger} from "./s9logger";
 import {v4 as UUID} from 'uuid';
 import {
-    DELETE_DOCUMENT_ERROR,
     ERROR_REFESHING_TOKEN, ERROR_REGISTER_EMAIL_NO_MATCH, ERROR_REGISTER_LINK_NO_LONGER_VALID,
-    ERROR_WHILE_LOGIN_USER,
     ERROR_WHILE_USERS_REQUEST,
     INVALID_TOKEN,
     REGISTER_INFO_INVALID,

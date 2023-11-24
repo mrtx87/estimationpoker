@@ -13,7 +13,7 @@ import {
 import WebSocket from "ws";
 import {S9DocumentEditorService} from "./services/s9-document-editor-service";
 import {WebsocketService} from "./services/websocket-service";
-import {WebsocketController} from "./controller/websocket-controller";
+import {WebsocketControllerImpl} from "./controller/websocket-controller-impl";
 import {EstimationPokerRoomRepository} from "./repository/estimation-poker-room-repository";
 import {AppService} from "./services/app-service";
 require('dotenv').config();
@@ -23,11 +23,10 @@ export const estimationPokerRoomRepository = EstimationPokerRoomRepository.estim
 //export const s9TagRepository = S9TagRepository.s9TagRepository;
 export const s9DocumentEditorsService = S9DocumentEditorService.s9DocumentEditorService;
 export const appService = AppService.appService;
-export const s9UserService = UserService.userService;
-
+export const userService = UserService.userService;
 export const websocketService = WebsocketService.websocketService;
 export const websocketServer = new WebSocket.Server({noServer: true, path: "/estimationpoker_websocket",});
-export const websocketController = new WebsocketController(websocketServer);
+export const websocketController = new WebsocketControllerImpl();
 
 
 /* create express server */
@@ -83,26 +82,28 @@ function startupGreeting() {
     logger.info('[AppStartUp]: EstimationPoker App Initialization Starts.');
 }
 
-export function initWebsocketSettings(init: InitAppProcess, websocketServer: any, websocketController: WebsocketController, appService: AppService) {
+
+
+export function initWebsocketSettings(init: InitAppProcess, websocketServer: any, websocketController: WebsocketControllerImpl, appService: AppService) {
     //Websocket Server Config
     try {
-        websocketServer.on('connection', (playerConnection: any) => {
+        websocketServer.on('connection', (userConnection: any) => {
             try {
                 logger.log('ws established - connections: {}', websocketServer.clients.size)
 
-                playerConnection.on('message', (dataWrapper: any) => {
+                userConnection.on('message', (data: any) => {
                     try {
-                        const request = JSON.parse(dataWrapper);
-                        websocketController.handleWebsocketMessage(request, playerConnection);
+                        const request = JSON.parse(data);
+                        websocketController.onPlayerMessageIncoming(request, userConnection);
                     } catch (e) {
                         logger.error(e);
                     }
                 });
 
-                playerConnection.on('close', () => {
+                userConnection.on('close', () => {
                     try {
-                        if ('roomId' in playerConnection && 'userId' in playerConnection) {
-                            appService.processDisconnectClient(playerConnection.roomId, playerConnection.userId);
+                        if ('roomId' in userConnection && 'userId' in userConnection) {
+                            appService.processDisconnectClient(userConnection.roomId, userConnection.userId);
                         }
                     } catch (e) {
                         logger.error(e);

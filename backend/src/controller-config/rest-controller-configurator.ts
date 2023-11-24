@@ -1,6 +1,6 @@
 import {Express} from "express";
 import {logger} from "../services/s9logger";
-import {s9UserService} from "../server";
+import {userService} from "../server";
 import {getForbiddenErrorResponseHandling} from "../util/util";
 import {ERROR_USER_IS_NOT_ADMIN} from "../constants/error-texts";
 
@@ -85,7 +85,7 @@ export class RestControllerConfigurator {
 
     adminRequestHandling(handleRequest: (req: any, res: any) => any, req: any, res: any) {
         try {
-            return s9UserService.isAdmin(req.user.id)
+            return userService.isAdmin(req.user.id)
                 .then(isAdmin => {
                     if (isAdmin) {
                         return handleRequest(req, res).then((responseObject: any) => responseHandling(res, responseObject)).catch((e: any) => {

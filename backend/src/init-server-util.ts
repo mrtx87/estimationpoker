@@ -4,7 +4,7 @@ import helmet = require('helmet');
 import {Express} from "express";
 import {InitAppProcess} from "./model/init-app-process";
 import {APP_REST_PREFIX, cors, ErrorResponse} from "./controller-config/rest-controller-configurator";
-import {s9UserService} from "./server";
+import {userService} from "./server";
 import {logger} from "./services/s9logger";
 
 export function initAppSettings(init: InitAppProcess, app: Express) {
@@ -69,7 +69,7 @@ export const authMiddleWare = function (req: any, res: any, next: any) {
         return next();
     }
 
-    const auth = s9UserService.authenticate(req, res);
+    const auth = userService.authenticate(req, res);
     if (auth instanceof ErrorResponse) {
         return res.status(auth.code).send(auth.message);
     }
