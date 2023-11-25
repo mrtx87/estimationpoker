@@ -79,7 +79,7 @@ export async function createTestRoom(init: InitAppProcess) {
             for(let i = 0; i < Number(testRoomsAmount); i++) {
                     const testRoomModel = new EstimationPokerRoomModel(getTestRoom());
                     await testRoomModel.save();
-                    logger.log(`[TEST DOC CREATED] ${i} created ${testRoomModel.id}`);
+                    logger.log(`[TEST ROOM CREATED] ${i} created ${testRoomModel.id}`);
                 }
         }
         init.steps.registerTestRoom = 1;

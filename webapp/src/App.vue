@@ -23,6 +23,7 @@ import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/v
 import {ConnectionState} from "@/services/websocket-service";
 import {useAppStateStore} from "@/stores/app-state";
     import HeaderVue from "@/components/header-vue.vue";
+import {restService} from "@/services/rest-service";
 
 
 export default {
@@ -33,9 +34,10 @@ export default {
     },
     created() {
         this.appState = useAppStateStore();
+        restService.setAppState(this.appState);
 
         this.initUserRandomOrFromCookie();
-        this.hasConfirmedPrivacyPolicy = getCookie(PRIVACY_POLICY_COOKIE_KEY) == 'true';
+        this.hasConfirmedPrivacyPolicy = true; //getCookie(PRIVACY_POLICY_COOKIE_KEY);
         if (this.hasConfirmedPrivacyPolicy) {
             this.initAppOnPrivacyPolicyConfirmation();
         } else {
