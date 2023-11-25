@@ -1,6 +1,6 @@
 <template>
     <div class="app-wrapper">
-      <HeaderVue  v-on:openAvatar-Configurator></HeaderVue>
+      <HeaderVue></HeaderVue>
       <landing-page></landing-page>
     </div>
 </template>
