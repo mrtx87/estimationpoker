@@ -101,9 +101,7 @@
         </div>
 
 
-        <div v-if="editingAvatarElementType" class="selectors-wrapper animation anim-in"
-             :class="{'anim-out':animateOutRunning}"
-             @animationend="onAnimationEnd()">
+        <div class="selectors-wrapper">
             <avatar-element-slide-selector v-if="editingAvatarElementType === 'hair'"
                                            v-bind:options="hairOptions"
                                            v-bind:selection="selectedHair"
@@ -161,7 +159,7 @@
                 selectedShirt: null,
                 selectedShirtColor: null,
                 selectPlayerLang: '',
-                editingAvatarElementType: null,
+                editingAvatarElementType: 'hair',
                 hairOptions: [...avatars.avatarHairsOptions],
                 headsOptions: [...avatars.avatarHeadsOptions],
                 shirtOptions: [...avatars.avatarShirtsOptions],

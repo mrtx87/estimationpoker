@@ -1,14 +1,13 @@
 <template>
     <div class="app-wrapper">
       <HeaderVue></HeaderVue>
-        <landing-page></landing-page>
+        <overlay></overlay>
         <button onclick="createRoom"> create room </button>
         <button> join room </button>
     </div>
 </template>
 
 <script>
-import LandingPage from "./components/landing-page";
 import {
     getCookie,
     setCookie,
@@ -22,14 +21,15 @@ import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
 import {ConnectionState} from "@/services/websocket-service";
 import {useAppStateStore} from "@/stores/app-state";
-    import HeaderVue from "@/components/header-vue.vue";
+import HeaderVue from "@/components/header-vue.vue";
+import Overlay from "@/components/overlay.vue";
 
 
 export default {
     name: "App",
     components: {
-            LandingPage,
             HeaderVue,
+            Overlay,
     },
     created() {
         this.appState = useAppStateStore();

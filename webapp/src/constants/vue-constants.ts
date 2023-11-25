@@ -24,7 +24,7 @@ export const RequestMessageType = {
     HINT_REQUEST: 'hint-request',
     HINT_RESPONSE: 'hint-response',
     HINT_ADOPT: 'hint-adopt',
-    HINT_GIVEN_CLOSE: 'hint-given-close'
+    HINT_GIVEN_CLOSE: 'hint-given-close',
 }
 
 export const ResponseMessageTypes = {
@@ -83,3 +83,11 @@ export const SIGNALING_OFFER_PEER_CONNECTION = 'voice-chat.signaling-offer-pc';
 export const SIGNALING_ANSWER_PEER_CONNECTION = 'voice-chat.signaling-answer-pc';
 export const SIGNALING_BROADCAST_ICE_CANDIDATE = 'voice-chat.broadcast-ice-candidate';
 export const WANTS_TO_VOICE_CHAT = 'voice-chat.wants-to-voice-chat';
+
+export const DISPLAY_OVERLAY_STATE = {
+    NO_OVERLAY: 0,
+    AVATAR_EDITOR: 1,
+    IMPRESSUM: 2,
+    DSGVO: 3,
+    ROOM_SETTING: 4,
+}
