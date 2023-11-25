@@ -42,7 +42,7 @@ export default createStore<State>({
         peerConnections: new Map(),
         connectionState: ConnectionState.PREINIT,
         displayedOverlayId: null,
-        initialInteractionDone: false
+        initialInteractionDone: false,
     },
     mutations: {
         handleIncomingMessage(state, message) {

@@ -1,6 +1,6 @@
 <template>
-
     <div class="app-wrapper">
+      <HeaderVue  v-on:openAvatar-Configurator></HeaderVue>
       <landing-page></landing-page>
     </div>
 </template>
@@ -19,12 +19,14 @@
     import * as avatars from "@/assets/avatar/avatar-constants.ts";
     import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
     import {ConnectionState} from "@/services/websocket-service";
+    import HeaderVue from "@/components/header-vue.vue";
 
 
     export default {
         name: "App",
         components: {
-            LandingPage
+            LandingPage,
+            HeaderVue,
         },
         created() {
             this.initUserRandomOrFromCookie();
