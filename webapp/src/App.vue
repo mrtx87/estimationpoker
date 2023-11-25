@@ -33,9 +33,10 @@ export default {
     },
     created() {
         this.appState = useAppStateStore();
+        restService.setAppState(this.appState);
 
         this.initUserRandomOrFromCookie();
-        this.hasConfirmedPrivacyPolicy = getCookie(PRIVACY_POLICY_COOKIE_KEY) == 'true';
+        this.hasConfirmedPrivacyPolicy = true; //getCookie(PRIVACY_POLICY_COOKIE_KEY);
         if (this.hasConfirmedPrivacyPolicy) {
             this.initAppOnPrivacyPolicyConfirmation();
         } else {

@@ -7,9 +7,12 @@ export const useAppStateStore = defineStore('AppState', {
             // states to reset after login
             _localUser: null,
             _globalCookie: null,
+<<<<<<< HEAD
             _overlayId: 0,
+=======
             _connectionState: ConnectionState.DISCONNECTED,
             _roomId: ''
+>>>>>>> initial_dev
         }
     },
     actions: {
@@ -19,21 +22,26 @@ export const useAppStateStore = defineStore('AppState', {
         addGlobalCookie(globalCookie: any) {
             this._globalCookie = globalCookie;
         },
+<<<<<<< HEAD
         setOverlayId(overlayId: number) {
             this._overlayId = overlayId;
-        },
+=======
         setConnectionState(state: ConnectionState) {
             this._connectionState = state;
         },
         setRoomId(roomId: string) {
             this._roomId = roomId;
+>>>>>>> initial_dev
         }
     },
     getters: {
         localUser: (state: any) => state._localUser,
         globalCookie: (state: any) => state._globalCookie,
+<<<<<<< HEAD
         overlayId: (state: any) => state._overlayId,
+=======
         connectionState: (state: any) => state._connectionState,
         roomId: (state: any) => state._roomId,
+>>>>>>> initial_dev
     }
 });

@@ -19,7 +19,7 @@ export enum ConnectionState {
 export class WebsocketService {
     retries = 0;
     wsConnection: WebSocket | null = null;
-    store: Store<State> | null = null;
+    store: any = null;
 
     pingTimeout: any;
 
@@ -46,9 +46,9 @@ export class WebsocketService {
     onOpenConnection(e: any) {
         Logger.log("websocket successfully connected");
         this.retries = 0;
-        this.store?.commit('updateConnectionState', ConnectionState.CONNECTED);
-        if (this.store?.state.gameSessionId) {
-            this.sendJoinRequest(this.store?.state.gameSessionId);
+        this.store.setConnectionState(ConnectionState.CONNECTED);
+        if (this.store.roomId) {
+            this.sendJoinRequest(this.store.roomId);
         }
         this.initPing();
     }
@@ -80,15 +80,15 @@ export class WebsocketService {
         this.sendMessage(joinRequest);
     }
 
-    onError(error: any): void {/*
+    onError(error: any): void {
         console.error("websocket server could not be reached");
-        this.store?.commit('updateConnectionState', ConnectionState.DISCONNECTED);
-        this.handleReconnect();*/
+        this.store.setConnectionState(ConnectionState.CONNECTION_NOT_POSSIBLE);
+        this.handleReconnect();
     }
 
     onCloseConnection(): void {
         console.error("websocket connection closed");
-        this.store?.commit('updateConnectionState', ConnectionState.DISCONNECTED);
+        this.store.setConnectionState(ConnectionState.DISCONNECTED);
         this.handleReconnect();
     }
 
@@ -98,7 +98,7 @@ export class WebsocketService {
             console.log("retry connecting... retries left:" + (MAX_RECONNECT_RETRIES - this.retries));
             this.establishConnection();
         }else{
-            this.store?.commit('updateConnectionState', ConnectionState.CONNECTION_NOT_POSSIBLE);
+            this.store.setConnectionState(ConnectionState.CONNECTION_NOT_POSSIBLE);
             console.error("connection to websocket server seems not possible at this time");
         }
     }

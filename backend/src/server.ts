@@ -20,12 +20,11 @@ export const estimationPokerRoomRepository = EstimationPokerRoomRepository.estim
 export const appService = AppService.appService;
 export const userService = UserService.userService;
 export const websocketService = WebsocketService.websocketService;
-export const websocketServer = new WebSocket.Server({noServer: true, path: "/estimation_poker_websocket",});
 export const websocketController = new WebsocketControllerImpl();
-
 
 /* create express server */
 export const app = express();
+export const websocketServer = new WebSocket.Server({noServer: true, path: "/estimation_poker_websocket",});
 
 export function startEstimationPokerServer() {
     startupGreeting();
@@ -54,6 +53,12 @@ function startWebServer(port: number) {
     // start the Express server
     const webServer = app.listen(port, () => {
         logger.log(`[APP SETUP] server started at ${port}`);
+    });// web server upgrade handling for websockets
+
+    webServer.on('upgrade', (request, socket, head) => {
+        websocketServer.handleUpgrade(request, socket, head, (websocket: any) => {
+            websocketServer.emit("connection", websocket, request);
+        });
     });
 
 }

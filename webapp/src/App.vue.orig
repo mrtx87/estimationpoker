@@ -1,177 +1,13 @@
 <template>
     <div class="app-wrapper">
-<<<<<<< HEAD
       <HeaderVue></HeaderVue>
-      <landing-page></landing-page>
-=======
-        <landing-page></landing-page>
+        <overlay></overlay>
         <button onclick="createRoom"> create room </button>
         <button> join room </button>
->>>>>>> initial_dev
     </div>
 </template>
 
 <script>
-<<<<<<< HEAD
-    import LandingPage from "./components/landing-page";
-    import {
-        getCookie,
-        setCookie,
-        getRandomAvatar,
-        setPrivacyCookie,
-        removeCookie,
-        removeAllCookies
-    } from "@/services/cookie-service";
-    import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
-    import * as avatars from "@/assets/avatar/avatar-constants.ts";
-    import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
-    import {ConnectionState} from "@/services/websocket-service";
-    import HeaderVue from "@/components/header-vue.vue";
-
-
-    export default {
-        name: "App",
-        components: {
-            LandingPage,
-            HeaderVue,
-        },
-        created() {
-            this.initUserRandomOrFromCookie();
-            this.hasConfirmedPrivacyPolicy = getCookie(PRIVACY_POLICY_COOKIE_KEY) == 'true';
-            if (this.hasConfirmedPrivacyPolicy) {
-                this.initAppOnPrivacyPolicyConfirmation();
-            } else {
-                this.openOverlay('DsgvoCookie')
-            }
-        },
-        data: function () {
-            return {
-                displayMenu: false,
-                none: '',
-                hairOptions: [...avatars.avatarHairsOptions],
-                headsOptions: [...avatars.avatarHeadsOptions],
-                shirtOptions: [...avatars.avatarShirtsOptions],
-                colorOptions: [...avatars.colorOptions],
-                hasConfirmedPrivacyPolicy: false,
-                displayBanPollMenu: false,
-                extOpenPlayerList: false
-            }
-        },
-        methods: {
-            onToggleMuteAll: function (event) {
-                this.$refs.PlayerListAndVoiceChat.toggleMuteAll();
-            },
-            onToggleMuteLocalPlayer: function () {
-                this.$refs.PlayerListAndVoiceChat.toggleMuteLocalPlayer();
-            },
-            onEnterVoiceChat: function (value) {
-                if (value) {
-                    this.$refs.PlayerListAndVoiceChat.enterVoiceChat();
-                } else {
-                    this.$refs.PlayerListAndVoiceChat.leaveVoiceChat();
-                }
-            },
-            overlayClicked: function (target) {
-                if (target.className === 'footer-overlay') {
-                    this.closeOverIfPermitted();
-                }
-            },
-            closeOverIfPermitted() {
-                if (this.isOverlayClosePermitted) {
-                    this.openOverlay('');
-                }
-            },
-            initAppOnPrivacyPolicyConfirmation: function () {
-                this.initSessionId();
-                this.$websocketService.registerStore(this.$store);
-                this.$websocketService.establishConnection();
-            },
-            onDsgvoConfirmUpdate: function (confirmed) {
-                if (!confirmed) {
-                    this.hasConfirmedPrivacyPolicy = false;
-                    removeAllCookies();
-                } else {
-                    this.hasConfirmedPrivacyPolicy = true;
-                    setPrivacyCookie(PRIVACY_POLICY_COOKIE_KEY, confirmed);
-                    setCookie(GLOBAL_PLAYER_COOKIE_KEY, JSON.stringify(this.$store.state.globalPlayerCookie));
-                    if (!this.$websocketService.wsConnection) {
-                        this.initAppOnPrivacyPolicyConfirmation();
-                    } else {
-                        if (this.gameSessionId && this.playerAuthentication.secret) {
-                            setCookie(this.gameSessionId, this.playerAuthentication.secret);
-                        }
-                    }
-                }
-                if (this.isOverlayClosePermitted) {
-                    this.openOverlay('');
-                }
-            },
-            initUserRandomOrFromCookie: function () {
-                let globalPlayerCookie = getCookie(GLOBAL_PLAYER_COOKIE_KEY);
-                let privacyPolicyConfirmed = getCookie(PRIVACY_POLICY_COOKIE_KEY);
-                if (privacyPolicyConfirmed && globalPlayerCookie) {
-                    globalPlayerCookie = new GlobalPlayerCookie(globalPlayerCookie);
-                } else {
-                    const randomAvatar = getRandomAvatar(
-                        this.headsOptions.length,
-                        this.hairOptions.length,
-                        this.shirtOptions.length,
-                        this.colorOptions);
-                    let randomNumber = Date.now().toString();
-                    randomNumber = randomNumber.substring(randomNumber.length - 3, randomNumber.length);
-                    const newGlobalPlayerCookie = new GlobalPlayerCookie({
-                        name: 'funnyname' + randomNumber,
-                        avatar: randomAvatar,
-                        bgSoundMuted: false
-                    })
-                    setCookie('wtfi_globalPlayer', JSON.stringify(newGlobalPlayerCookie));
-                    globalPlayerCookie = newGlobalPlayerCookie;
-                }
-                this.$store.commit('updateGlobalCookie', globalPlayerCookie);
-            },
-            initSessionId: function () {
-                const url = window.location.href;
-                const index = url.lastIndexOf('/');
-                const sessionId = url.substring(index + 1);
-                if (sessionId) {
-                    this.$store.commit('updateSessionId', sessionId)
-                    this.$store.commit('updateJoining', true)
-                }
-            },
-            openMenu: function () {
-                this.displayMenu = true;
-            },
-            closeMenu: function (event) {
-                this.displayMenu = false;
-            },
-            openOverlay: function (id) {
-                this.$store.commit('updateDisplayedOverlayId', id)
-            },
-            onDisplayBanPollMenu: function (display) {
-                this.displayBanPollMenu = display;
-            },
-            onOpenOverlayFromMainMenu: function (overlayKey) {
-                this.closeMenu();
-                this.openOverlay(overlayKey);
-            },
-            externalToggleOpenPlayerList: function () {
-                this.extOpenPlayerList = !this.extOpenPlayerList;
-            },
-            onInnerPlayerListChange: function (value) {
-                this.extOpenPlayerList = value;
-            },
-        },
-        computed: {
-            voiceChatSignalUpdate: function () {
-                return this.$store.state.voiceChatSignalUpdate;
-            },
-            displayedVue: function () {
-                if (this.playerId) {
-                    if (this.lobby) {
-                        return 'Lobby';
-                    }
-=======
-import LandingPage from "./components/landing-page";
 import {
     getCookie,
     setCookie,
@@ -185,19 +21,27 @@ import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
 import {ConnectionState} from "@/services/websocket-service";
 import {useAppStateStore} from "@/stores/app-state";
+<<<<<<< HEAD
+import HeaderVue from "@/components/header-vue.vue";
+import Overlay from "@/components/overlay.vue";
+=======
+    import HeaderVue from "@/components/header-vue.vue";
+import {restService} from "@/services/rest-service";
+>>>>>>> initial_dev
 
 
 export default {
     name: "App",
     components: {
-        LandingPage
+            HeaderVue,
+            Overlay,
     },
     created() {
         this.appState = useAppStateStore();
->>>>>>> initial_dev
+        restService.setAppState(this.appState);
 
         this.initUserRandomOrFromCookie();
-        this.hasConfirmedPrivacyPolicy = getCookie(PRIVACY_POLICY_COOKIE_KEY) == 'true';
+        this.hasConfirmedPrivacyPolicy = true; //getCookie(PRIVACY_POLICY_COOKIE_KEY);
         if (this.hasConfirmedPrivacyPolicy) {
             this.initAppOnPrivacyPolicyConfirmation();
         } else {
@@ -248,7 +92,7 @@ export default {
             }
         },
         openOverlay(id) {
-            this.appState.addGlobalCookie( id)
+            //this.appState.addGlobalCookie( id)
         },
         initUserRandomOrFromCookie() {
             let globalPlayerCookie = getCookie(GLOBAL_PLAYER_COOKIE_KEY);
