@@ -14,8 +14,13 @@ export class EstimationPokerRoom {
         this.userIds = init.userIds;
     }
 
-    public static createEstimationPokerRoom(init: any): EstimationPokerRoom {
-        const estimationPokerRoom = new EstimationPokerRoom(init);
+    public static createEstimationPokerRoom(basicInformation: {creatorName: string, roomTitle: string}, initModeratorId: string): EstimationPokerRoom {
+        const estimationPokerRoom = new EstimationPokerRoom({
+            id: UUID(),
+            title: basicInformation.roomTitle,
+            createdAt: Date.now(),
+            userIds: [initModeratorId]
+        });
         estimationPokerRoom.id = UUID();
         return estimationPokerRoom;
     }

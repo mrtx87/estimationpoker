@@ -1,5 +1,5 @@
 export class BasicRequest {
-    type: string | undefined;
+    type: string;
     data: any;
 
     constructor(init: Partial<BasicRequest>) {

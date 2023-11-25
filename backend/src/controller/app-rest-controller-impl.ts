@@ -1,12 +1,12 @@
 import {Express} from "express";
 
 import {
+    appService,
     userService
 } from "../server";
 
 import {
     APP_REST_PREFIX,
-    ErrorResponse,
     ResponseCode,
     RestControllerConfigurator
 } from "../controller-config/rest-controller-configurator";
@@ -14,17 +14,14 @@ import {GridFsStorage} from "multer-gridfs-storage/lib/gridfs";
 import {GridFSBucket} from "mongodb";
 import {
     DELETE_USER_ERROR,
-    ERROR_WHILE_CREATING_ROOM,
+    ERROR_WHILE_CREATING_ROOM, ERROR_WHILE_JOINING_ROOM,
     ERROR_WHILE_REGISTER_USER,
 } from "../constants/error-texts";
 import {
-    addLastEditedByUserIdToDocument, getBadRequestErrorResponseHandling,
     getErrorResponseHandling,
     getInternalErrorErrorResponseHandling, wait, WAIT_DELAY_FOR_EXPENSIVE_REQUESTS
 } from "../util/util";
-import {S9DocumentRevisionMapper} from "../mapper/s9-mapper";
 import {logger} from "../services/s9logger";
-import {EstimationPokerRoom} from "../model/estimation-poker-room";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -46,12 +43,13 @@ export function applyAppRestControllerConfig(app: Express) {
 
 function handleCreateRoomRequest(req: any, res: any) {
     logger.log("created room")
-    return Promise.reject("not implemented").catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
+    const roomInitData: any = JSON.parse(req.body);
+    return appService.createRoom(roomInitData).catch((error: any) => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
 }
 
 function handleJoinRoomRequest(req: any, res: any) {
-    logger.log("created room")
-    return Promise.reject("not implemented").catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
+    logger.log("join room")
+    return Promise.reject("not implemented").catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
 }
 
 
@@ -205,10 +203,3 @@ function updateTokenRequest(request: any, response: any) {
 }
 */
 
-/* Admin Requests */
-
-function handleDeleteUserFully(req: any, res: any) {
-    const userId = req.body.userId;
-    return userService.deleteUserFully(userId)
-        .catch(error => getInternalErrorErrorResponseHandling(error, DELETE_USER_ERROR));
-}

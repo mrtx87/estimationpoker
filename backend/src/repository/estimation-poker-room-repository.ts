@@ -1,4 +1,4 @@
-import {EstimationPokerRoomModel} from "../db/mongodb/db-schemas";
+import {DBUserModel, EstimationPokerRoomModel} from "../db/mongodb/db-schemas";
 import {ErrorResponse, ResponseCode} from "../controller-config/rest-controller-configurator";
 import {EstimationPokerRoom} from "../model/estimation-poker-room";
 import {
@@ -13,23 +13,53 @@ import {
     ROOM_DOES_NOT_EXIST
 } from "../constants/error-texts";
 import {logger} from "../services/s9logger";
-import {EstimationPokerRoomMapper} from "../mapper/s9-mapper";
+import {EstimationPokerRoomMapper} from "../mapper/estimation-poker-mapper";
 import {INFO_ROOM_DELETED} from "../constants/logging-texts";
+import {DBUser} from "../model/user";
+import {v4 as UUID} from 'uuid';
+import {ROLE} from "../constants/global";
+import {Avatar} from "../model/avatar";
+import {AvatarElement} from "../model/avatar-element.model";
 
 export class EstimationPokerRoomRepository {
     private static INSTANCE: EstimationPokerRoomRepository = new EstimationPokerRoomRepository();
+
+    readonly ROOM_CONNECTIONS = new Map<string, any>();
 
     public static get estimationPokerRoomRepository(): EstimationPokerRoomRepository {
         return EstimationPokerRoomRepository.INSTANCE;
     }
 
-
     private constructor() {
     }
 
-    createEstimationPokerRoom(request: any) {
+    async createEstimationPokerRoom(roomInitData: { creatorName: string, roomTitle: string }) {
         try {
-            const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(request.body);
+            const dbUserModel = new DBUserModel(DBUser.from({
+                id: UUID(),
+                name: roomInitData.creatorName,
+                roles: [ROLE.MODERATOR],
+                avatar: new Avatar({
+                    hair: new AvatarElement({
+                        type: 'hair',
+                        color: 'blue',
+                        code: 1
+                    }),
+                    head: new AvatarElement({
+                        type: 'head',
+                        color: 'blue',
+                        code: 1
+                    }),
+                    shirt: new AvatarElement({
+                        type: 'shirt',
+                        color: 'blue',
+                        code: 1
+                    })
+                })
+            }))
+
+            const storedDbUserModel = await dbUserModel.save()
+            const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomInitData, storedDbUserModel.id);
             const estimationPokerRoomModel = new EstimationPokerRoomModel(estimationPokerRoom);
 
             return estimationPokerRoomModel
@@ -101,7 +131,7 @@ export class EstimationPokerRoomRepository {
             .limit(MAX_RESULTS_DOC_SEARCH);
     }*/
 
-    private updateDocumentInDB(storedRoom: any, updatedRoom:any) {
+    private updateDocumentInDB(storedRoom: any, updatedRoom: any) {
         this.updateCurrentRoomModelSafe(storedRoom, updatedRoom);
         return storedRoom
             .save()
