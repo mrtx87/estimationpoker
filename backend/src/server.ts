@@ -20,7 +20,7 @@ export const estimationPokerRoomRepository = EstimationPokerRoomRepository.estim
 export const appService = AppService.appService;
 export const userService = UserService.userService;
 export const websocketService = WebsocketService.websocketService;
-export const websocketServer = new WebSocket.Server({noServer: true, path: "/estimationpoker_websocket",});
+export const websocketServer = new WebSocket.Server({noServer: true, path: "/estimation_poker_websocket",});
 export const websocketController = new WebsocketControllerImpl();
 
 
