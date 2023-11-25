@@ -23,6 +23,7 @@ import {ConnectionState} from "@/services/websocket-service";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
+import {restService} from "@/services/rest-service";
 
 
 export default {
