@@ -1,141 +1,12 @@
 <template>
+
     <div class="app-wrapper">
-        <bg-sound :class="{'hidden-bg-sound': displayedVue === 'LandingPage'}"> </bg-sound>
-        <div v-if="isConnectionNotPossible"  class="connection-not-possible">
-            <img class="warn-icon" src="./assets/radiation-solid.svg">
-            <span>
-                    Unfortunately, we can not reach the servers.
-            </span>
-            <span>
-                 Please try again later.
-            </span>
-        </div>
-
-        <div v-if="connectingToServer" class="connecting-to-server">
-            Connecting to servers...
-        </div>
-
-        <voice-chat-toggle v-if="anyPlayers" v-on:onToggleMuteAll="onToggleMuteAll"
-                           v-on:onToggleMuteLocalPlayer="onToggleMuteLocalPlayer"
-                           v-on:onEnterVoiceChat="onEnterVoiceChat($event)"
-        ></voice-chat-toggle>
-        <ban-poll v-if="currentGame && (banPoll || displayBanPollMenu)" v-bind:banPoll="banPoll"
-                  v-bind:players="currentGame.gamePlayers" v-on:onClose="onDisplayBanPollMenu($event)">
-        </ban-poll>
-        <transition name="change-section" mode="out-in">
-            <div class="footer-overlay" v-if="displayedOverlayId" v-on:click="overlayClicked($event.target)">
-                <div class="footer-overlay-content">
-                    <svg v-if="isOverlayClosePermitted" v-on:click="closeOverIfPermitted()" class="close-overlay"
-                         xmlns="http://www.w3.org/2000/svg" width="28.991"
-                         height="28.991" viewBox="0 0 28.991 28.991">
-                        <rect id="Rectangle_32" data-name="Rectangle 32" width="36" height="5" rx="2.5"
-                              transform="translate(3.536) rotate(45)" fill="#fff"/>
-                        <rect id="Rectangle_33" data-name="Rectangle 33" width="36" height="5" rx="2.5"
-                              transform="translate(28.991 3.536) rotate(135)" fill="#fff"/>
-                    </svg>
-                    <DsgvoCookieModal v-if="displayedOverlayId === 'DsgvoCookie'"
-                                      v-on:onUpdatePrivacyPolicyConfirmState="onDsgvoConfirmUpdate($event)"
-                                      v-bind:hasConfirmed="hasConfirmedPrivacyPolicy"></DsgvoCookieModal>
-                    <TermsOfUse v-if="displayedOverlayId === 'TermsOfUse'"></TermsOfUse>
-                    <Impressum v-if="displayedOverlayId === 'Impressum'"></Impressum>
-                </div>
-            </div>
-        </transition>
-        <transition name="change-section" mode="out-in">
-            <component :is="displayedVue"></component>
-        </transition>
-
-        <!-- absolute stuff -->
-        <transition name="lobby-host-disconnected">
-            <div class="disconnect-warning-container" v-if="lobby && lobby.hostDisconnected">
-           <span>Host has left the Lobby.<br>
-            A new host will be picked if the host is not returning in time.</span>
-                <timer-container v-bind:timer="lobby?.hostDisconnected"
-                                 v-bind:format="'seconds-unit'"></timer-container>
-            </div>
-        </transition>
-
-        <transition name="term-assignment-disconnected">
-            <div class="disconnect-warning-container" v-if="termAssignment && termAssignment.backToLobbyTimer">
-           <span>Not all players seem to be connected.
-               <br>If they do not reconnect in time, the game returns to the lobby.
-           </span>
-                <timer-container v-bind:timer="termAssignment.backToLobbyTimer"
-                                 v-bind:format="'seconds-unit'"></timer-container>
-            </div>
-        </transition>
-
-        <transition name="term-assignment-disconnected">
-            <div class="disconnect-warning-container" v-if="gameOver && gameOver.hostDisconnectedTimer">
-           <span>Host has left the Game.<br>
-            A new host will be picked if the host is not returning in time.
-           </span>
-                <timer-container v-bind:timer="gameOver.hostDisconnectedTimer"
-                                 v-bind:format="'seconds-unit'"></timer-container>
-            </div>
-        </transition>
-
-        <div class="logo">
-            <img src="./assets/wtfiLogo.svg" alt="wtfai logo">
-        </div>
-
-        <button style="z-index: 55555;" :disabled="!isConnected" v-on:click="openMenu()" aria-label="open menu"
-                class="plain-button main-menu-button" title="open menu">
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="27" viewBox="0 0 30 27">
-                <rect id="Rectangle_6" data-name="Rectangle 6" width="30" height="5" rx="2.5" fill="#fff"/>
-                <rect id="Rectangle_7" data-name="Rectangle 7" width="30" height="5" rx="2.5"
-                      transform="translate(0 11)"
-                      fill="#fff"/>
-                <rect id="Rectangle_8" data-name="Rectangle 8" width="30" height="5" rx="2.5"
-                      transform="translate(0 22)"
-                      fill="#fff"/>
-            </svg>
-        </button>
-
-        <InstantMessageWrapper v-bind:messages="instantMessages"></InstantMessageWrapper>
-
-        <transition name="menuslide">
-            <main-menu v-if="displayMenu" v-on:onCloseMenu="closeMenu"
-                       v-on:onDisplayBanPoll="onDisplayBanPollMenu($event)"
-                       v-on:onOpenOverlayFromMainMenu="onOpenOverlayFromMainMenu($event)"
-                       v-bind:notOnLandingPage="displayedVue !== 'LandingPage'"
-                       v-bind:inGameSection="displayedVue === 'Game'"
-                       v-bind:banPollDisabled="!currentGame || currentGame.gamePlayers.length < 3 || banPoll || displayBanPollMenu"></main-menu>
-        </transition>
-
-        <transition name="termassignoverlay">
-            <player-term-assignment-overlay
-                    class="overlay-transition"
-                    v-if="playerAssignee && !playerAssignee.assignment.term"
-                    v-bind:termAssigmentPlayer="playerAssignee"
-                    v-bind:mode="termAssignment?.mode"></player-term-assignment-overlay>
-        </transition>
-
-
-        <button v-if="anyPlayers" class="main-button alt-button-right" @click="externalToggleOpenPlayerList()">
-            <img src="@/assets/users.svg" class="users-icon" alt="players"> Players
-        </button>
-
-        <PlayerListAndVoiceChat
-                ref="PlayerListAndVoiceChat"
-                v-if="anyPlayers"
-                v-bind:players="anyPlayers" v-bind:disconnectedIds="currentGame?.disconnectedIds"
-                v-bind:extOpen="extOpenPlayerList"
-                v-bind:voiceChatSignalUpdate="voiceChatSignalUpdate"
-                v-bind:playersInVoiceChat="playersInVoiceChat"
-                v-on:onInnerToggleOpenCloseChange="onInnerPlayerListChange($event)"></PlayerListAndVoiceChat>
+      <landing-page></landing-page>
     </div>
 </template>
 
 <script>
-    import Lobby from "./components/Lobby";
-    import Impressum from "./components/impressum";
     import LandingPage from "./components/landing-page";
-    import Game from "./components/Game";
-    import DsgvoCookieModal from "./components/dsgvo-cookie";
-    import BanPoll from "./components/ban-poll";
-    import VoiceChatToggle from "./components/voice-chat-toggle";
-    import TermsOfUse from "./components/terms-of-use";
     import {
         getCookie,
         setCookie,
@@ -145,39 +16,15 @@
         removeAllCookies
     } from "@/services/cookie-service";
     import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
-    import TimerContainer from "@/components/timer-container";
-    import TermAssignmentSection from "@/components/term-assigment-section";
-    import MainMenu from "@/components/main-menu";
-    import BgSound from "@/components/bg-sound";
-    import GameOverSection from "@/components/GameOverSection";
-    import GameOverSectionSlider from "@/components/GameOverSectionSlider";
-    import PlayerTermAssignmentOverlay from "@/components/player-term-assigment-overlay";
     import * as avatars from "@/assets/avatar/avatar-constants.ts";
-    import {GLOBAL_PLAYER_COOKIE_KEY, MenuItemKey, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
-    import InstantMessageWrapper from "@/components/instant-message";
-    import PlayerListAndVoiceChat from "@/components/player-list-and-voice-chat";
+    import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
     import {ConnectionState} from "@/services/websocket-service";
 
 
     export default {
         name: "App",
         components: {
-            Impressum,
-            DsgvoCookieModal,
-            TermsOfUse,
-            InstantMessageWrapper,
-            PlayerTermAssignmentOverlay,
-            TermAssignmentSection,
-            TimerContainer,
-            LandingPage,
-            Lobby,
-            Game,
-            GameOverSectionSlider,
-            MainMenu,
-            BanPoll,
-            VoiceChatToggle,
-            PlayerListAndVoiceChat,
-            BgSound
+            LandingPage
         },
         created() {
             this.initUserRandomOrFromCookie();

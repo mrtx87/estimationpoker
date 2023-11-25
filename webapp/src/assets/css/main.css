@@ -27,7 +27,6 @@ html, body, div {
 body {
     font-family: bungee;
     color: var(--primary-light-text-color);
-    background-image: url("../absolute-wallpaper.svg");
     display: flex;
     align-items: flex-start;
     justify-content: center;

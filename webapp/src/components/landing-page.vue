@@ -1,13 +1,5 @@
 <template>
   <div class="landing-page-wrapper">
-    <div class="horizontal-app-title">
-      <span class="who">WHO </span>
-      <span class="the">THE </span>
-      <span class="fuck">F*CK </span>
-      <span class="am">AM </span>
-      <span class="_i">I </span>
-      <span class="_questionmark">?</span>
-    </div>
     <div class="landing-page-content">
       <div class="middle-section">
         <avatar-configurator v-if="globalPlayerCookie"
@@ -15,86 +7,33 @@
                              v-bind:disabled="false"
                              v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
                              v-on:onChangeGlobalPlayerCookie="onAvatarConfiguratorChange($event)"></avatar-configurator>
-        <button :disabled="!isConnected" :class="{'disabled': !isConnected}"
-                class="main-button m-1vw-v create-button" v-if="!avatarConfiguratorActive"
-                v-on:click="requestCreateGame()"><img src="../assets/create-game-icon-colored.svg" alt="create game">
-          create game
-        </button>
       </div>
-      <div class="rules-wrapper">
-        <div class="rules-heading">
-          <span>game instructions</span>
-        </div>
-        <div class="rules-video">
-          <video ref='instructionVideo' src="../assets/instructionsVideo.webm" muted autoplay loop>
-          </video>
-        </div>
-      </div>
-    </div>
-    <div class="footer">
-      <button class=" footer-elem" v-on:click="openOverlay('Impressum')">Impressum</button>
-      <span>|</span>
-      <button class=" footer-elem" v-on:click="openOverlay('TermsOfUse')">Terms of use</button>
-      <span>|</span>
-      <button class=" footer-elem" v-on:click="openOverlay('DsgvoCookie')">Privacy Settings</button>
-      <span>|</span>
-      <div class=" footer-elem">
-        <a class="" href="https://www.curview.net" target="_blank"> Curview </a>
-      </div>
-      <span>|</span>
-      <div class="footer-elem disabled-shy">
-        © Section 9 {{ currentYear }}
-      </div>
-    </div>
+  </div>
   </div>
 </template>
 
 <script>
 import AvatarConfigurator from "@/components/avatar-configurator";
-import {GlobalPlayerCookie} from "../model/global-player-cookie.model";
 import {setCookie} from "@/services/cookie-service";
-import {ConnectionState} from "@/services/websocket-service";
+import {GlobalPlayerCookie} from "@/model/global-player-cookie.model";
 
 
 export default {
   name: 'LandingPage',
   components: {AvatarConfigurator},
-  mounted(){
-      const instructionVideo = this.$refs.instructionVideo;
-      instructionVideo.playbackRate = 0.75;
-    },
-  data() {
-    return {
-      avatarConfiguratorActive: false,
-      currentYear: new Date().getFullYear()
-    }
-  },
   methods: {
-    requestCreateGame: function () {
-      const createGameMessage = {
-        type: 'creategame',
-        data: new GlobalPlayerCookie(this.globalPlayerCookie)
-      }
-      this.$websocketService.sendMessage(createGameMessage);
-    },
     avatarConfiguratorToggle: function (value) {
       this.avatarConfiguratorActive = !!value;
     },
     onAvatarConfiguratorChange: function (glbCookieUpdate) {
       setCookie('wtfi_globalPlayer', JSON.stringify(glbCookieUpdate));
       this.$store.commit('updateGlobalCookie', glbCookieUpdate);
-    },
-    openOverlay: function (id) {
-      this.$store.commit('updateDisplayedOverlayId', id)
     }
   },
   computed: {
     globalPlayerCookie: function () {
       return this.$store.state.globalPlayerCookie;
     },
-    isConnected: function () {
-      return this.$store.state.connectionState === ConnectionState.CONNECTED;
-    }
   }
 }
 </script>
@@ -138,9 +77,6 @@ export default {
     width: max(275px, 30vh) !important;
   }
 }
-
-
-
 
 .landing-page-wrapper {
   position: relative;
@@ -243,7 +179,6 @@ export default {
   }
 
 }
-
 .landing-page-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
