@@ -1,40 +1,51 @@
 <template>
-  <div class="landing-page-wrapper">
-    <div class="landing-page-content">
-      <div class="middle-section">
-        <avatar-configurator v-if="globalPlayerCookie"
-                             v-bind:globalPlayerCookie="globalPlayerCookie"
-                             v-bind:disabled="false"
-                             v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
-                             v-on:onChangeGlobalPlayerCookie="onAvatarConfiguratorChange($event)"></avatar-configurator>
-      </div>
-  </div>
-  </div>
+    <div class="landing-page-wrapper">
+        <div class="landing-page-content">
+            <div class="middle-section">
+                <avatar-configurator v-if="globalPlayerCookie"
+                                     v-bind:globalPlayerCookie="globalPlayerCookie"
+                                     v-bind:disabled="false"
+                                     v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
+                                     v-on:onChangeGlobalPlayerCookie="onAvatarConfiguratorChange($event)"></avatar-configurator>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script>
 import AvatarConfigurator from "@/components/avatar-configurator";
 import {setCookie} from "@/services/cookie-service";
 import {GlobalPlayerCookie} from "@/model/global-player-cookie.model";
+import {useAppStateStore} from "@/stores/app-state";
+import * as avatars from "@/assets/avatar/avatar-constants";
 
 
 export default {
-  name: 'LandingPage',
-  components: {AvatarConfigurator},
-  methods: {
-    avatarConfiguratorToggle: function (value) {
-      this.avatarConfiguratorActive = !!value;
+    name: 'LandingPage',
+    components: {AvatarConfigurator},
+    created() {
+        this.appState = useAppStateStore();
     },
-    onAvatarConfiguratorChange: function (glbCookieUpdate) {
-      setCookie('wtfi_globalPlayer', JSON.stringify(glbCookieUpdate));
-      this.$store.commit('updateGlobalCookie', glbCookieUpdate);
+    data: function () {
+        return {
+            appState: null
+        }
+    },
+    methods: {
+        avatarConfiguratorToggle: function (value) {
+            this.avatarConfiguratorActive = !!value;
+        },
+        onAvatarConfiguratorChange: function (glbCookieUpdate) {
+            setCookie('wtfi_globalPlayer', JSON.stringify(glbCookieUpdate));
+            this.$store.commit('updateGlobalCookie', glbCookieUpdate);
+        }
+    },
+    computed: {
+        globalPlayerCookie: function () {
+            console.log(this.appState.globalPlayerCookie);
+            return this.appState.globalCookie;
+        },
     }
-  },
-  computed: {
-    globalPlayerCookie: function () {
-      return this.$store.state.globalPlayerCookie;
-    },
-  }
 }
 </script>
 
@@ -179,6 +190,7 @@ export default {
   }
 
 }
+
 .landing-page-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -291,7 +303,7 @@ export default {
   }
 
   @media only screen and (max-aspect-ratio: 1/1) {
-      display: none !important;
+    display: none !important;
   }
 }
 

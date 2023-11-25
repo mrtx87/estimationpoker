@@ -23,8 +23,8 @@ export class WebsocketService {
 
     pingTimeout: any;
 
-    registerStore(store: Store<State>): void {
-        this.store = store;
+    registerStore(appState: any): void {
+        this.store = appState;
     }
 
     establishConnection(): void {
@@ -33,10 +33,10 @@ export class WebsocketService {
 
         let address = 'wss://v2202005121049117361.nicesrv.de';
         if (isLocalHost()) {
-            address = 'ws://localhost:6969';
+            address = 'ws://localhost:8085';
         }
         Logger.log(`establishing connection to ${address}`);
-        this.wsConnection = new WebSocket(`${address}/websock`);
+        this.wsConnection = new WebSocket(`${address}/estimation_poker_websocket`);
         this.wsConnection.onopen = this.onOpenConnection.bind(this);
         this.wsConnection.onerror = this.onError.bind(this);
         this.wsConnection.onmessage = this.onReceiveMessage.bind(this);
