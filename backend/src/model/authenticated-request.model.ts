@@ -1,13 +1,12 @@
-import {BasicRequest} from "@/model/basic-request.model";
-import {PlayerAuthentication} from "@/model/player.authentication";
+import {BasicRequest} from "./basic-request.model";
 
 export class AuthenticatedRequest extends BasicRequest{
-    playerAuthentication: PlayerAuthentication;
-    gameSessionId: string;
+    roomId: string;
+    userId: string;
 
     constructor(init: AuthenticatedRequest) {
         super(init);
-        this.playerAuthentication = init.playerAuthentication;
-        this.gameSessionId = init.gameSessionId;
+        this.roomId = init.roomId;
+        this.userId = init.userId;
     }
 }

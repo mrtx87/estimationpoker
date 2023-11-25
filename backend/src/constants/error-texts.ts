@@ -9,6 +9,7 @@ export const ERROR_WHILE_REGISTER_USER = 'Fehler bei der Registrierung.';
 export const INVALID_TOKEN = 'Deine Sitzung ist abgelaufen, bitte melde dich erneut an.';
 export const TOKEN_REQUIRED = 'Du musst dich zuerst einloggen.';
 export const ERROR_WHILE_CREATING_ROOM = 'Interner Fehler beim Anlegen des Raums.';
+export const ERROR_WHILE_JOINING_ROOM = 'Interner Fehler beim Betreten des Raums.';
 export const USER_NAME_OR_PW_NOT_EXISTS = 'Diese Kombination aus Benutzer & Passwort existiert nicht.';
 export const LOCKING_DOCUMENT_CHANGED = 'Speichern nicht möglich. Das Dokument wurde zwischenzeitlich geändert.';
 export const CREATE_ROOM_ERROR = 'Fehler beim Erstellen eines Raums.';
@@ -42,3 +43,4 @@ export const ERROR_NOT_FOUND_DOCUMENT_EDITORS = 'Es können keine Bearbeiter fü
 export const ERROR_DOCUMENT_NOT_FOUND_BY_ID = (faultyDocumentId: string) =>  `Ein Dokument mit der ID ${faultyDocumentId} konnte nicht gefunden werden`;
 export const ERROR_GETTING_DOCUMENT = `Beim Abfragen des Dokuments kam es zu einem Fehler.`;
 
+export const ERROR_WHILE_LOGIN_USER = "Fehler beim der Anmeldung ihres Users";

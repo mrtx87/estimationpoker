@@ -1,4 +1,4 @@
-import {S9DeletedUserModel, S9UserModel} from "../db/mongodb/db-schemas";
+import {DBUserModel} from "../db/mongodb/db-schemas";
 import {DBUser} from "../model/user";
 
 export class S9UserRepository {
@@ -13,48 +13,29 @@ export class S9UserRepository {
     }
 
     createUser(dbUser: DBUser) {
-        const s9UserModel = new S9UserModel(dbUser);
+        const s9UserModel = new DBUserModel(dbUser);
         return s9UserModel.save();
     }
 
     getUser(userId: string) {
-        return S9UserModel.findOne({id: userId});
+        return DBUserModel.findOne({id: userId});
     }
 
     getUsers(userIds: string[]) {
-        return S9UserModel.find({}).where('id').in(userIds);
+        return DBUserModel.find({}).where('id').in(userIds);
     }
-
-    async getDeletedUserByName(name: string) {
-        return S9DeletedUserModel.findOne({name: name});
-    }
-
-    async getPublicUser(userId: string) {
-        const activeUser= await S9UserModel.findOne({id: userId});
-        if(activeUser) {
-            return activeUser;
-        }
-        return S9DeletedUserModel.findOne({id: userId});
-    }
-
-    async getPublicUsers(userIds: string[]) {
-        const activeUsers = await  S9UserModel.find().where('id').in(userIds);
-        const deletedUsers = await S9DeletedUserModel.find().where('id').in(userIds);
-        return [...activeUsers, ...deletedUsers];
-    }
-
     findUsers(searchText: string) {
-        return S9UserModel.find({
+        return DBUserModel.find({
             name: {$regex: '.*' + searchText + '.*'},
         })
     }
 
     getUserByEmail(email: string) {
-        return S9UserModel.findOne({email: email});
+        return DBUserModel.findOne({email: email});
     }
 
     getLoginUser(username:string, email:string) {
-        return S9UserModel.findOne({
+        return DBUserModel.findOne({
             $or: [
                 {'name': username},
                 {'email': email}

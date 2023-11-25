@@ -20,7 +20,7 @@ export class ErrorResponse {
 }
 
 
-export const APP_REST_PREFIX = '/s9library/api/rest';
+export const APP_REST_PREFIX = '/em/api/rest';
 
 export enum ResponseCode {
     BAD_REQUEST = 400,

@@ -1,10 +1,8 @@
 import {InitAppProcess} from "../../model/init-app-process";
 import {logger} from "../../services/s9logger";
 import mongoose from "mongoose";
-import {userService} from "../../server";
-import {DBUser} from "../../model/user";
-import {randomDoc} from "../../util/util";
-import {S9DocumentModel} from "./db-schemas";
+import {getTestRoom} from "../../util/util";
+import {EstimationPokerRoomModel} from "./db-schemas";
 
 export function connectToDB(init: InitAppProcess) {
     try {
@@ -45,9 +43,10 @@ export function connectToDB(init: InitAppProcess) {
     }
 }
 
+/*
 export function updateSuperUserCredentials(init: InitAppProcess) {
     try {
-        const superUser = DBUser.of(JSON.parse(process.env.SUPER_USER));
+        const superUser = DBUser.from(JSON.parse(process.env.SUPER_USER));
         userService.registerUserFromConfig(superUser)
         init.steps.registerSuperUser = 1;
         return Promise.resolve(init);
@@ -57,11 +56,12 @@ export function updateSuperUserCredentials(init: InitAppProcess) {
     }
 }
 
+
 export async function addTestUsers(init: InitAppProcess) {
     try {
         if (process.env.TEST_USERS) {
             const testUsers = JSON.parse(process.env.TEST_USERS);
-            await userService.registerTestUsers(testUsers.users.map(DBUser.of));
+            await userService.registerTestUsers(testUsers.users.map(DBUser.from));
             init.steps.registerTestUser = 1;
         }
         return Promise.resolve(init);
@@ -69,19 +69,20 @@ export async function addTestUsers(init: InitAppProcess) {
         init.steps.registerTestUser = -1;
         return Promise.resolve(init);
     }
-}
+} */
 
-export async function registerTestDocuments(init: InitAppProcess) {
+export async function createTestRoom(init: InitAppProcess) {
     try {
-        const testUsersRaw = process.env.TEST_DOCUMENTS;
-        if (testUsersRaw && Number(testUsersRaw) > 0) {
-            logger.log(`[TEST DOCUMENTS CREATING] amount: ${Number(testUsersRaw)}`)
-            for(let i = 0; i < Number(testUsersRaw); i++) {
-                    const testDoc = new S9DocumentModel(randomDoc());
-                    await testDoc.save();
-                    logger.log(`[TEST DOC CREATED] ${i} created ${testDoc.id}`);
+        const testRoomsAmount = process.env.TEST_ROOMS;
+        if (testRoomsAmount && Number(testRoomsAmount) > 0) {
+            logger.log(`[TEST ROOM CREATING] amount: ${Number(testRoomsAmount)}`)
+            for(let i = 0; i < Number(testRoomsAmount); i++) {
+                    const testRoomModel = new EstimationPokerRoomModel(getTestRoom());
+                    await testRoomModel.save();
+                    logger.log(`[TEST DOC CREATED] ${i} created ${testRoomModel.id}`);
                 }
         }
+        init.steps.registerTestRoom = 1;
         return Promise.resolve(init);
     }catch (e) {
         init.steps.testDocuments = -1;

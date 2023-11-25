@@ -17,12 +17,11 @@ export class Steps {
         this.registerExitHandlers = 0;
         this.connectToDB = 0;
         this.requiredConfig = 0;
-        this.imageCleanup = 0;
         this.registerSuperUser = 0;
         this.registerTestUser = 0;
-        this.baseImageGeneration = 0;
         this.testDocuments = 0;
         this.initWebsocketSettings = 0;
+        this.registerTestRoom = 0;
     }
     requiredConfig:number;
     initAppSettings: number;
@@ -34,4 +33,5 @@ export class Steps {
     registerTestUser:number;
     baseImageGeneration:number;
     testDocuments:number;
+    registerTestRoom: number;
 }

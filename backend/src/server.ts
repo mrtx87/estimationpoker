@@ -7,11 +7,9 @@ import {abortStartupOnCriticalError, hasRequiredAppConfig, printAppInitResult} f
 import {InitAppProcess} from "./model/init-app-process";
 import {
     connectToDB,
-    registerTestDocuments,
-    updateSuperUserCredentials
+    createTestRoom
 } from "./db/mongodb/mongodb-connection";// @ts-ignore
 import WebSocket from "ws";
-import {S9DocumentEditorService} from "./services/s9-document-editor-service";
 import {WebsocketService} from "./services/websocket-service";
 import {WebsocketControllerImpl} from "./controller/websocket-controller-impl";
 import {EstimationPokerRoomRepository} from "./repository/estimation-poker-room-repository";
@@ -19,9 +17,6 @@ import {AppService} from "./services/app-service";
 require('dotenv').config();
 
 export const estimationPokerRoomRepository = EstimationPokerRoomRepository.estimationPokerRoomRepository;
-//export const s9DocumentRevisionRepository = DocumentRevisionRepository.documentRevisionRepository;
-//export const s9TagRepository = S9TagRepository.s9TagRepository;
-export const s9DocumentEditorsService = S9DocumentEditorService.s9DocumentEditorService;
 export const appService = AppService.appService;
 export const userService = UserService.userService;
 export const websocketService = WebsocketService.websocketService;
@@ -39,7 +34,7 @@ export function startEstimationPokerServer() {
             'requiredConfig',
             'initAppSettings',
             'connectToDB',
-            'registerSuperUser',
+            //'registerSuperUser',
             'initWebsocketSettings'
         ]))
         .then(init => initAppSettings(init, app), abortStartupOnCriticalError)
@@ -47,9 +42,9 @@ export function startEstimationPokerServer() {
         .then(connectToDB, abortStartupOnCriticalError)
         //.then(cleanupService.initImageCleanup.bind(cleanupService), abortStartupOnCriticalError)
         .then(registerExitHandlers, abortStartupOnCriticalError)
-        .then(updateSuperUserCredentials, abortStartupOnCriticalError)
+        //.then(updateSuperUserCredentials, abortStartupOnCriticalError)
         //.then(addTestUsers, abortStartupOnCriticalError)
-        .then(registerTestDocuments, abortStartupOnCriticalError)
+        .then(createTestRoom, abortStartupOnCriticalError)
         .then(printAppInitResult)
         .then(init => startWebServer(Number(process.env.PORT)));
 }
