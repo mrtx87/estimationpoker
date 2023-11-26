@@ -35,10 +35,7 @@ export default {
         avatarConfiguratorToggle: function (value) {
             this.avatarConfiguratorActive = !!value;
         },
-        onAvatarConfiguratorChange: function (glbCookieUpdate) {
-            setCookie('wtfi_globalPlayer', JSON.stringify(glbCookieUpdate));
-            this.$store.commit('updateGlobalCookie', glbCookieUpdate);
-        }
+
     },
     computed: {
         globalPlayerCookie: function () {

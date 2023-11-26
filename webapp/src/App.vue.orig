@@ -1,33 +1,31 @@
 <template>
-    <div class="app-wrapper">
-      <HeaderVue></HeaderVue>
-        <overlay></overlay>
-        <button onclick="createRoom"> create room </button>
-        <button> join room </button>
-    </div>
+  <div class="app-wrapper">
+    <HeaderVue></HeaderVue>
+    <overlay></overlay>
+    <button onclick="createRoom"> create room</button>
+    <button> join room</button>
+    <Footer></Footer>
+  </div>
 </template>
 
 <script>
 import {
-    getCookie,
-    setCookie,
-    getRandomAvatar,
-    setPrivacyCookie,
-    removeCookie,
-    removeAllCookies
+  getCookie,
+  setCookie,
+  getRandomAvatar,
+  setPrivacyCookie,
+  removeCookie,
+  removeAllCookies
 } from "@/services/cookie-service";
 import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
-import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
 import {ConnectionState} from "@/services/websocket-service";
 import {useAppStateStore} from "@/stores/app-state";
-<<<<<<< HEAD
 import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
-=======
-    import HeaderVue from "@/components/header-vue.vue";
+<<<<<<< Updated upstream
 import {restService} from "@/services/rest-service";
->>>>>>> initial_dev
 
 
 export default {
@@ -128,8 +126,109 @@ export default {
         },
     },
     computed: {
+=======
+import Footer from "@/components/footer.vue";
 
+
+export default {
+  name: "App",
+  components: {
+    HeaderVue,
+    Overlay,
+    Footer
+  },
+  created() {
+    this.appState = useAppStateStore();
+>>>>>>> Stashed changes
+
+    this.initUserRandomOrFromCookie();
+    this.hasConfirmedPrivacyPolicy = getCookie(PRIVACY_POLICY_COOKIE_KEY) == 'true';
+    if (this.hasConfirmedPrivacyPolicy) {
+      this.initAppOnPrivacyPolicyConfirmation();
+    } else {
+      this.openOverlay('DsgvoCookie')
     }
+  },
+  data: function () {
+    return {
+      displayMenu: false,
+      none: '',
+      hairOptions: [...avatars.avatarHairsOptions],
+      headsOptions: [...avatars.avatarHeadsOptions],
+      shirtOptions: [...avatars.avatarShirtsOptions],
+      colorOptions: [...avatars.colorOptions],
+      hasConfirmedPrivacyPolicy: false,
+      displayBanPollMenu: false,
+      extOpenPlayerList: false,
+      appState: null
+    }
+  },
+  methods: {
+    createRoom() {
+      console.log('create room')
+    },
+    initAppOnPrivacyPolicyConfirmation() {
+      this.initSessionId();
+      this.$websocketService.registerStore(this.appState);
+      this.$websocketService.establishConnection();
+    },
+    onDsgvoConfirmUpdate(confirmed) {
+      if (!confirmed) {
+        this.hasConfirmedPrivacyPolicy = false;
+        removeAllCookies();
+      } else {
+        this.hasConfirmedPrivacyPolicy = true;
+        setPrivacyCookie(PRIVACY_POLICY_COOKIE_KEY, confirmed);
+        setCookie(GLOBAL_PLAYER_COOKIE_KEY, JSON.stringify(this.$store.state.globalPlayerCookie));
+        if (!this.$websocketService.wsConnection) {
+          this.initAppOnPrivacyPolicyConfirmation();
+        } else {
+          if (this.gameSessionId && this.playerAuthentication.secret) {
+            setCookie(this.gameSessionId, this.playerAuthentication.secret);
+          }
+        }
+      }
+      if (this.hasConfirmedPrivacyPolicy) {
+        this.openOverlay('');
+      }
+    },
+    openOverlay(id) {
+      //this.appState.addGlobalCookie( id)
+    },
+    initUserRandomOrFromCookie() {
+      let globalPlayerCookie = getCookie(GLOBAL_PLAYER_COOKIE_KEY);
+      let privacyPolicyConfirmed = getCookie(PRIVACY_POLICY_COOKIE_KEY);
+      if (privacyPolicyConfirmed && globalPlayerCookie) {
+        globalPlayerCookie = new GlobalPlayerCookie(globalPlayerCookie);
+      } else {
+        const randomAvatar = getRandomAvatar(
+            this.headsOptions.length,
+            this.hairOptions.length,
+            this.shirtOptions.length,
+            this.colorOptions);
+        let randomNumber = Date.now().toString();
+        randomNumber = randomNumber.substring(randomNumber.length - 3, randomNumber.length);
+        const newGlobalPlayerCookie = new GlobalPlayerCookie({
+          name: 'funnyname' + randomNumber,
+          avatar: randomAvatar,
+          bgSoundMuted: false
+        })
+        setCookie('wtfi_globalPlayer', JSON.stringify(newGlobalPlayerCookie));
+        globalPlayerCookie = newGlobalPlayerCookie;
+      }
+      this.appState.addGlobalCookie(globalPlayerCookie);
+    },
+    initSessionId: function () {
+      const url = window.location.href;
+      const index = url.lastIndexOf('/');
+      const sessionId = url.substring(index + 1);
+      if (sessionId) {
+        this.$store.commit('updateSessionId', sessionId)
+        this.$store.commit('updateJoining', true)
+      }
+    },
+  },
+  computed: {}
 };
 </script>
 
