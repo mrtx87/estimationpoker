@@ -1,5 +1,6 @@
 import {defineStore} from 'pinia';
 import {ConnectionState} from "@/services/websocket-service";
+import {APP_STATE} from "@/constants/vue-constants";
 
 export const useAppStateStore = defineStore('AppState', {
     state: () => {
@@ -9,7 +10,8 @@ export const useAppStateStore = defineStore('AppState', {
             _globalCookie: null,
             _overlayId: 0,
             _connectionState: ConnectionState.DISCONNECTED,
-            _roomId: ''
+            _roomId: '',
+            _state: APP_STATE.NO_ROOM_ENTERED
         }
     },
     actions: {
@@ -27,6 +29,9 @@ export const useAppStateStore = defineStore('AppState', {
         },
         setRoomId(roomId: string) {
             this._roomId = roomId;
+        },
+        setState(state: number) {
+            this._state = state;
         }
     },
     getters: {

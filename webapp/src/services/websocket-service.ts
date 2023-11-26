@@ -1,6 +1,7 @@
 import {getCookie} from "@/services/cookie-service";
 import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
+import {APP_STATE, ResponseMessageTypes} from "@/constants/vue-constants";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -25,7 +26,11 @@ export class WebsocketService {
         this.store = appState;
     }
 
-    establishConnection(): void {
+    establishConnection(): boolean {
+        if(this.wsConnection) {
+            Logger.log('websocket connection already established')
+            return false;
+        }
         const domWindow: any = window;
         window.WebSocket = domWindow.WebSocket || domWindow.MozWebSocket;
 
@@ -39,6 +44,7 @@ export class WebsocketService {
         this.wsConnection.onerror = this.onError.bind(this);
         this.wsConnection.onmessage = this.onReceiveMessage.bind(this);
         this.wsConnection.onclose = this.onCloseConnection.bind(this);
+        return true;
     }
 
     onOpenConnection(e: any) {
@@ -46,7 +52,7 @@ export class WebsocketService {
         this.retries = 0;
         this.store.setConnectionState(ConnectionState.CONNECTED);
         if (this.store.roomId) {
-            this.sendJoinRequest(this.store.roomId);
+            this.sendFinalizeJoinRequest(this.store.roomId);
         }
         this.initPing();
     }
@@ -70,13 +76,14 @@ export class WebsocketService {
         }
     }
 
-    sendJoinRequest(roomId: string) {
+    sendFinalizeJoinRequest(roomId: string) {
         const token = getCookie(roomId);
         const joinRequest = new AuthenticatedRequest({
             type: 'finalize-join',
             token: token,
             data: null
         });
+        this.store.setState(APP_STATE.JOINING_ROOM);
         this.sendMessage(joinRequest);
     }
 
@@ -116,8 +123,16 @@ export class WebsocketService {
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
-            console.log(message);
-            //this.store?.commit('handleIncomingMessage', message);
+            if(!message.type) {
+                Logger.error('Error: No Response Type received', message);
+            }
+            switch(message.type) {
+                case ResponseMessageTypes.JOINED_GAME_SESSION: {
+                     console.log(message)
+                }
+                break;
+                default: Logger.error('Error: Unknown Response Type: ' + message.type);
+            }
         } catch (e) {
             Logger.warn(e, "Invalid JSON: ", response.data);
             return;

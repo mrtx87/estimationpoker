@@ -25,8 +25,8 @@ export function applyAppRestControllerConfig(app: Express) {
     new RestControllerConfigurator(app)
         .addPrefix(APP_REST_PREFIX)
         .addPostEndPoint('/create-room', handleCreateRoomRequest)
-        .addPostEndPoint('/rejoinRoom', handleRejoinRoomRequest)
-        .addPostEndPoint('/joinRoom', handleNewJoinRoomRequest)
+        .addGetEndPoint('/rejoin-room', handleRejoinRoomRequest)
+        .addPostEndPoint('/join-room', handleNewJoinRoomRequest)
 
     //.addPostEndPoint('/register', handleRegisterRequest)
     //.addPostEndPoint('/search-document', handleSearchDocumentsRequest)
@@ -50,8 +50,7 @@ function handleNewJoinRoomRequest(req: any, res: any) {
 
 function handleRejoinRoomRequest(req: any, res: any) {
     logger.log("rejoin room")
-    const rejoinRoomRequest: any = req.body;
-    return estimationRoomService.joinRoomAsKnownUser({userId: req.user.id, roomId: rejoinRoomRequest.roomId})
+    return estimationRoomService.joinRoomAsKnownUser({userId: req.user.id, roomId: req.user.roomId})
         .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
 }
 

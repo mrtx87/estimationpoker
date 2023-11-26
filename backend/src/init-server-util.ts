@@ -58,7 +58,7 @@ export function initAppSettings(init: InitAppProcess, app: Express) {
 
 const UNPROTECTED_ROUTES = [
     APP_REST_PREFIX +'/create-room',
-    APP_REST_PREFIX +'/joinRoom',
+    APP_REST_PREFIX +'/join-room',
 ];
 
 export const authMiddleWare = function (req: any, res: any, next: any) {

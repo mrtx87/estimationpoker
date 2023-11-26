@@ -9,21 +9,20 @@
 <script>
 import {
     getCookie,
-    getRandomAvatar,
+    getRandomAvatar, setCookie,
 } from "@/services/cookie-service";
 import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {
     DISPLAY_OVERLAY_STATE,
-    GLOBAL_PLAYER_COOKIE_KEY,
     PRIVACY_POLICY_COOKIE_KEY,
-    ROOM_ROUTE
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
+import {isValidRoomId} from "@/services/util";
 
 
 export default {
@@ -45,14 +44,6 @@ export default {
             this.onRouteChange(to);
         }
     },
-    mounted() {
-        const privatePolicyCookie = getCookie(PRIVACY_POLICY_COOKIE_KEY);
-        if (privatePolicyCookie && Boolean(privatePolicyCookie)) {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
-        } else {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
-        }
-    },
     data: function () {
         return {
             appState: null,
@@ -64,8 +55,45 @@ export default {
     },
     methods: {
         onRouteChange(routeTo) {
-            console.log(routeTo.params.roomId)
-            // TODO join room
+            if (!this.hasConfirmedPrivacyPolicy()) {
+                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+                return
+            }
+
+            const roomId = routeTo.params.roomId;
+            if (roomId && isValidRoomId(roomId)) {
+                this.appState.setRoomId(roomId);
+                const token = getCookie(roomId);
+                let joinRequest = null;
+                if (token) {
+                    restService.setHeaderConfig(token);
+                    joinRequest = null;
+                    joinRequest = restService.sendGetRequest('/rejoin-room')
+                }
+
+                joinRequest.then(response => {
+                    setCookie(response.data.roomId, response.data.token);
+                    const establishing = this.$websocketService.establishConnection();
+                    if (!establishing) {
+                        this.$websocketService.sendFinalizeJoinRequest(roomId);
+                    }
+                })
+
+
+                return;    // JOIN
+            }
+
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
+        },
+        determineOverlayState() {
+            if (this.hasConfirmedPrivacyPolicy()) {
+                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
+            } else {
+                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+            }
+        },
+        hasConfirmedPrivacyPolicy() {
+            return getCookie(PRIVACY_POLICY_COOKIE_KEY);
         },
         initUserRandom() {
             const randomAvatar = getRandomAvatar(

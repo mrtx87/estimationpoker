@@ -25,3 +25,7 @@ export class Logger {
         }
     }
 }
+
+export function isValidRoomId(roomId: string): boolean {
+    return Boolean(roomId) && roomId.match(/^\w{8}-(\w{4}-){3}\w{12}$/i) !== null;
+}

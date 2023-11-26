@@ -60,7 +60,7 @@ export class WebsocketControllerImpl {
     finalizeJoin(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {
         // add room to cache if not there
         // send all required data for join to users
-        websocketService.notifyConnections( new BasicResponse('finalize.join', userId), [playerConnection]);
+        websocketService.notifyConnections( new BasicResponse('finalized.join', userId), [playerConnection]);
     }
 
     ping(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {

@@ -5,21 +5,11 @@ export const RequestMessageType = {
 }
 
 export const ResponseMessageTypes = {
-    CREATED_NEW_SESSION: 'finalized.join',
     JOINED_GAME_SESSION: 'finalized.join',
 }
 
-export const AssignmentModes = {
-    FULL_RANDOM : 'full-random',
-    ASSIGNEE_KNOWN: 'assignee-known',
-    SELECT_ASSIGNEE: 'select-assignee',
-}
 
-export const PlayerTurnState = {
-    QUESTION_STATE : 'question-state',
-    POLL_STATE : 'poll-state',
-    HINT_STATE: 'hint-state',
-}
+
 
 export const MenuItemKey = {
     CREATE_NEW_GAME : 'create-new-game',
@@ -45,6 +35,12 @@ export const DISPLAY_OVERLAY_STATE = {
     ROOM_SETTING: 4,
     BURGER_MENU: 5,
     HOME: 6,
+}
+
+export const APP_STATE = {
+    NO_ROOM_ENTERED: 100,
+    JOINING_ROOM: 101,
+    ROOM_JOINED: 102
 }
 
 

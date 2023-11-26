@@ -43,7 +43,6 @@ export class EstimationRoomService {
             return getInternalErrorErrorResponseHandling(error, CREATE_ROOM_ERROR).toRejectedPromise();
         }
     }
-
     public async joinRoomAsNewUser(joinRoomRequest: any): Promise<InitValues> {
         const roomId = joinRoomRequest.roomId;
         const userName = joinRoomRequest.userName;
