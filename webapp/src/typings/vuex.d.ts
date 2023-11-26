@@ -44,7 +44,6 @@ declare module '@vue/runtime-core' {
     }
 
     interface ComponentCustomProperties {
-        $store: Store<State>
         $websocketService: WebsocketService,
         $emit: any,
         $refs: any

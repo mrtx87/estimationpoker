@@ -1,5 +1,6 @@
 
 import {estimationPokerRoomRepository} from "../server";
+import {BasicResponse} from "../model/basic-response.model";
 
 export class WebsocketService {
 
@@ -12,17 +13,13 @@ export class WebsocketService {
     private constructor() {
     }
 
-    getRoom(roomId: string) {
-        return estimationPokerRoomRepository.getRoomById(roomId);
-    }
-
-    notifyPlayer(response: any, playerConnection: any) {
+    notifyPlayer(response: BasicResponse, playerConnection: any) {
         if (playerConnection) {
             playerConnection.send(JSON.stringify(response));
         }
     }
 
-    notifyAllConnections(response: any, connections: any) {
+    notifyConnections(response: BasicResponse, connections: any[]) {
         connections
             .forEach((pConnection: any) => {
                 if (pConnection) {

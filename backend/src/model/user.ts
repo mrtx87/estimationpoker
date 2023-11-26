@@ -21,9 +21,9 @@ export class User {
         user.name = init.name;
         user.roles = init.roles;
         const avatarList = init.avatar.split('|');
-        const hair = avatarList[0].split('#');
-        const head = avatarList[1].split('#');
-        const shirt = avatarList[2].split('#');
+        const hair = avatarList[0].split('$');
+        const head = avatarList[1].split('$');
+        const shirt = avatarList[2].split('$');
         user.avatar = new Avatar({
             hair: {type: hair[0], color: hair[1], code: +hair[2]},
             head: {type: head[0], color: head[1], code: +head[2]},
@@ -44,9 +44,9 @@ export class DBUser {
         dbUser.id = init.id;
         dbUser.name = init.name;
         dbUser.roles = init.roles;
-        dbUser.avatar = `${init.avatar.hair.type + '#' + init.avatar.hair.color + '#' + init.avatar.hair.code}|
-        ${init.avatar.head.type + '#' + init.avatar.head.color + '#' + init.avatar.head.code}|
-        ${init.avatar.shirt.type + '#' + init.avatar.shirt.color + '#' + init.avatar.shirt.code}`;
+        dbUser.avatar = `${init.avatar.hair.type + '$' + init.avatar.hair.color + '$' + init.avatar.hair.code}|
+        ${init.avatar.head.type + '$' + init.avatar.head.color + '$' + init.avatar.head.code}|
+        ${init.avatar.shirt.type + '$' + init.avatar.shirt.color + '$' + init.avatar.shirt.code}`;
         return dbUser;
     }
 

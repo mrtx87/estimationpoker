@@ -1,4 +1,4 @@
-import {User} from "../model/user";
+import {DBUser, User} from "../model/user";
 
 import {logger} from "./s9logger";
 import {v4 as UUID} from 'uuid';
@@ -19,8 +19,10 @@ import {
     getUnauthorizedErrorResponseHandling, wait, WAIT_DELAY_FOR_EXPENSIVE_REQUESTS
 } from "../util/util";
 import {S9UserRepository} from "../repository/user-respository";
-import {S9UserMapper} from "../mapper/estimation-poker-mapper";
+import {UserMapper} from "../mapper/estimation-poker-mapper";
 import {Avatar} from "../model/avatar";
+import {DBUserModel} from "../db/mongodb/db-schemas";
+import {AvatarElement} from "../model/avatar-element.model";
 
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
@@ -39,7 +41,7 @@ export class UserService {
     private constructor() {
     }
 
-    authenticate(req: any, res?: any) {
+    authenticate(req: any) {
         const rawtoken = req.header('Authorization');
         if (!rawtoken) {
             return getForbiddenErrorResponseHandling(TOKEN_REQUIRED);
@@ -54,17 +56,57 @@ export class UserService {
         return true;
     };
 
+    authenticateToken(token: string) {
+        if (!token) {
+            return null;
+        }
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_KEY);
+            return {...decoded, id: decoded.username};
+        } catch (err) {
+            return null;
+        }
+    }
+
+
     refreshToken(req: any, res?: any) {
         try {
             const userId = req.user.id;
-            return Promise.resolve(this.getSignedJwtToken(userId));
+            return Promise.resolve(this.getSignedJwtToken(userId, 'TODO'));
         } catch (e) {
             return getInternalErrorErrorResponseHandling(e.message, ERROR_REFESHING_TOKEN).toPromise();
         }
     }
 
+    createUser(userName: string, avatar: Avatar, roles = [ROLE.PARTICIPANT]) {
+        const dbUserModel = new DBUserModel(DBUser.from({
+            id: UUID(),
+            name: userName,
+            roles: roles,
+            avatar: avatar ? avatar : new Avatar({
+                hair: new AvatarElement({
+                    type: 'hair',
+                    color: '#CBA670',
+                    code: 1
+                }),
+                head: new AvatarElement({
+                    type: 'head',
+                    color: '#FF861C',
+                    code: 1
+                }),
+                shirt: new AvatarElement({
+                    type: 'shirt',
+                    color: '#9A3EE9',
+                    code: 1
+                })
+            })
+        }));
+
+        return dbUserModel.save().then(User.from)
+    }
+
     getUser(userId: string) {
-        return s9UserRepository.getUser(userId).then(S9UserMapper.map);
+        return s9UserRepository.getUser(userId).then(UserMapper.map);
     }
 
     isModerator(userId: string) {
@@ -88,14 +130,14 @@ export class UserService {
     }
 
 
-    private getSignedJwtToken(userId: string) {
-        return jwt.sign({username: userId}, process.env.JWT_KEY, {
+    public getSignedJwtToken(userId: string, roomId: string) {
+        return jwt.sign({username: userId, roomId: roomId}, process.env.JWT_KEY, {
             algorithm: "HS256",
             expiresIn: process.env.JWT_TOKEN_EXPIRY
         });
     }
 
-    /**** these methods are currently not used ****/
+    /**** these methods are currently not used
 
     onHandleRegister(req: any, res: any) {
         const rawToken = req.header('Authorization');
@@ -109,7 +151,7 @@ export class UserService {
         return getBadRequestErrorResponseHandling(ERROR_REGISTER_LINK_NO_LONGER_VALID).toPromise();
     }
 
-    /** currently not used **/
+
     private verifyRegisterToken(rawToken: string) {
         try {
             const token = rawToken.substring(7);
@@ -121,11 +163,11 @@ export class UserService {
         }
     }
 
-    /** currently not used **/
+
     onLogin(req: any) {
         return wait(WAIT_DELAY_FOR_EXPENSIVE_REQUESTS, req).then(this.executeLogin.bind(this));
     }
-    /** currently not used **/
+
     private async executeLogin(req: any) {
         try {
             const {username, password} = req.body;
@@ -149,11 +191,11 @@ export class UserService {
     }
 
     findPublicUsers(searchText: string) {
-        return s9UserRepository.findUsers(searchText).then(users => users.map(S9UserMapper.map));
+        return s9UserRepository.findUsers(searchText).then(users => users.map(UserMapper.map));
     }
 
-    /** currently not used **/
-    /*async registerUserFromConfig(configUser: any) {
+
+    async registerUserFromConfig(configUser: any) {
         try {
             const encryptedPassword = await bcrypt.hash(configUser.password, 10);
 
@@ -176,9 +218,8 @@ export class UserService {
         testUsers.forEach(testUser => {
             this.registerUserFromConfig(testUser);
         });
-    } */
+    }
 
-    /** currently not used **/
     async onRegister(req: any, res?: any) {
         // Our register logic starts here
         try {
@@ -202,7 +243,7 @@ export class UserService {
                 email: email.toLowerCase(), // sanitize: convert email to lowercase
                 password: encryptedPassword,
                 role: ROLE.PARTICIPANT
-            });*/
+            });
 
             return s9UserRepository.createUser(createdUser)
                 .then(() => {
@@ -223,4 +264,5 @@ export class UserService {
             return {invalidEditorsAssignments, validEditorsAssignments};
         });
     }
+     */
 }

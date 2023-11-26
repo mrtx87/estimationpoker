@@ -57,9 +57,8 @@ export function initAppSettings(init: InitAppProcess, app: Express) {
 }
 
 const UNPROTECTED_ROUTES = [
-    APP_REST_PREFIX +'/register',
-    APP_REST_PREFIX +'/login',
-    APP_REST_PREFIX+'/images/'
+    APP_REST_PREFIX +'/create-room',
+    APP_REST_PREFIX +'/joinRoom',
 ];
 
 export const authMiddleWare = function (req: any, res: any, next: any) {
@@ -69,7 +68,7 @@ export const authMiddleWare = function (req: any, res: any, next: any) {
         return next();
     }
 
-    const auth = userService.authenticate(req, res);
+    const auth = userService.authenticate(req);
     if (auth instanceof ErrorResponse) {
         return res.status(auth.code).send(auth.message);
     }

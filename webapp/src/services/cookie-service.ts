@@ -9,8 +9,13 @@ export function getCookie(cookieKey: string): any {
 
 export function setCookie(cookieKey: string, cookieValue: string): void {
     const privacyConfirmed = VueCookieNext.getCookie(PRIVACY_POLICY_COOKIE_KEY);
-    if(privacyConfirmed) {
-        VueCookieNext.setCookie(cookieKey, cookieValue)
+    if(privacyConfirmed || 1 == 1) {
+        VueCookieNext.setCookie(cookieKey, cookieValue, {
+            path: '/',
+            domain: 'localhost',
+            secure: 'true',
+            sameSite: 'true'
+        })
     }
 }
 

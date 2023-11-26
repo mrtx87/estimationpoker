@@ -10,7 +10,7 @@ export class EstimationPokerRoomMapper {
 }
 
 
-export class S9UserMapper {
+export class UserMapper {
     public static map(init: any): User {
         return User.of(init);
     }

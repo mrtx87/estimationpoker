@@ -1,4 +1,4 @@
-import {DBUserModel, EstimationPokerRoomModel} from "../db/mongodb/db-schemas";
+import {EstimationPokerRoomModel} from "../db/mongodb/db-schemas";
 import {ErrorResponse, ResponseCode} from "../controller-config/rest-controller-configurator";
 import {EstimationPokerRoom} from "../model/estimation-poker-room";
 import {
@@ -7,7 +7,6 @@ import {
     getNotFoundErrorResponseHandling
 } from "../util/util";
 import {
-    CREATE_ROOM_ERROR,
     ROOM_TO_BE_STORED_NOT_EXIST,
     DELETE_ROOM_ERROR,
     ROOM_DOES_NOT_EXIST
@@ -15,11 +14,8 @@ import {
 import {logger} from "../services/s9logger";
 import {EstimationPokerRoomMapper} from "../mapper/estimation-poker-mapper";
 import {INFO_ROOM_DELETED} from "../constants/logging-texts";
-import {DBUser} from "../model/user";
-import {v4 as UUID} from 'uuid';
-import {ROLE} from "../constants/global";
-import {Avatar} from "../model/avatar";
-import {AvatarElement} from "../model/avatar-element.model";
+import {User} from "../model/user";
+
 
 export class EstimationPokerRoomRepository {
     private static INSTANCE: EstimationPokerRoomRepository = new EstimationPokerRoomRepository();
@@ -33,41 +29,12 @@ export class EstimationPokerRoomRepository {
     private constructor() {
     }
 
-    async createEstimationPokerRoom(roomInitData: { creatorName: string, roomTitle: string }) {
-        try {
-            const dbUserModel = new DBUserModel(DBUser.from({
-                id: UUID(),
-                name: roomInitData.creatorName,
-                roles: [ROLE.MODERATOR],
-                avatar: new Avatar({
-                    hair: new AvatarElement({
-                        type: 'hair',
-                        color: 'blue',
-                        code: 1
-                    }),
-                    head: new AvatarElement({
-                        type: 'head',
-                        color: 'blue',
-                        code: 1
-                    }),
-                    shirt: new AvatarElement({
-                        type: 'shirt',
-                        color: 'blue',
-                        code: 1
-                    })
-                })
-            }))
-
-            const storedDbUserModel = await dbUserModel.save()
-            const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomInitData, storedDbUserModel.id);
-            const estimationPokerRoomModel = new EstimationPokerRoomModel(estimationPokerRoom);
-
-            return estimationPokerRoomModel
-                .save()
-                .then(() => this.postRoomCreationProcessing(estimationPokerRoomModel));
-        } catch (e) {
-            return getInternalErrorErrorResponseHandling(e, CREATE_ROOM_ERROR).toPromise();
-        }
+    createEstimationPokerRoom(roomTitle: string, creator: User) {
+        const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomTitle, creator.id);
+        const estimationPokerRoomModel = new EstimationPokerRoomModel(estimationPokerRoom);
+        return estimationPokerRoomModel
+            .save()
+            .then(this.postRoomCreationProcessing);
     }
 
     deleteS9Document(request: any): any {
@@ -150,13 +117,9 @@ export class EstimationPokerRoomRepository {
         savedRoomModel.userIds = roomUpdate.userIds;
     }
 
-    private postRoomCreationProcessing(requestDocument: EstimationPokerRoom) {
-        try {
-            logger.info('Room created: ' + requestDocument.id)
-            return EstimationPokerRoomMapper.map(requestDocument);
-        } catch (e) {
-            return getInternalErrorErrorResponseHandling(e, 'Fehler beim Erzeugen des Raumes.');
-        }
+    private postRoomCreationProcessing(room: EstimationPokerRoom) {
+        logger.info('Room created: ' + room.id)
+        return EstimationPokerRoomMapper.map(room);
     }
 
     private executeRoomDeletion(userId: string, documentId: string, documentModelToDelete: any) {

@@ -17,6 +17,10 @@ export class ErrorResponse {
     toPromise() {
         return Promise.resolve(this);
     }
+
+    toRejectedPromise() {
+        return Promise.reject(this);
+    }
 }
 
 

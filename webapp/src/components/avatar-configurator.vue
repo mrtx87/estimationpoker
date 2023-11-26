@@ -1,4 +1,4 @@
-<template>
+ <template>
     <div class="avatar-configurator-wrapper">
         <input id="avatarConfigInputId" :disabled="disabled" class="name-field" :value="globalPlayerCookie.name"
                v-on:change="updatePlayerName($event.target.value)" maxlength="15">

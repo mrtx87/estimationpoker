@@ -2,7 +2,7 @@
     <div class="app-wrapper">
       <HeaderVue></HeaderVue>
         <overlay></overlay>
-        <button onclick="createRoom"> create room </button>
+        <button v-on:click="createRoom()"> create room </button>
         <button> join room </button>
     </div>
 </template>
@@ -13,17 +13,15 @@ import {
     setCookie,
     getRandomAvatar,
     setPrivacyCookie,
-    removeCookie,
     removeAllCookies
 } from "@/services/cookie-service";
 import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
-import {ConnectionState} from "@/services/websocket-service";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
-import {restService} from "@/services/rest-service";
+import {CREATE_DOCUMENT_ENDPOINT, restService} from "@/services/rest-service";
 
 
 export default {
@@ -46,26 +44,32 @@ export default {
     },
     data: function () {
         return {
-            displayMenu: false,
-            none: '',
+            hasConfirmedPrivacyPolicy: false,
+            appState: null,
             hairOptions: [...avatars.avatarHairsOptions],
             headsOptions: [...avatars.avatarHeadsOptions],
             shirtOptions: [...avatars.avatarShirtsOptions],
-            colorOptions: [...avatars.colorOptions],
-            hasConfirmedPrivacyPolicy: false,
-            displayBanPollMenu: false,
-            extOpenPlayerList: false,
-            appState: null
+            colorOptions: [...avatars.colorOptions]
         }
     },
     methods: {
         createRoom() {
             console.log('create room')
+            restService.sendPostRequest(
+                CREATE_DOCUMENT_ENDPOINT,
+                {userName: 'Padde', roomTitle:"Kakkraum"},
+                true,
+                false)
+                .then(rawResponse => this.processJoinResponse(rawResponse.data))
+        },
+        processJoinResponse(response) {
+            this.$websocketService.establishConnection();
+            setCookie(response.roomId, response.token)
+            console.log(response)
         },
         initAppOnPrivacyPolicyConfirmation() {
-            this.initSessionId();
+            //this.initSessionId();
             this.$websocketService.registerStore(this.appState);
-            this.$websocketService.establishConnection();
         },
         onDsgvoConfirmUpdate(confirmed) {
             if (!confirmed) {
@@ -74,13 +78,9 @@ export default {
             } else {
                 this.hasConfirmedPrivacyPolicy = true;
                 setPrivacyCookie(PRIVACY_POLICY_COOKIE_KEY, confirmed);
-                setCookie(GLOBAL_PLAYER_COOKIE_KEY, JSON.stringify(this.$store.state.globalPlayerCookie));
+                // setCookie(GLOBAL_PLAYER_COOKIE_KEY, JSON.stringify(this.$store.state.globalPlayerCookie));
                 if (!this.$websocketService.wsConnection) {
                     this.initAppOnPrivacyPolicyConfirmation();
-                } else {
-                    if (this.gameSessionId && this.playerAuthentication.secret) {
-                        setCookie(this.gameSessionId, this.playerAuthentication.secret);
-                    }
                 }
             }
             if (this.hasConfirmedPrivacyPolicy) {
@@ -108,7 +108,6 @@ export default {
                     avatar: randomAvatar,
                     bgSoundMuted: false
                 })
-                setCookie('wtfi_globalPlayer', JSON.stringify(newGlobalPlayerCookie));
                 globalPlayerCookie = newGlobalPlayerCookie;
             }
             this.appState.addGlobalCookie(globalPlayerCookie);

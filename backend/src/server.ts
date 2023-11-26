@@ -13,14 +13,17 @@ import WebSocket from "ws";
 import {WebsocketService} from "./services/websocket-service";
 import {WebsocketControllerImpl} from "./controller/websocket-controller-impl";
 import {EstimationPokerRoomRepository} from "./repository/estimation-poker-room-repository";
-import {AppService} from "./services/app-service";
+import {EstimationRoomService} from "./services/estimation-room-service";
+import {EstimationRoomCache} from "./cache/estimation-room-cache";
+
 require('dotenv').config();
 
 export const estimationPokerRoomRepository = EstimationPokerRoomRepository.estimationPokerRoomRepository;
-export const appService = AppService.appService;
+export const estimationRoomService = EstimationRoomService.estimationRoomService;
+export const estimationRoomCache = EstimationRoomCache.estimationRoomCache;
 export const userService = UserService.userService;
 export const websocketService = WebsocketService.websocketService;
-export const websocketController = new WebsocketControllerImpl();
+export const websocketController = WebsocketControllerImpl.websocketControllerImpl;
 
 /* create express server */
 export const app = express();
@@ -37,13 +40,13 @@ export function startEstimationPokerServer() {
             'initWebsocketSettings'
         ]))
         .then(init => initAppSettings(init, app), abortStartupOnCriticalError)
-        .then((init: InitAppProcess) => initWebsocketSettings(init, websocketServer, websocketController, appService), abortStartupOnCriticalError)
+        .then((init: InitAppProcess) => initWebsocketSettings(init, websocketServer, websocketController, estimationRoomService), abortStartupOnCriticalError)
         .then(connectToDB, abortStartupOnCriticalError)
         //.then(cleanupService.initImageCleanup.bind(cleanupService), abortStartupOnCriticalError)
         .then(registerExitHandlers, abortStartupOnCriticalError)
         //.then(updateSuperUserCredentials, abortStartupOnCriticalError)
         //.then(addTestUsers, abortStartupOnCriticalError)
-        .then(createTestRoom, abortStartupOnCriticalError)
+        //.then(createTestRoom, abortStartupOnCriticalError)
         .then(printAppInitResult)
         .then(init => startWebServer(Number(process.env.PORT)));
 }
@@ -83,13 +86,12 @@ function startupGreeting() {
 }
 
 
-
-export function initWebsocketSettings(init: InitAppProcess, websocketServer: any, websocketController: WebsocketControllerImpl, appService: AppService) {
+export function initWebsocketSettings(init: InitAppProcess, websocketServer: any, websocketController: WebsocketControllerImpl, appService: EstimationRoomService) {
     //Websocket Server Config
     try {
         websocketServer.on('connection', (userConnection: any) => {
             try {
-                logger.log('ws established - connections: {}', websocketServer.clients.size)
+                logger.log(`ws established - connections: ${websocketServer.clients.size}`)
 
                 userConnection.on('message', (data: any) => {
                     try {
@@ -120,7 +122,7 @@ export function initWebsocketSettings(init: InitAppProcess, websocketServer: any
 
         init.steps.initWebsocketSettings = 1;
         return Promise.resolve(init);
-    }catch (e) {
+    } catch (e) {
         init.steps.initWebsocketSettings = 0;
         return Promise.reject(init);
     }

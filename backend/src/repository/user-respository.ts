@@ -8,7 +8,6 @@ export class S9UserRepository {
         return S9UserRepository.INSTANCE;
     }
 
-
     private constructor() {
     }
 
@@ -40,7 +39,7 @@ export class S9UserRepository {
                 {'name': username},
                 {'email': email}
             ]
-        })
+        });
     }
 
 }

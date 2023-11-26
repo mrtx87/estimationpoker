@@ -1,4 +1,6 @@
 import {v4 as UUID} from 'uuid';
+import {CachedEstimationPokerRoom} from "./cached-estimation-poker-room";
+import {User} from "./user";
 
 
 export class EstimationPokerRoom {
@@ -14,10 +16,10 @@ export class EstimationPokerRoom {
         this.userIds = init.userIds;
     }
 
-    public static createEstimationPokerRoom(basicInformation: {creatorName: string, roomTitle: string}, initModeratorId: string): EstimationPokerRoom {
+    public static createEstimationPokerRoom(roomTitle: string, initModeratorId: string): EstimationPokerRoom {
         const estimationPokerRoom = new EstimationPokerRoom({
             id: UUID(),
-            title: basicInformation.roomTitle,
+            title: roomTitle,
             createdAt: Date.now(),
             userIds: [initModeratorId]
         });
@@ -27,6 +29,15 @@ export class EstimationPokerRoom {
 
     public static of(init: any): EstimationPokerRoom {
         return new EstimationPokerRoom(init);
+    }
+
+    public static from(cachedRoom: CachedEstimationPokerRoom) {
+        return new EstimationPokerRoom({
+            id: cachedRoom.id,
+            createdAt: cachedRoom.createdAt,
+            title: cachedRoom.title,
+            userIds: cachedRoom.users.map(u => u.id)
+        });
     }
 
 

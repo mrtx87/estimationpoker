@@ -1,26 +1,19 @@
 import {Express} from "express";
 
-import {
-    appService,
-    userService
-} from "../server";
+import {estimationRoomService, userService} from "../server";
 
 import {
     APP_REST_PREFIX,
     ResponseCode,
     RestControllerConfigurator
 } from "../controller-config/rest-controller-configurator";
-import {GridFsStorage} from "multer-gridfs-storage/lib/gridfs";
-import {GridFSBucket} from "mongodb";
 import {
-    DELETE_USER_ERROR,
-    ERROR_WHILE_CREATING_ROOM, ERROR_WHILE_JOINING_ROOM,
+    ERROR_WHILE_CREATING_ROOM,
+    ERROR_WHILE_JOINING_ROOM,
     ERROR_WHILE_REGISTER_USER,
+    INVALID_TOKEN,
 } from "../constants/error-texts";
-import {
-    getErrorResponseHandling,
-    getInternalErrorErrorResponseHandling, wait, WAIT_DELAY_FOR_EXPENSIVE_REQUESTS
-} from "../util/util";
+import {getErrorResponseHandling, getInternalErrorErrorResponseHandling} from "../util/util";
 import {logger} from "../services/s9logger";
 
 
@@ -31,8 +24,10 @@ export function applyAppRestControllerConfig(app: Express) {
 
     new RestControllerConfigurator(app)
         .addPrefix(APP_REST_PREFIX)
-        .addPostEndPoint('/createRoom', handleCreateRoomRequest)
-        .addPostEndPoint('/joinRoom', handleJoinRoomRequest)
+        .addPostEndPoint('/create-room', handleCreateRoomRequest)
+        .addPostEndPoint('/rejoinRoom', handleRejoinRoomRequest)
+        .addPostEndPoint('/joinRoom', handleNewJoinRoomRequest)
+
     //.addPostEndPoint('/register', handleRegisterRequest)
     //.addPostEndPoint('/search-document', handleSearchDocumentsRequest)
     //.addPostEndPoint('/get-document', handleGetDocumentRequest)
@@ -43,22 +38,30 @@ export function applyAppRestControllerConfig(app: Express) {
 
 function handleCreateRoomRequest(req: any, res: any) {
     logger.log("created room")
-    const roomInitData: any = JSON.parse(req.body);
-    return appService.createRoom(roomInitData).catch((error: any) => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
+    return estimationRoomService.createRoom(req.body).catch((error: any) => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
 }
 
-function handleJoinRoomRequest(req: any, res: any) {
+function handleNewJoinRoomRequest(req: any, res: any) {
     logger.log("join room")
-    return Promise.reject("not implemented").catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
+    const joinRoomRequest: any = req.body;
+    return estimationRoomService.joinRoomAsNewUser(joinRoomRequest)
+        .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
 }
 
+function handleRejoinRoomRequest(req: any, res: any) {
+    logger.log("rejoin room")
+    const rejoinRoomRequest: any = req.body;
+    return estimationRoomService.joinRoomAsKnownUser({userId: req.user.id, roomId: rejoinRoomRequest.roomId})
+        .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
+}
 
+/*
 function handleRegisterRequest(req: any, res: any) {
     return userService.onHandleRegister(req, res)
         .catch(e => getInternalErrorErrorResponseHandling(e, ERROR_WHILE_REGISTER_USER));
 }
 
-/*function handleSearchDocumentsRequest(request: any) {
+function handleSearchDocumentsRequest(request: any) {
     const searchParams = request.body;
     return s9DocumentRepository.findDocuments(searchParams)
         .catch((e: any) => getInternalErrorErrorResponseHandling(e, ERROR_ON_DOCUMENT_SEARCH));

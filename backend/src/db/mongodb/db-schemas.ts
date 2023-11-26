@@ -20,7 +20,7 @@ export const UserSchema = new mongoose.Schema<DBUser>({
     avatar: String
 });
 UserSchema.index({id: -1}, { unique: true });
-UserSchema.index({name: -1}, { unique: true });
+UserSchema.index({name: -1}, { unique: false });
 
 
 
