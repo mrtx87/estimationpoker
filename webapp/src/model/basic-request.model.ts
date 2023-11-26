@@ -1,8 +1,8 @@
 export class BasicRequest {
-    type: string | undefined;
+    type: string;
     data: any;
 
-    constructor(init: Partial<BasicRequest>) {
+    constructor(init: BasicRequest) {
         this.type = init.type;
         this.data = init.data;
     }

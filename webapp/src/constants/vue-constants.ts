@@ -37,12 +37,6 @@ export const PRIVACY_POLICY_COOKIE_KEY = 'estimation-poker-privacy';
 export const GLOBAL_PLAYER_COOKIE_KEY = 'estimation-poker-sessions';
 
 
-export const VOICE_CHAT_CALLS_UPDATE = 'voice-chat.calls-update';
-export const SIGNALING_OFFER_PEER_CONNECTION = 'voice-chat.signaling-offer-pc';
-export const SIGNALING_ANSWER_PEER_CONNECTION = 'voice-chat.signaling-answer-pc';
-export const SIGNALING_BROADCAST_ICE_CANDIDATE = 'voice-chat.broadcast-ice-candidate';
-export const WANTS_TO_VOICE_CHAT = 'voice-chat.wants-to-voice-chat';
-
 export const DISPLAY_OVERLAY_STATE = {
     NO_OVERLAY: 0,
     AVATAR_EDITOR: 1,

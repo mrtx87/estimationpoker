@@ -3,6 +3,7 @@ import {BasicRequest} from "../model/basic-request.model";
 import {ROLE} from "../constants/global";
 import {userService, websocketService} from "../server";
 import {BasicResponse} from "../model/basic-response.model";
+import {logger} from "../services/s9logger";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -18,17 +19,22 @@ export class WebsocketControllerImpl {
     }
 
     addWebsocketEndpoint(config: WebsocketControllerEndpoint) {
-
+        this.websocketControllerEndpoints.set(config.type, config);
         return this;
     }
 
     private constructor() {
+        this.applyConfigSettings();
     }
 
     applyConfigSettings() {
         this.addWebsocketEndpoint({
             type: 'finalize-join',
             action: this.finalizeJoin.bind(this),
+            requiredRole: [ROLE.PARTICIPANT, ROLE.MODERATOR, ROLE.SPECTATOR]
+        }).addWebsocketEndpoint({
+            type: 'ping',
+            action: this.ping.bind(this),
             requiredRole: [ROLE.PARTICIPANT, ROLE.MODERATOR, ROLE.SPECTATOR]
         })
     }
@@ -52,8 +58,15 @@ export class WebsocketControllerImpl {
     }
 
     finalizeJoin(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {
-        websocketService.notifyConnections( new BasicResponse('finalize.join', userId), [playerConnection])
+        // add room to cache if not there
+        // send all required data for join to users
+        websocketService.notifyConnections( new BasicResponse('finalize.join', userId), [playerConnection]);
     }
+
+    ping(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {
+        logger.log(request.type + ':' + userId);
+    }
+
 
 }
 

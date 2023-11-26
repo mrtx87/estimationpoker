@@ -35,9 +35,10 @@ export default {
               .then(rawResponse => this.processJoinResponse(rawResponse.data))
       },
       processJoinResponse(response) {
+          this.appState.setRoomId(response.roomId);
           this.$websocketService.establishConnection();
-          setCookie(response.roomId, response.token)
-          router.push(ROOM_ROUTE + response.roomId)
+          setCookie(response.roomId, response.token);
+          router.push(ROOM_ROUTE + response.roomId);
       },
   },
   computed: {}

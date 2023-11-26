@@ -62,7 +62,7 @@ export class UserService {
         }
         try {
             const decoded = jwt.verify(token, process.env.JWT_KEY);
-            return {...decoded, id: decoded.username};
+            return {...decoded, userId: decoded.username};
         } catch (err) {
             return null;
         }

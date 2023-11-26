@@ -5,17 +5,18 @@ import {WebsocketService} from "@/services/websocket-service";
 import './assets/css/main.css';
 import {createPinia} from "pinia";
 import {createRouter, createWebHashHistory} from 'vue-router'
+import {ROOM_ROUTE} from "@/constants/vue-constants";
 
 
 
 const routes = [
-    /*{
-        path: `${REGISTER_ROUTE}:registerToken`,
-        name: 'Register',
-        component: Register
-    },*/
     {
-        path: '/:catchAll(.*)',
+        path: `/`,
+        name: 'Estimation Poker',
+        component: App
+    },
+    {
+        path: `${ROOM_ROUTE}:roomId`,
         name: 'Estimation Poker',
         component: App
     },

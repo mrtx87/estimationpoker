@@ -1,8 +1,6 @@
-import {Store} from "vuex";
-import {State} from 'vue'
 import {getCookie} from "@/services/cookie-service";
-import {GlobalPlayerCookie} from "../model/global-player-cookie.model";
 import {isLocalHost, Logger} from "@/services/util";
+import {AuthenticatedRequest} from "@/model/authenticated-request.model";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -60,23 +58,25 @@ export class WebsocketService {
 
     sendPing() {
         if(this.wsConnection) {
-            //Logger.warn('send ping');
+            const token = getCookie(this.store.roomId);
+            Logger.warn('send ping');
             const pingData = {ping: 1}
-            //this.wsConnection?.send(JSON.stringify(pingData));
+            this.sendMessage(new AuthenticatedRequest({
+                type: 'ping',
+                token: token,
+                data: null
+            }));
             this.initPing();
         }
     }
 
-    sendJoinRequest(gameSessionId: string) {
-        const playerSessionSecret = getCookie(gameSessionId);
-        const joinRequest = {
-            type: 'join-game-session',
-            data: {
-                gameSessionId: gameSessionId,
-                secret: playerSessionSecret,
-                globalPlayerCookie: new GlobalPlayerCookie(this.store?.getters.globalPlayerCookie)
-            }
-        };
+    sendJoinRequest(roomId: string) {
+        const token = getCookie(roomId);
+        const joinRequest = new AuthenticatedRequest({
+            type: 'finalize-join',
+            token: token,
+            data: null
+        });
         this.sendMessage(joinRequest);
     }
 
@@ -116,7 +116,8 @@ export class WebsocketService {
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
-            this.store?.commit('handleIncomingMessage', message);
+            console.log(message);
+            //this.store?.commit('handleIncomingMessage', message);
         } catch (e) {
             Logger.warn(e, "Invalid JSON: ", response.data);
             return;

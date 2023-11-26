@@ -24,7 +24,6 @@ import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
-import {router} from "@/main";
 
 
 export default {
@@ -38,21 +37,21 @@ export default {
         this.appState = useAppStateStore();
         restService.setAppState(this.appState);
         this.$websocketService.registerStore(this.appState);
-
+        this.onRouteChange(this.$route)
         this.initUserRandom();
     },
+    watch: {
+        $route(to) {
+            this.onRouteChange(to);
+        }
+    },
     mounted() {
-
         const privatePolicyCookie = getCookie(PRIVACY_POLICY_COOKIE_KEY);
         if (privatePolicyCookie && Boolean(privatePolicyCookie)) {
             this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
         } else {
             this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
         }
-    },
-    beforeMount() {
-        console.log(router.currentRoute.value.fullPath.startsWith(ROOM_ROUTE))
-        console.log(router.currentRoute.value.fullPath)
     },
     data: function () {
         return {
@@ -64,6 +63,10 @@ export default {
         }
     },
     methods: {
+        onRouteChange(routeTo) {
+            console.log(routeTo.params.roomId)
+            // TODO join room
+        },
         initUserRandom() {
             const randomAvatar = getRandomAvatar(
                 this.headsOptions.length,
