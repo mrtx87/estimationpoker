@@ -44,9 +44,7 @@ export class DBUser {
         dbUser.id = init.id;
         dbUser.name = init.name;
         dbUser.roles = init.roles;
-        dbUser.avatar = `${init.avatar.hair.type + '$' + init.avatar.hair.color + '$' + init.avatar.hair.code}|
-        ${init.avatar.head.type + '$' + init.avatar.head.color + '$' + init.avatar.head.code}|
-        ${init.avatar.shirt.type + '$' + init.avatar.shirt.color + '$' + init.avatar.shirt.code}`;
+        dbUser.avatar = `${init.avatar.hair.type + '$' + init.avatar.hair.color + '$' + init.avatar.hair.code}|${init.avatar.head.type + '$' + init.avatar.head.color + '$' + init.avatar.head.code}|${init.avatar.shirt.type + '$' + init.avatar.shirt.color + '$' + init.avatar.shirt.code}`;
         return dbUser;
     }
 

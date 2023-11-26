@@ -60,7 +60,7 @@ export class WebsocketService {
 
     sendPing() {
         if(this.wsConnection) {
-            Logger.warn('send ping');
+            //Logger.warn('send ping');
             const pingData = {ping: 1}
             //this.wsConnection?.send(JSON.stringify(pingData));
             this.initPing();
