@@ -30,12 +30,12 @@ export class EstimationRoomService {
     static startedAt: number = 0;
 
     public createRoom(createRoomRequest: {
-        creatorName: string,
+        userName: string,
         roomTitle: string,
         avatar: Avatar
     }): Promise<InitValues | ErrorResponse> {
         try {
-            return userService.createUser(createRoomRequest.creatorName, createRoomRequest.avatar, [ROLE.MODERATOR])
+            return userService.createUser(createRoomRequest.userName, createRoomRequest.avatar, [ROLE.MODERATOR])
                 .then(creator => estimationPokerRoomRepository
                     .createEstimationPokerRoom(createRoomRequest.roomTitle, creator)
                     .then(newRoom => this.getJoinedUserResponse(newRoom.id, creator)));
