@@ -5,7 +5,7 @@ export const useAppStateStore = defineStore('AppState', {
     state: () => {
         return {
             // states to reset after login
-            _localUser: null,
+            _localUser: {},
             _globalCookie: null,
             _overlayId: 0,
             _connectionState: ConnectionState.DISCONNECTED,

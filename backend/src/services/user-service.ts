@@ -132,8 +132,7 @@ export class UserService {
 
     public getSignedJwtToken(userId: string, roomId: string) {
         return jwt.sign({username: userId, roomId: roomId}, process.env.JWT_KEY, {
-            algorithm: "HS256",
-            expiresIn: process.env.JWT_TOKEN_EXPIRY
+            algorithm: "HS256"
         });
     }
 

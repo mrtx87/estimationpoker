@@ -20,7 +20,8 @@
     "vue-contenteditable": "^3.0.4",
     "vue-cookie-next": "^1.0.3",
     "vuex": "^4.0.0-0",
-    "pinia": "^2.0.17"
+    "pinia": "^2.0.17",
+    "vue-router": "4"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

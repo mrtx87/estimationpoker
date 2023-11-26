@@ -1,131 +1,90 @@
 <template>
-  <div class="app-wrapper">
-    <HeaderVue></HeaderVue>
-    <overlay></overlay>
-        <button v-on:click="createRoom()"> create room </button>
-    <button> join room</button>
-    <Footer></Footer>
-  </div>
+    <div class="app-wrapper">
+        <HeaderVue></HeaderVue>
+        <overlay v-if="appState.overlayId !== DISPLAY_OVERLAY_STATE.NO_OVERLAY"></overlay>
+        <Footer></Footer>
+    </div>
 </template>
 
 <script>
 import {
-  getCookie,
-  setCookie,
-  getRandomAvatar,
-  setPrivacyCookie,
-  removeAllCookies
+    getCookie,
+    getRandomAvatar,
 } from "@/services/cookie-service";
 import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
-import {DISPLAY_OVERLAY_STATE, GLOBAL_PLAYER_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
+import {
+    DISPLAY_OVERLAY_STATE,
+    GLOBAL_PLAYER_COOKIE_KEY,
+    PRIVACY_POLICY_COOKIE_KEY,
+    ROOM_ROUTE
+} from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
-import {CREATE_DOCUMENT_ENDPOINT, restService} from "@/services/rest-service";
+import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
+import {router} from "@/main";
 
 
 export default {
-  name: "App",
-  components: {
-    HeaderVue,
-    Overlay,
-    Footer
-  },
-  created() {
-    this.appState = useAppStateStore();
+    name: "App",
+    components: {
+        HeaderVue,
+        Overlay,
+        Footer
+    },
+    created() {
+        this.appState = useAppStateStore();
         restService.setAppState(this.appState);
+        this.$websocketService.registerStore(this.appState);
 
-    this.initUserRandomOrFromCookie();
-        this.hasConfirmedPrivacyPolicy = true; //getCookie(PRIVACY_POLICY_COOKIE_KEY);
-    if (this.hasConfirmedPrivacyPolicy) {
-      this.initAppOnPrivacyPolicyConfirmation();
-    } else {
-      this.openOverlay('DsgvoCookie')
-    }
-  },
-  data: function () {
-    return {
-            hasConfirmedPrivacyPolicy: false,
-            appState: null,
-      hairOptions: [...avatars.avatarHairsOptions],
-      headsOptions: [...avatars.avatarHeadsOptions],
-      shirtOptions: [...avatars.avatarShirtsOptions],
-            colorOptions: [...avatars.colorOptions]
-    }
-  },
-  methods: {
-    createRoom() {
-      console.log('create room')
-            restService.sendPostRequest(
-                CREATE_DOCUMENT_ENDPOINT,
-                {userName: 'Padde', roomTitle:"Kakkraum"},
-                true,
-                false)
-                .then(rawResponse => this.processJoinResponse(rawResponse.data))
-        },
-        processJoinResponse(response) {
-            this.$websocketService.establishConnection();
-            setCookie(response.roomId, response.token)
-            console.log(response)
+        this.initUserRandom();
     },
-    initAppOnPrivacyPolicyConfirmation() {
-            //this.initSessionId();
-      this.$websocketService.registerStore(this.appState);
-    },
-    onDsgvoConfirmUpdate(confirmed) {
-      if (!confirmed) {
-        this.hasConfirmedPrivacyPolicy = false;
-        removeAllCookies();
-      } else {
-        this.hasConfirmedPrivacyPolicy = true;
-        setPrivacyCookie(PRIVACY_POLICY_COOKIE_KEY, confirmed);
-                // setCookie(GLOBAL_PLAYER_COOKIE_KEY, JSON.stringify(this.$store.state.globalPlayerCookie));
-        if (!this.$websocketService.wsConnection) {
-          this.initAppOnPrivacyPolicyConfirmation();
+    mounted() {
+
+        const privatePolicyCookie = getCookie(PRIVACY_POLICY_COOKIE_KEY);
+        if (privatePolicyCookie && Boolean(privatePolicyCookie)) {
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
+        } else {
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
         }
-      }
-      if (this.hasConfirmedPrivacyPolicy) {
-        this.openOverlay('');
-      }
     },
-    openOverlay(id) {
-      //this.appState.addGlobalCookie( id)
+    beforeMount() {
+        console.log(router.currentRoute.value.fullPath.startsWith(ROOM_ROUTE))
+        console.log(router.currentRoute.value.fullPath)
     },
-    initUserRandomOrFromCookie() {
-      let globalPlayerCookie = getCookie(GLOBAL_PLAYER_COOKIE_KEY);
-      let privacyPolicyConfirmed = getCookie(PRIVACY_POLICY_COOKIE_KEY);
-      if (privacyPolicyConfirmed && globalPlayerCookie) {
-        globalPlayerCookie = new GlobalPlayerCookie(globalPlayerCookie);
-      } else {
-        const randomAvatar = getRandomAvatar(
-            this.headsOptions.length,
-            this.hairOptions.length,
-            this.shirtOptions.length,
-            this.colorOptions);
-        let randomNumber = Date.now().toString();
-        randomNumber = randomNumber.substring(randomNumber.length - 3, randomNumber.length);
-        const newGlobalPlayerCookie = new GlobalPlayerCookie({
-          name: 'funnyname' + randomNumber,
-          avatar: randomAvatar,
-          bgSoundMuted: false
-        })
-        globalPlayerCookie = newGlobalPlayerCookie;
-      }
-      this.appState.addGlobalCookie(globalPlayerCookie);
+    data: function () {
+        return {
+            appState: null,
+            hairOptions: [...avatars.avatarHairsOptions],
+            headsOptions: [...avatars.avatarHeadsOptions],
+            shirtOptions: [...avatars.avatarShirtsOptions],
+            colorOptions: [...avatars.colorOptions]
+        }
     },
-    initSessionId: function () {
-      const url = window.location.href;
-      const index = url.lastIndexOf('/');
-      const sessionId = url.substring(index + 1);
-      if (sessionId) {
-        this.$store.commit('updateSessionId', sessionId)
-        this.$store.commit('updateJoining', true)
-      }
+    methods: {
+        initUserRandom() {
+            const randomAvatar = getRandomAvatar(
+                this.headsOptions.length,
+                this.hairOptions.length,
+                this.shirtOptions.length,
+                this.colorOptions);
+            let randomNumber = Date.now().toString();
+            randomNumber = randomNumber.substring(randomNumber.length - 3, randomNumber.length);
+            const newGlobalPlayerCookie = new GlobalPlayerCookie({
+                name: 'funnyname' + randomNumber,
+                avatar: randomAvatar,
+                bgSoundMuted: false
+            });
+            this.appState.addGlobalCookie(newGlobalPlayerCookie);
+        }
     },
-  },
-  computed: {}
+    computed: {
+        DISPLAY_OVERLAY_STATE() {
+            return DISPLAY_OVERLAY_STATE
+        }
+    }
 };
 </script>
 

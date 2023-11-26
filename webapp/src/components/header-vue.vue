@@ -42,7 +42,6 @@ export default {
     openBurgerMenu: function () {
       if (this.appState._overlayId !== 5) {
         this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.BURGER_MENU)
-        console.log(this.appState._overlayId)
       } else {
         this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
       }

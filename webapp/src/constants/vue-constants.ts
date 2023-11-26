@@ -50,4 +50,10 @@ export const DISPLAY_OVERLAY_STATE = {
     DSGVO: 3,
     ROOM_SETTING: 4,
     BURGER_MENU: 5,
+    HOME: 6,
 }
+
+
+/** ROUTES **/
+
+export const ROOM_ROUTE = '/estimations/room/'
