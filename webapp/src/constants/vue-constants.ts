@@ -90,4 +90,5 @@ export const DISPLAY_OVERLAY_STATE = {
     IMPRESSUM: 2,
     DSGVO: 3,
     ROOM_SETTING: 4,
+    BURGER_MENU: 5,
 }
