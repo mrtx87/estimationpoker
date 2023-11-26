@@ -35,6 +35,7 @@ export const DISPLAY_OVERLAY_STATE = {
     ROOM_SETTING: 4,
     BURGER_MENU: 5,
     HOME: 6,
+    JOIN_ROOM: 7,
 }
 
 export const APP_STATE = {
@@ -47,3 +48,4 @@ export const APP_STATE = {
 /** ROUTES **/
 
 export const ROOM_ROUTE = '/estimations/room/'
+export const HOME_ROUTE = '/'

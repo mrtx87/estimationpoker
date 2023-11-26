@@ -2,11 +2,7 @@
     <div class="landing-page-wrapper">
         <div class="landing-page-content">
             <div class="middle-section">
-                <avatar-configurator v-if="globalPlayerCookie"
-                                     v-bind:globalPlayerCookie="globalPlayerCookie"
-                                     v-bind:disabled="false"
-                                     v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
-                                     v-on:onChangeGlobalPlayerCookie="onAvatarConfiguratorChange($event)"></avatar-configurator>
+
             </div>
         </div>
     </div>

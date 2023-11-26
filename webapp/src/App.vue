@@ -11,11 +11,10 @@ import {
     getCookie,
     getRandomAvatar, setCookie,
 } from "@/services/cookie-service";
-import {GlobalPlayerCookie} from "./model/global-player-cookie.model";
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {
-    DISPLAY_OVERLAY_STATE,
-    PRIVACY_POLICY_COOKIE_KEY,
+    DISPLAY_OVERLAY_STATE, HOME_ROUTE,
+    PRIVACY_POLICY_COOKIE_KEY, ROOM_ROUTE,
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
@@ -23,6 +22,7 @@ import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
 import {isValidRoomId} from "@/services/util";
+import {router} from "@/main";
 
 
 export default {
@@ -55,41 +55,40 @@ export default {
     },
     methods: {
         onRouteChange(routeTo) {
+
+            let isOnRoomRoute = false;
+            const roomId = routeTo.params.roomId;
+            if (routeTo.path.startsWith(ROOM_ROUTE) && roomId && isValidRoomId(roomId)) {
+                isOnRoomRoute = true;
+            }
+
             if (!this.hasConfirmedPrivacyPolicy()) {
                 this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+                if (isOnRoomRoute) {
+                    this.appState.setPendingRedirect({
+                        path: routeTo.path,
+                        roomId: roomId
+                    });
+                    router.push(HOME_ROUTE);
+                }
                 return
             }
 
-            const roomId = routeTo.params.roomId;
-            if (roomId && isValidRoomId(roomId)) {
+            if (isOnRoomRoute) {
                 this.appState.setRoomId(roomId);
                 const token = getCookie(roomId);
-                let joinRequest = null;
                 if (token) {
-                    restService.setHeaderConfig(token);
-                    joinRequest = null;
-                    joinRequest = restService.sendGetRequest('/rejoin-room')
+                    this.$websocketService.finalizeJoinRoom(roomId);
+                    return;
                 }
 
-                joinRequest.then(response => {
-                    setCookie(response.data.roomId, response.data.token);
-                    const establishing = this.$websocketService.establishConnection();
-                    if (!establishing) {
-                        this.$websocketService.sendFinalizeJoinRequest(roomId);
-                    }
-                })
-
-
+                this.appState.setPendingRedirect({
+                    path: routeTo.path,
+                    roomId: roomId
+                });
+                router.push(HOME_ROUTE);
+                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.JOIN_ROOM)
                 return;    // JOIN
-            }
-
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
-        },
-        determineOverlayState() {
-            if (this.hasConfirmedPrivacyPolicy()) {
-                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
-            } else {
-                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
             }
         },
         hasConfirmedPrivacyPolicy() {
@@ -103,12 +102,7 @@ export default {
                 this.colorOptions);
             let randomNumber = Date.now().toString();
             randomNumber = randomNumber.substring(randomNumber.length - 3, randomNumber.length);
-            const newGlobalPlayerCookie = new GlobalPlayerCookie({
-                name: 'funnyname' + randomNumber,
-                avatar: randomAvatar,
-                bgSoundMuted: false
-            });
-            this.appState.addGlobalCookie(newGlobalPlayerCookie);
+            this.appState.addAvatar(randomAvatar);
         }
     },
     computed: {

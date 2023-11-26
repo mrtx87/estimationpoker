@@ -1,7 +1,7 @@
 import {getCookie} from "@/services/cookie-service";
 import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
-import {APP_STATE, ResponseMessageTypes} from "@/constants/vue-constants";
+import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageTypes} from "@/constants/vue-constants";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -120,6 +120,13 @@ export class WebsocketService {
         this.initPing();
     }
 
+    finalizeJoinRoom(roomId: string) {
+        const establishing = this.establishConnection();
+        if (!establishing) {
+            this.sendFinalizeJoinRequest(roomId);
+        }
+    }
+
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
@@ -129,6 +136,7 @@ export class WebsocketService {
             switch(message.type) {
                 case ResponseMessageTypes.JOINED_GAME_SESSION: {
                      console.log(message)
+                    this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
                 }
                 break;
                 default: Logger.error('Error: Unknown Response Type: ' + message.type);

@@ -15,8 +15,9 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {DISPLAY_OVERLAY_STATE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
 import {getCookie, removeAllCookies, setCookie, setPrivacyCookie} from "@/services/cookie-service";
+import {router} from "@/main";
 
 export default {
     name: "Dsgvo",
@@ -32,11 +33,17 @@ export default {
     methods: {
         confirmDSGVO() {
             setCookie(PRIVACY_POLICY_COOKIE_KEY, 'true');
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
+            if(this.appState.pendingRedirect) {
+                router.push(this.appState.pendingRedirect.path);
+                this.appState.setPendingRedirect(null);
+            }else{
+                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
+            }
         },
         declineDGSVO() {
             removeAllCookies();
             this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+            router.push(HOME_ROUTE);
         }
     },
     computed: {}

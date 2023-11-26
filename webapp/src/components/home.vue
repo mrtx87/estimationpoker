@@ -1,7 +1,6 @@
 <template>
   <div class="home-wrapper">
       <button v-on:click="createRoom()"> create room </button>
-      <button> join room</button>
   </div>
 </template>
 
@@ -26,9 +25,8 @@ export default {
   },
   methods: {
       createRoom() {
-          console.log('create room')
           restService.sendPostRequest(
-              CREATE_DOCUMENT_ENDPOINT,
+              '/create-room',
               {userName: 'Padde', roomTitle: "Kakkraum"},
               true,
               false)

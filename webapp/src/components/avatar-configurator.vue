@@ -1,7 +1,5 @@
  <template>
   <div class="avatar-configurator-wrapper">
-    <input id="avatarConfigInputId" :disabled="disabled" class="name-field" :value="globalPlayerCookie.name"
-           v-on:change="updatePlayerName($event.target.value)" maxlength="15">
     <div class="avatar-needles">
       <button title="random avatar" class="random-avatar-button"
               v-if="!disabled"
@@ -148,7 +146,7 @@ import {getRandomAvatar} from "@/services/cookie-service";
 export default {
   name: 'AvatarConfigurator',
   components: {AvatarColorCarouselSelector, AvatarElementSlideSelector},
-  props: ['globalPlayerCookie', 'disabled', 'isReady'],
+  props: ['avatar', 'disabled', 'isReady'],
   data() {
     return {
       avatars: avatars,
@@ -158,7 +156,6 @@ export default {
       selectedHeadColor: null,
       selectedShirt: null,
       selectedShirtColor: null,
-      selectPlayerLang: '',
       editingAvatarElementType: 'hair',
       hairOptions: [...avatars.avatarHairsOptions],
       headsOptions: [...avatars.avatarHeadsOptions],
@@ -204,10 +201,7 @@ export default {
       this.updateAvatarAndPlayerCookie(avatar);
     },
     updateAvatarAndPlayerCookie: function (newAvatar) {
-      const updatePlayerCookie = {
-        ...this.globalPlayerCookie, avatar: newAvatar
-      };
-      this.$emit('onChangeGlobalPlayerCookie', updatePlayerCookie);
+      this.$emit('onAvatarChange', newAvatar);
     },
     onDone: function () {
       this.animateOutRunning = true;
@@ -222,12 +216,6 @@ export default {
     },
     updateAvatarShirt(value) {
       this.selectedShirt = value;
-    },
-    updatePlayerName: function (value) {
-      if (value.length >= 1 && value.length <= 15) {
-        const updatePlayerCookie = {...this.globalPlayerCookie, name: value};
-        this.$emit('onChangeGlobalPlayerCookie', updatePlayerCookie);
-      }
     },
     onAvatarColorSelectionChange: function (value) {
       if (this.editingAvatarElementType === 'hair') {
@@ -248,35 +236,32 @@ export default {
         this.animateOutRunning = false;
       }
     },
-    externalUpdate(newCookie) {
-      const cookie = newCookie;
-      this.selectPlayerLang = cookie.language;
-      this.selectedHairColor = cookie.avatar.hair.color;
-      this.selectedHeadColor = cookie.avatar.head.color;
-      this.selectedShirtColor = cookie.avatar.shirt.color;
-      this.selectedHair = this.findElementByCode(this.hairOptions, cookie.avatar.hair.code);
-      this.selectedHead = this.findElementByCode(this.headsOptions, cookie.avatar.head.code);
-      this.selectedShirt = this.findElementByCode(this.shirtOptions, cookie.avatar.shirt.code);
+    externalUpdate(avatar) {
+      this.selectedHairColor = avatar.hair.color;
+      this.selectedHeadColor = avatar.head.color;
+      this.selectedShirtColor = avatar.shirt.color;
+      this.selectedHair = this.findElementByCode(this.hairOptions,avatar.hair.code);
+      this.selectedHead = this.findElementByCode(this.headsOptions, avatar.head.code);
+      this.selectedShirt = this.findElementByCode(this.shirtOptions, avatar.shirt.code);
     },
-    avatarHasChanged: function (newCookie, oldCookie) {
-      return !newCookie || !oldCookie ||
-          newCookie.avatar.hair.color !== oldCookie.avatar.hair.color ||
-          newCookie.avatar.head.color !== oldCookie.avatar.head.color ||
-          newCookie.avatar.shirt.color !== oldCookie.avatar.shirt.color ||
-          newCookie.avatar.hair.code !== oldCookie.avatar.hair.code ||
-          newCookie.avatar.head.code !== oldCookie.avatar.head.code ||
-          newCookie.avatar.shirt.code !== oldCookie.avatar.shirt.code ||
-          newCookie.name !== oldCookie.name;
+    avatarHasChanged: function (avatar, oldAvatar) {
+      return !avatar || !oldAvatar ||
+          avatar.hair.color !== oldAvatar.hair.color ||
+          avatar.head.color !== oldAvatar.head.color ||
+          avatar.shirt.color !== oldAvatar.shirt.color ||
+          avatar.hair.code !== oldAvatar.hair.code ||
+          avatar.head.code !== oldAvatar.head.code ||
+          avatar.shirt.code !== oldAvatar.shirt.code;
     }
   },
   watch: {
-    globalPlayerCookie: function (newCookie, oldCookie) {
-      if ((newCookie && !oldCookie) || this.avatarHasChanged(newCookie, oldCookie))
-        this.externalUpdate(newCookie)
+    avatar: function (avatar, oldAvatar) {
+      if (this.avatarHasChanged(avatar, oldAvatar))
+        this.externalUpdate(avatar);
     }
   },
   beforeMount: function () {
-    this.externalUpdate(this.globalPlayerCookie)
+    this.externalUpdate(this.avatar);
   },
   computed: {
     selectedHairReplaced: function () {
@@ -304,13 +289,6 @@ export default {
         return this.selectedShirtColor;
       }
       return '';
-    }
-    ,
-    isLanguagePickerDisabled: function () {
-      if ('role' in this.globalPlayerCookie) {
-        return this.globalPlayerCookie.role !== 'host';
-      }
-      return false;
     }
   }
 

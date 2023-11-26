@@ -25,7 +25,7 @@ export function applyAppRestControllerConfig(app: Express) {
     new RestControllerConfigurator(app)
         .addPrefix(APP_REST_PREFIX)
         .addPostEndPoint('/create-room', handleCreateRoomRequest)
-        .addGetEndPoint('/rejoin-room', handleRejoinRoomRequest)
+        //.addGetEndPoint('/rejoin-room', handleRejoinRoomRequest)
         .addPostEndPoint('/join-room', handleNewJoinRoomRequest)
 
     //.addPostEndPoint('/register', handleRegisterRequest)

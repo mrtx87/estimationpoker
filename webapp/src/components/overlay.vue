@@ -3,14 +3,15 @@
         <div class="overlay-container">
             <div v-on:click="closeOverlay" class="close-btn">X</div>
             <avatar-configurator v-if="appState.overlayId === 1"
-                                 v-bind:globalPlayerCookie="globalPlayerCookie"
+                                 v-bind:avatar="avatar"
                                  v-bind:disabled="false"
                                  v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
-                                 v-on:onChangeGlobalPlayerCookie="onAvatarConfiguratorChange($event)">
+                                 v-on:onAvatarChange="onAvatarConfiguratorChange($event)">
             </avatar-configurator>
             <Impressum v-if="appState.overlayId === 2"></Impressum>
             <dsgvo v-if="appState.overlayId === 3"></dsgvo>
             <Home v-if="appState.overlayId === 6"></Home>
+            <JoiningRoom v-if="appState.overlayId === 7"></JoiningRoom>
         </div>
     </div>
 
@@ -30,10 +31,12 @@ import {setCookie} from "@/services/cookie-service";
 import Impressum from "@/components/impressum.vue";
 import Dsgvo from "@/components/dsgvo.vue";
 import Home from "@/components/home.vue";
+import JoiningRoom from "@/components/joining-room.vue";
 
 export default {
     name: "Overlay",
     components: {
+        JoiningRoom,
         AvatarConfigurator,
         Impressum,
         Dsgvo,
@@ -55,16 +58,16 @@ export default {
         closeOverlay: function () {
             this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
         },
-        onAvatarConfiguratorChange: function (glbCookieUpdate) {
-            this.appState.addGlobalCookie(glbCookieUpdate);
+        onAvatarConfiguratorChange: function (avatar) {
+            this.appState.addAvatar(avatar);
         },
         avatarConfiguratorToggle: function (value) {
             this.avatarConfiguratorActive = !!value;
         },
     },
     computed: {
-        globalPlayerCookie: function () {
-            return this.appState.globalCookie;
+        avatar: function () {
+            return this.appState.avatar;
         },
     }
 };

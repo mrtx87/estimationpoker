@@ -48,11 +48,12 @@ export const restService = {
         return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
     },
+    /*
     sendRefreshTokenRequest: function (tempHeaderConfig: any) {
         const loadingInterception = this.addLoadingInterception(UPDATE_TOKEN_ENDPOINT);
         return axios.get(REST_BASE_PATH + UPDATE_TOKEN_ENDPOINT, tempHeaderConfig)
             .then(this.responseInterception.bind(this, loadingInterception), this.errorHandlingOnBlockingResponse.bind(this, loadingInterception))
-    },
+    },*/
     setAppState: function (appState: any) {
         this.appState = appState;
     },
@@ -141,13 +142,6 @@ function getLoadingText(path:string) {
             return 'Daten werden geladen...';
     }
 }
-
-export const CREATE_DOCUMENT_ENDPOINT = '/create-room';
-export const UPDATE_DOCUMENT_ENDPOINT = '/join-room';
-export const UPDATE_TOKEN_ENDPOINT = '/update-token';
-
-export const PREFIX_FIND_DELETED_USERS_ENDPOINT = '/find-deleted-users';
-export const HOME_ROUTE = '/';
 
 /* error texts */
 /* eslint-disable */
