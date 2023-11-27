@@ -36,6 +36,10 @@ export default {
         this.appState = useAppStateStore();
         restService.setAppState(this.appState);
         this.$websocketService.registerStore(this.appState);
+        this.$websocketService.registerAppService(this.$appService);
+        this.$appService.setStore(this.appState);
+        this.$appService.setWebsocketService(this.$websocketService);
+
         this.onRouteChange(this.$route)
         this.initUserRandom();
     },
@@ -55,44 +59,8 @@ export default {
     },
     methods: {
         onRouteChange(routeTo) {
-
-            let isOnRoomRoute = false;
-            const roomId = routeTo.params.roomId;
-            if (routeTo.path.startsWith(ROOM_ROUTE) && roomId && isValidRoomId(roomId)) {
-                isOnRoomRoute = true;
-            }
-
-            if (!this.hasConfirmedPrivacyPolicy()) {
-                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
-                if (isOnRoomRoute) {
-                    this.appState.setPendingRedirect({
-                        path: routeTo.path,
-                        roomId: roomId
-                    });
-                    router.push(HOME_ROUTE);
-                }
-                return
-            }
-
-            if (isOnRoomRoute) {
-                this.appState.setRoomId(roomId);
-                const token = getCookie(roomId);
-                if (token) {
-                    this.$websocketService.finalizeJoinRoom(roomId);
-                    return;
-                }
-
-                this.appState.setPendingRedirect({
-                    path: routeTo.path,
-                    roomId: roomId
-                });
-                router.push(HOME_ROUTE);
-                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.JOIN_ROOM)
-                return;    // JOIN
-            }
-        },
-        hasConfirmedPrivacyPolicy() {
-            return getCookie(PRIVACY_POLICY_COOKIE_KEY);
+            this.$appService.setRouteOn(routeTo);
+            this.$appService.initApp();
         },
         initUserRandom() {
             const randomAvatar = getRandomAvatar(

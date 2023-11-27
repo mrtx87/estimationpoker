@@ -6,6 +6,7 @@ import './assets/css/main.css';
 import {createPinia} from "pinia";
 import {createRouter, createWebHashHistory} from 'vue-router'
 import {ROOM_ROUTE} from "@/constants/vue-constants";
+import {AppService} from "@/services/app-service";
 
 
 
@@ -29,6 +30,7 @@ export const router = createRouter({
 
 const app = createApp(App);
 app.config.globalProperties.$websocketService = new WebsocketService();
+app.config.globalProperties.$appService = new AppService();
 app.use(router)
 app.use(createPinia());
 app.mount('#app');

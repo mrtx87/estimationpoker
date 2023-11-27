@@ -37,15 +37,7 @@ export default {
                 roomId: this.roomId,
                 userName: this.userNameInput,
                 avatar: this.appState.avatar
-            }).then(response => {
-                setCookie(response.data.roomId, response.data.token);
-                this.$websocketService.finalizeJoinRoom(response.data.roomId);
-            }).then(rawResponse => this.processJoinResponse(rawResponse.data));
-        },
-        processJoinResponse(response) {
-            setCookie(response.roomId, response.token);
-            router.push(ROOM_ROUTE + response.roomId);
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
+            }).then(this.$appService.onJoinRoomResponse.bind(this.$appService));
         },
         initUserRandom() {
             const randomAvatar = getRandomAvatar(

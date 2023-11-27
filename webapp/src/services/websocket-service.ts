@@ -2,6 +2,7 @@ import {getCookie} from "@/services/cookie-service";
 import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
 import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageTypes} from "@/constants/vue-constants";
+import {AppService} from "@/services/app-service";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -19,6 +20,7 @@ export class WebsocketService {
     retries = 0;
     wsConnection: WebSocket | null = null;
     store: any = null;
+    appService: AppService | undefined;
 
     pingTimeout: any;
 
@@ -26,8 +28,12 @@ export class WebsocketService {
         this.store = appState;
     }
 
+    registerAppService(appService: AppService) {
+        this.appService = appService;
+    }
+
     establishConnection(): boolean {
-        if(this.wsConnection) {
+        if (this.wsConnection) {
             Logger.log('websocket connection already established')
             return false;
         }
@@ -63,7 +69,7 @@ export class WebsocketService {
     }
 
     sendPing() {
-        if(this.wsConnection) {
+        if (this.wsConnection) {
             const token = getCookie(this.store.roomId);
             Logger.warn('send ping');
             const pingData = {ping: 1}
@@ -104,7 +110,7 @@ export class WebsocketService {
             this.retries += 1;
             console.log("retry connecting... retries left:" + (MAX_RECONNECT_RETRIES - this.retries));
             this.establishConnection();
-        }else{
+        } else {
             this.store.setConnectionState(ConnectionState.CONNECTION_NOT_POSSIBLE);
             console.error("connection to websocket server seems not possible at this time");
         }
@@ -130,16 +136,17 @@ export class WebsocketService {
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
-            if(!message.type) {
+            if (!message.type) {
                 Logger.error('Error: No Response Type received', message);
             }
-            switch(message.type) {
+            switch (message.type) {
                 case ResponseMessageTypes.JOINED_GAME_SESSION: {
-                     console.log(message)
+                    console.log(message)
                     this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
                 }
-                break;
-                default: Logger.error('Error: Unknown Response Type: ' + message.type);
+                    break;
+                default:
+                    Logger.error('Error: Unknown Response Type: ' + message.type);
             }
         } catch (e) {
             Logger.warn(e, "Invalid JSON: ", response.data);

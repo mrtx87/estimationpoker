@@ -33,16 +33,10 @@ export default {
     methods: {
         confirmDSGVO() {
             setCookie(PRIVACY_POLICY_COOKIE_KEY, 'true');
-            if(this.appState.pendingRedirect) {
-                router.push(this.appState.pendingRedirect.path);
-                this.appState.setPendingRedirect(null);
-            }else{
-                this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.HOME);
-            }
+            this.$appService.initApp();
         },
         declineDGSVO() {
             removeAllCookies();
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
             router.push(HOME_ROUTE);
         }
     },

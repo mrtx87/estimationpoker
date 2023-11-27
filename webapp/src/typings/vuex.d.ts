@@ -1,6 +1,7 @@
 // vuex.d.ts
 import {Store} from '@/typings/vuex'
 import {BanPollDto} from "@/model/dto/ban-poll-dto";
+import {AppService} from "@/services/app-service";
 
 declare module '@vue/runtime-core' {
     // declare your own store states
@@ -45,6 +46,7 @@ declare module '@vue/runtime-core' {
 
     interface ComponentCustomProperties {
         $websocketService: WebsocketService,
+        $appService: AppService
         $emit: any,
         $refs: any
     }

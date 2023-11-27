@@ -30,12 +30,8 @@ export default {
               {userName: 'Padde', roomTitle: "Kakkraum"},
               true,
               false)
-              .then(rawResponse => this.processJoinResponse(rawResponse.data))
-      },
-      processJoinResponse(response) {
-          setCookie(response.roomId, response.token);
-          router.push(ROOM_ROUTE + response.roomId);
-      },
+              .then(this.$appService.onJoinRoomResponse.bind(this.$appService))
+      }
   },
   computed: {}
 };
