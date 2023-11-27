@@ -24,8 +24,8 @@ export class WebsocketService {
 
     pingTimeout: any;
 
-    registerStore(appState: any): void {
-        this.store = appState;
+    registerStore(appStore: any): void {
+        this.store = appStore;
     }
 
     registerAppService(appService: AppService) {

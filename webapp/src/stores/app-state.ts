@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {ConnectionState} from "@/services/websocket-service";
 import {APP_STATE, DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
 
-export const useAppStateStore = defineStore('AppState', {
+export const useAppStateStore = defineStore('AppStore', {
     state: () => {
         return {
             // states to reset after login
@@ -45,5 +45,6 @@ export const useAppStateStore = defineStore('AppState', {
         connectionState: (state: any) => state._connectionState,
         roomId: (state: any) => state._roomId,
         pendingRedirect: (state: any) => state._pendingRedirect,
+        state: (state: any) => state._state,
     }
 });

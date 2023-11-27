@@ -29,3 +29,15 @@ export class Logger {
 export function isValidRoomId(roomId: string): boolean {
     return Boolean(roomId) && roomId.match(/^\w{8}-(\w{4}-){3}\w{12}$/i) !== null;
 }
+
+export function randomInt(num: number) {
+    return Math.floor(Math.random() * num);
+}
+
+export function randomSelection(arr: any[]) {
+    return arr[randomInt(arr.length)];
+}
+
+export function randomColor(colorOptions: string[]): string {
+    return randomSelection(colorOptions);
+}

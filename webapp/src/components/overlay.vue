@@ -2,20 +2,21 @@
     <div class="overlay-wrapper">
         <div class="overlay-container">
             <div v-on:click="closeOverlay" class="close-btn">X</div>
-            <avatar-configurator v-if="appState.overlayId === 1"
+            <avatar-configurator v-if="overlayId === DISPLAY_OVERLAY_STATE.AVATAR_EDITOR"
                                  v-bind:avatar="avatar"
                                  v-bind:disabled="false"
                                  v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
                                  v-on:onAvatarChange="onAvatarConfiguratorChange($event)">
             </avatar-configurator>
-            <Impressum v-if="appState.overlayId === 2"></Impressum>
-            <dsgvo v-if="appState.overlayId === 3"></dsgvo>
-            <Home v-if="appState.overlayId === 6"></Home>
-            <JoiningRoom v-if="appState.overlayId === 7"></JoiningRoom>
+            <Impressum v-if="overlayId === DISPLAY_OVERLAY_STATE.IMPRESSUM"></Impressum>
+            <dsgvo v-if="overlayId === DISPLAY_OVERLAY_STATE.DSGVO"></dsgvo>
+            <JoiningRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.JOIN_ROOM"></JoiningRoom>
+            <CreateRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.CREATE_ROOM"></CreateRoom>
         </div>
     </div>
 
-    <div v-if="this.appState.overlayId === 5" class="burger-menu-wrapper">
+    <div v-if="overlayId === 5" class="burger-menu-wrapper">
+        <!--- needs to be moved away from here -->
         <div class="burger-menu">
             <div v-on:click="openAvatarEditor" class="change-avatar-Btn">Change Avatar</div>
         </div>
@@ -27,28 +28,27 @@
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
 import AvatarConfigurator from "@/components/avatar-configurator.vue";
-import {setCookie} from "@/services/cookie-service";
 import Impressum from "@/components/impressum.vue";
 import Dsgvo from "@/components/dsgvo.vue";
-import Home from "@/components/home.vue";
 import JoiningRoom from "@/components/joining-room.vue";
+import CreateRoom from "@/components/create-room.vue";
 
 export default {
     name: "Overlay",
     components: {
+        CreateRoom,
         JoiningRoom,
         AvatarConfigurator,
         Impressum,
-        Dsgvo,
-        Home
+        Dsgvo
     },
     created() {
-        this.appState = useAppStateStore();
+        this.appStore = useAppStateStore();
     },
     data: function () {
         return {
             isAvatarConfiguratorOpen: false,
-            appState: null,
+            appStore: null,
         }
     },
     methods: {
@@ -66,9 +66,15 @@ export default {
         },
     },
     computed: {
+        DISPLAY_OVERLAY_STATE() {
+            return DISPLAY_OVERLAY_STATE
+        },
         avatar: function () {
             return this.appState.avatar;
         },
+        overlayId() {
+            return this.appStore.overlayId;
+        }
     }
 };
 </script>

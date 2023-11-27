@@ -30,20 +30,20 @@ export default {
   name: "HeaderVue",
   components: {},
   created() {
-    this.appState = useAppStateStore();
+    this.appStore = useAppStateStore();
   },
   data: function () {
     return {
       isAvatarConfiguratorOpen: false,
-      appState: null,
+        appStore: null,
     }
   },
   methods: {
     openBurgerMenu: function () {
       if (this.appState._overlayId !== 5) {
-        this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.BURGER_MENU)
+        this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.BURGER_MENU)
       } else {
-        this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
+        this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
       }
     },
   },
@@ -55,7 +55,7 @@ export default {
 
 .header-wrapper {
   width: 100%;
-  position: fixed;
+  #position: fixed;
   top: 0;
 }
 

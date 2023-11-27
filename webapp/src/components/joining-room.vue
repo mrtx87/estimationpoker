@@ -24,11 +24,7 @@ export default {
     data: function () {
         return {
             appState: null,
-            userNameInput: '',
-            hairOptions: [...avatars.avatarHairsOptions],
-            headsOptions: [...avatars.avatarHeadsOptions],
-            shirtOptions: [...avatars.avatarShirtsOptions],
-            colorOptions: [...avatars.colorOptions]
+            userNameInput: ''
         }
     },
     methods: {
@@ -36,17 +32,9 @@ export default {
             restService.sendPostRequest('/join-room', {
                 roomId: this.roomId,
                 userName: this.userNameInput,
-                avatar: this.appState.avatar
+                avatar: this.$appService.getRandomAvatar()
             }).then(this.$appService.onJoinRoomResponse.bind(this.$appService));
         },
-        initUserRandom() {
-            const randomAvatar = getRandomAvatar(
-                this.headsOptions.length,
-                this.hairOptions.length,
-                this.shirtOptions.length,
-                this.colorOptions);
-            this.appState.addAvatar(randomAvatar);
-        }
     },
     computed: {
         roomId() {

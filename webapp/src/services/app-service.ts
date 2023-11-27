@@ -1,8 +1,10 @@
 import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY, ROOM_ROUTE} from "@/constants/vue-constants";
-import {isValidRoomId} from "@/services/util";
+import {isValidRoomId, randomColor, randomInt} from "@/services/util";
 import {router} from "@/main";
 import {getCookie, setCookie} from "@/services/cookie-service";
 import {WebsocketService} from "@/services/websocket-service";
+import * as avatars from "@/assets/avatar/avatar-constants";
+import {WTFAIAvatar} from "@/model/w-t-f-a-i-avatar";
 
 export class AppService {
     routeOn: any = null;
@@ -21,7 +23,7 @@ export class AppService {
             return;
         }
 
-        this.store.setOverlayId(DISPLAY_OVERLAY_STATE.HOME)
+        this.store.setOverlayId(DISPLAY_OVERLAY_STATE.CREATE_ROOM);
     }
 
 
@@ -66,11 +68,30 @@ export class AppService {
         this.processJoinResponse(response.data);
         this.initApp();
     }
+
     processJoinResponse(response: any) {
         this.setRoomCookie(response.roomId, response.token);
         router.push(ROOM_ROUTE + response.roomId);
     }
+
     setRoomCookie(roomId: string, token: string) {
         setCookie(roomId, token)
+    }
+
+    getRandomAvatar(): WTFAIAvatar {
+        const hairOptions = [...avatars.avatarHairsOptions];
+        const headsOptions = [...avatars.avatarHeadsOptions];
+        const shirtOptions = [...avatars.avatarShirtsOptions];
+        const colorOptions = [...avatars.colorOptions];
+
+        const randomHead = randomInt(headsOptions.length) + 1;
+        const randomHair = randomInt(hairOptions.length) + 1;
+        const randomShirt = randomInt(shirtOptions.length) + 1;
+        const avatar = new WTFAIAvatar({
+            head: {type: 'face', code: randomHead, color: randomColor(colorOptions)},
+            hair: {type: 'hair', code: randomHair, color: randomColor(colorOptions)},
+            shirt: {type: 'shirt', code: randomShirt, color: randomColor(colorOptions)},
+        });
+        return avatar;
     }
 }

@@ -34,14 +34,15 @@ export const DISPLAY_OVERLAY_STATE = {
     DSGVO: 3,
     ROOM_SETTING: 4,
     BURGER_MENU: 5,
-    HOME: 6,
     JOIN_ROOM: 7,
+    CREATE_ROOM: 8
 }
 
 export const APP_STATE = {
     NO_ROOM_ENTERED: 100,
-    JOINING_ROOM: 101,
-    ROOM_JOINED: 102
+    CREATING_ROOM: 101,
+    JOINING_ROOM: 105,
+    ROOM_JOINED: 1010
 }
 
 
