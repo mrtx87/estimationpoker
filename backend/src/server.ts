@@ -105,7 +105,7 @@ export function initWebsocketSettings(init: InitAppProcess, websocketServer: any
                 userConnection.on('close', () => {
                     try {
                         if ('roomId' in userConnection && 'userId' in userConnection) {
-                            appService.processDisconnectClient(userConnection.roomId, userConnection.userId);
+                            appService.processDisconnectClient(userConnection);
                         }
                     } catch (e) {
                         logger.error(e);

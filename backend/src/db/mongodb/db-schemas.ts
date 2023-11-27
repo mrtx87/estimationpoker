@@ -5,8 +5,7 @@ import {DBUser} from "../../model/user";
 export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom>({
     id: String,
     createdAt: Number,
-    title: String,
-    userIds:[String]
+    title: String
 });
 
 // TODO INDEX Rooms
@@ -15,11 +14,13 @@ EstimationPokerRoomSchema.index({id: -1}, { unique: true });
 
 export const UserSchema = new mongoose.Schema<DBUser>({
     id: String,
+    roomId: String,
     name: String,
     roles: [String],
     avatar: String
 });
 UserSchema.index({id: -1}, { unique: true });
+UserSchema.index({roomId: -1}, { unique: false });
 UserSchema.index({name: -1}, { unique: false });
 
 

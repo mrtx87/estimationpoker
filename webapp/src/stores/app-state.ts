@@ -6,7 +6,8 @@ export const useAppStateStore = defineStore('AppStore', {
     state: () => {
         return {
             // states to reset after login
-            _localUser: {},
+            _localUserId: '',
+            _room: null,
             _avatar: null,
             _overlayId: DISPLAY_OVERLAY_STATE.NO_OVERLAY,
             _connectionState: ConnectionState.DISCONNECTED,
@@ -16,9 +17,6 @@ export const useAppStateStore = defineStore('AppStore', {
         }
     },
     actions: {
-        setRouter(localUser: any) {
-            this._localUser = localUser;
-        },
         addAvatar(avatar: any) {
             this._avatar = avatar;
         },
@@ -36,10 +34,15 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setPendingRedirect(redirectObj: any) {
             this._pendingRedirect = redirectObj;
+        },
+        setRoom(room: any) {
+            this._room = room;
         }
     },
     getters: {
-        localUser: (state: any) => state._localUser,
+        localUserId: (state: any) => state._localUserId,
+        localUser: (state: any) => state._room ? state._room.users.find((u: any) => u.id === state._localUserId) : null,
+        room: (state: any) => state._room,
         avatar: (state: any) => state._avatar,
         overlayId: (state: any) => state._overlayId,
         connectionState: (state: any) => state._connectionState,

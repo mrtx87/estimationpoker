@@ -29,8 +29,8 @@ export class EstimationPokerRoomRepository {
     private constructor() {
     }
 
-    createEstimationPokerRoom(roomTitle: string, creator: User) {
-        const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomTitle, creator.id);
+    createEstimationPokerRoom(roomTitle: string) {
+        const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomTitle);
         const estimationPokerRoomModel = new EstimationPokerRoomModel(estimationPokerRoom);
         return estimationPokerRoomModel
             .save()
@@ -52,7 +52,9 @@ export class EstimationPokerRoomRepository {
         const roomUpdate = request.body.room;
         return EstimationPokerRoomModel
             .findOne({id: roomUpdate.id})
-            .then((storedRoom: any) => this.executeDocumentUpdate(request.user.id, EstimationPokerRoom.of(roomUpdate), storedRoom));
+            .then((storedRoom: any) =>
+                this.executeRoomUpdate(request.user.id, EstimationPokerRoom.of(roomUpdate), storedRoom)
+            );
     }
 
     findAllRooms() {
@@ -114,7 +116,6 @@ export class EstimationPokerRoomRepository {
     private updateCurrentRoomModelSafe(savedRoomModel: any, roomUpdate: EstimationPokerRoom) {
         savedRoomModel.changedAt = Date.now();
         savedRoomModel.title = roomUpdate.title;
-        savedRoomModel.userIds = roomUpdate.userIds;
     }
 
     private postRoomCreationProcessing(room: EstimationPokerRoom) {
@@ -140,7 +141,7 @@ export class EstimationPokerRoomRepository {
         }
     }
 
-    private async executeDocumentUpdate(userId: any, room: EstimationPokerRoom, storedRoom: any) {
+    private async executeRoomUpdate(userId: any, room: EstimationPokerRoom, storedRoom: any) {
         try {
             if (!storedRoom) {
                 return getNotFoundErrorResponseHandling(ROOM_TO_BE_STORED_NOT_EXIST);

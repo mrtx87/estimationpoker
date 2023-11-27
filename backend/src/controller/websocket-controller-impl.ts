@@ -1,9 +1,10 @@
 import {AuthenticatedRequest} from "../model/authenticated-request.model";
 import {BasicRequest} from "../model/basic-request.model";
 import {ROLE} from "../constants/global";
-import {userService, websocketService} from "../server";
+import {estimationRoomCache, estimationRoomService, userService, websocketService} from "../server";
 import {BasicResponse} from "../model/basic-response.model";
 import {logger} from "../services/s9logger";
+import {connection} from "mongoose";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -57,10 +58,20 @@ export class WebsocketControllerImpl {
         }
     }
 
-    finalizeJoin(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {
-        // add room to cache if not there
-        // send all required data for join to users
-        websocketService.notifyConnections( new BasicResponse('finalized.join', userId), [playerConnection]);
+    async finalizeJoin(roomId: string, joiningUserId: string, request: AuthenticatedRequest, userWsConnection: any) {
+        let cachedRoom = estimationRoomCache.getCachedRoom(roomId);
+        userWsConnection.userId = joiningUserId;
+        userWsConnection.roomId = roomId;
+        if(!cachedRoom){
+            cachedRoom = await estimationRoomService.restoreRoomToCacheFromDB(roomId, userWsConnection);
+            if(!cachedRoom) {
+                websocketService.notifyUser( new BasicResponse('room.not.existing', joiningUserId, null), userWsConnection);
+                return;
+            }
+        }
+        cachedRoom.addConnection(userWsConnection);
+        websocketService.notifyUser( new BasicResponse('finalized.join', joiningUserId, cachedRoom.toPublicDTO()), userWsConnection);
+        websocketService.notifyUsers( new BasicResponse('another.user.joined', joiningUserId, cachedRoom.toPublicDTO()), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
     }
 
     ping(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {

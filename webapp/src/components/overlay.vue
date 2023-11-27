@@ -53,13 +53,13 @@ export default {
     },
     methods: {
         openAvatarEditor: function () {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
         },
         closeOverlay: function () {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
         },
         onAvatarConfiguratorChange: function (avatar) {
-            this.appState.addAvatar(avatar);
+            this.appStore.addAvatar(avatar);
         },
         avatarConfiguratorToggle: function (value) {
             this.avatarConfiguratorActive = !!value;
@@ -70,7 +70,7 @@ export default {
             return DISPLAY_OVERLAY_STATE
         },
         avatar: function () {
-            return this.appState.avatar;
+            return this.appStore.avatar;
         },
         overlayId() {
             return this.appStore.overlayId;

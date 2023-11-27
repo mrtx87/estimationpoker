@@ -5,7 +5,7 @@
         <div class="app-content">
             <div class="left-content">
                 <div class="room-title-container">
-                    ROOM TITLE
+                    {{room?.title}}
                 </div>
                 <div class="estimation-title-container">
                     SCHÄTZUNG TITLE
@@ -22,7 +22,7 @@
                     Moderator Actions
                 </div>
                 <div class="user-list">
-                    USER LIST
+                    <user-list></user-list>
                 </div>
             </div>
         </div>
@@ -39,11 +39,13 @@ import HeaderVue from "@/components/header-vue.vue";
 import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
+import UserList from "@/components/user-list.vue";
 
 
 export default {
     name: "App",
     components: {
+        UserList,
         HeaderVue,
         Overlay,
         Footer
@@ -81,6 +83,9 @@ export default {
     computed: {
         DISPLAY_OVERLAY_STATE() {
             return DISPLAY_OVERLAY_STATE
+        },
+        room() {
+            return this.appStore.room;
         }
     }
 };

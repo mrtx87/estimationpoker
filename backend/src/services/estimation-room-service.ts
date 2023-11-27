@@ -1,21 +1,21 @@
 import {
-    estimationPokerRoomRepository, estimationRoomCache,
-    userService,
-    websocketService
+    estimationPokerRoomRepository,
+    estimationRoomCache, estimationRoomService,
+    userService, websocketService
 } from "../server";
 
-import {v4 as UUID} from 'uuid';
 
-import {ErrorResponse, ResponseCode} from "../controller-config/rest-controller-configurator";
-import {logger} from "./s9logger";
-import {CREATE_ROOM_ERROR, ERROR_WHILE_JOINING_ROOM, ROOM_NOT_EXISTING} from "../constants/error-texts";
-import {EstimationPokerRoom} from "../model/estimation-poker-room";
-import {getBadRequestErrorResponseHandling, getInternalErrorErrorResponseHandling} from "../util/util";
+import {ErrorResponse} from "../controller-config/rest-controller-configurator";
+import {CREATE_ROOM_ERROR} from "../constants/error-texts";
+import {getInternalErrorErrorResponseHandling} from "../util/util";
 import {InitValues} from "../model/init-values";
-import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
 import {ROLE} from "../constants/global";
-import {User} from "../model/user";
+import {DBUser, User} from "../model/user";
 import {Avatar} from "../model/avatar";
+import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
+import {EstimationPokerRoom} from "../model/estimation-poker-room";
+import {logger} from "./s9logger";
+import {BasicResponse} from "../model/basic-response.model";
 
 export class EstimationRoomService {
     private static INSTANCE: EstimationRoomService = new EstimationRoomService();
@@ -35,21 +35,28 @@ export class EstimationRoomService {
         avatar: Avatar
     }): Promise<InitValues | ErrorResponse> {
         try {
-            return userService.createUser(createRoomRequest.userName, createRoomRequest.avatar, [ROLE.MODERATOR])
-                .then(creator => estimationPokerRoomRepository
-                    .createEstimationPokerRoom(createRoomRequest.roomTitle, creator)
-                    .then(newRoom => this.getJoinedUserResponse(newRoom.id, creator)));
+            return estimationPokerRoomRepository
+                .createEstimationPokerRoom(createRoomRequest.roomTitle)
+                .then(newRoom => userService.createUser(createRoomRequest.userName, createRoomRequest.avatar, newRoom.id, [ROLE.MODERATOR])
+                    .then(creator => this.getJoinedUserResponse(newRoom.id, creator)));
         } catch (error) {
             return getInternalErrorErrorResponseHandling(error, CREATE_ROOM_ERROR).toRejectedPromise();
         }
     }
+
     public async joinRoomAsNewUser(joinRoomRequest: any): Promise<InitValues> {
         const roomId = joinRoomRequest.roomId;
         const userName = joinRoomRequest.userName;
         const avatar = joinRoomRequest.avatar
         return this.getJoiningRoom(roomId)
-            .then(joiningRoom => userService.createUser(userName, avatar)
-                .then(joiningUser => this.getJoinedUserResponse(joiningRoom.id, joiningUser)));
+            .then(joiningRoom => userService.createUser(userName, avatar, roomId)
+                .then(joiningUser => {
+                    const cachedRoom = estimationRoomCache.getCachedRoom(joiningRoom.id);
+                    if (cachedRoom) {
+                        cachedRoom.users.push(joiningUser);
+                    }
+                    return this.getJoinedUserResponse(joiningRoom.id, joiningUser);
+                }));
     }
 
     public async joinRoomAsKnownUser(rejoinRoomRequest: any): Promise<InitValues> {
@@ -60,10 +67,13 @@ export class EstimationRoomService {
                 .then(user => this.getJoinedUserResponse(joiningRoom.id, user)));
     }
 
-    public processDisconnectClient(roomId: string, userId: string) {
-        const room = estimationPokerRoomRepository.getRoomById(roomId);
-        if (room) {
-            console.log(room);
+    public processDisconnectClient(connection: any) {
+        //const room = estimationPokerRoomRepository.getRoomById(roomId);
+        const cachedRoom = estimationRoomCache.getCachedRoom(connection.roomId);
+        if (cachedRoom) {
+            cachedRoom.removeConnection(connection);
+            websocketService.notifyUsers(new BasicResponse('user.disconnected.room', connection.userId), cachedRoom.connections);
+            logger.log('user ' + connection.userId + ' disconnect from room ' + connection.roomId);
         }
     }
 
@@ -78,6 +88,18 @@ export class EstimationRoomService {
         }
         return Promise.reject();
 
+    }
+
+    async restoreRoomToCacheFromDB(roomId: string, connection: any) {
+        const dbRoom = await estimationPokerRoomRepository.getRoomById(roomId);
+        if (!dbRoom) {
+            return null;
+        }
+        const users = await userService.getDBUsersByRoomId(dbRoom.id);
+
+        const cachedRoom = CachedEstimationPokerRoom.from(dbRoom, users);
+        estimationRoomCache.addRoomToCache(cachedRoom);
+        return cachedRoom;
     }
 
     private getJoinedUserResponse(roomId: string, user: User) {

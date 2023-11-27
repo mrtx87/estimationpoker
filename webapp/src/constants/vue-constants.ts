@@ -5,7 +5,10 @@ export const RequestMessageType = {
 }
 
 export const ResponseMessageTypes = {
-    JOINED_GAME_SESSION: 'finalized.join',
+    JOINED_ESTIMATION_SESSION: 'finalized.join',
+    ANOTHER_USER_JOINED_SESSION: 'another.user.joined',
+    ROOM_NOT_EXISTING: 'room.not.existing',
+    USER_DISCONNECTED: 'user.disconnected.room',
 }
 
 

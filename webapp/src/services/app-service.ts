@@ -32,7 +32,7 @@ export class AppService {
         this.store.setRoomId(roomId);
         const token = getCookie(roomId);
         if (token) {
-            this.websocketService.finalizeJoinRoom(roomId);
+            this.websocketService.sendFinalizeJoinRoom(roomId);
             return;
         }
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.JOIN_ROOM)
@@ -65,11 +65,11 @@ export class AppService {
     }
 
     onJoinRoomResponse(response: any) {
-        this.processJoinResponse(response.data);
+        this.processInitialJoinResponse(response.data);
         this.initApp();
     }
 
-    processJoinResponse(response: any) {
+    processInitialJoinResponse(response: any) {
         this.setRoomCookie(response.roomId, response.token);
         router.push(ROOM_ROUTE + response.roomId);
     }

@@ -13,13 +13,13 @@ export class WebsocketService {
     private constructor() {
     }
 
-    notifyPlayer(response: BasicResponse, playerConnection: any) {
-        if (playerConnection) {
-            playerConnection.send(JSON.stringify(response));
+    notifyUser(response: BasicResponse, connection: any) {
+        if (connection) {
+            connection.send(JSON.stringify(response));
         }
     }
 
-    notifyConnections(response: BasicResponse, connections: any[]) {
+    notifyUsers(response: BasicResponse, connections: any[]) {
         connections
             .forEach((pConnection: any) => {
                 if (pConnection) {

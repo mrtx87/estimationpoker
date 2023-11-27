@@ -1,11 +1,11 @@
 import {DBUserModel} from "../db/mongodb/db-schemas";
 import {DBUser} from "../model/user";
 
-export class S9UserRepository {
-    private static INSTANCE: S9UserRepository = new S9UserRepository();
+export class UserRepository {
+    private static INSTANCE: UserRepository = new UserRepository();
 
-    public static get s9UserRepository(): S9UserRepository {
-        return S9UserRepository.INSTANCE;
+    public static get s9UserRepository(): UserRepository {
+        return UserRepository.INSTANCE;
     }
 
     private constructor() {
@@ -21,7 +21,11 @@ export class S9UserRepository {
     }
 
     getUsers(userIds: string[]) {
-        return DBUserModel.find({}).where('id').in(userIds);
+        return DBUserModel.find().where('id').in(userIds);
+    }
+
+    getUsersByRoomId(roomId: string) {
+        return DBUserModel.find({roomId: roomId});
     }
     findUsers(searchText: string) {
         return DBUserModel.find({

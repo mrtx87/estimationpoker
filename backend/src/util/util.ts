@@ -126,5 +126,5 @@ export function hasRequiredAppConfig(init: InitAppProcess) {
 
 // test documents stuff
 export function getTestRoom() {
-    return EstimationPokerRoom.createEstimationPokerRoom("Testraum" + UUID(), UUID());
+    return EstimationPokerRoom.createEstimationPokerRoom("Testraum" + UUID());
 }

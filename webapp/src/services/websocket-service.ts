@@ -126,25 +126,50 @@ export class WebsocketService {
         this.initPing();
     }
 
-    finalizeJoinRoom(roomId: string) {
+    sendFinalizeJoinRoom(roomId: string) {
         const establishing = this.establishConnection();
         if (!establishing) {
             this.sendFinalizeJoinRequest(roomId);
         }
     }
 
+    /** handle responses **/
+
+    onRoomJoinFinalizeResponse(message: any) {
+        this.store.setRoom(message.data);
+        this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
+        // TODO TOASTR
+    }
+
+    onOtherUserJoinedRoom(message: any) {
+        this.store.setRoom(message.data);
+        // TODO TOASTR
+    }
+
+    onUserDisconnectRoom(message: any) {
+        const room = this.store.room;
+        room.users = room.users.filter((u: any) => u.id !== message.sender);
+        room.connections = room.connections.filter((uid: string) => uid !== message.sender);
+        this.store.setRoom({...room})
+        // TODO TOASTR
+    }
+
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
+            Logger.log(message);
             if (!message.type) {
                 Logger.error('Error: No Response Type received', message);
             }
             switch (message.type) {
-                case ResponseMessageTypes.JOINED_GAME_SESSION: {
-                    console.log(message)
-                    this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
-                }
-                    break;
+                case ResponseMessageTypes.JOINED_ESTIMATION_SESSION:
+                    return this.onRoomJoinFinalizeResponse(message);
+                case ResponseMessageTypes.ROOM_NOT_EXISTING:
+                    return console.log('raum existiert nicht')
+                case ResponseMessageTypes.USER_DISCONNECTED:
+                    return this.onUserDisconnectRoom(message);
+                case ResponseMessageTypes.ANOTHER_USER_JOINED_SESSION:
+                    return this.onOtherUserJoinedRoom(message);
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);
             }

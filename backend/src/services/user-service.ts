@@ -1,24 +1,19 @@
 import {DBUser, User} from "../model/user";
 
-import {logger} from "./s9logger";
 import {v4 as UUID} from 'uuid';
 import {
-    ERROR_REFESHING_TOKEN, ERROR_REGISTER_EMAIL_NO_MATCH, ERROR_REGISTER_LINK_NO_LONGER_VALID, ERROR_WHILE_LOGIN_USER,
+    ERROR_REFESHING_TOKEN,
     ERROR_WHILE_USERS_REQUEST,
     INVALID_TOKEN,
-    REGISTER_INFO_INVALID,
     TOKEN_REQUIRED,
-    USER_ALREADY_EXISTS,
-    USER_NAME_OR_PW_NOT_EXISTS,
-    USER_TO_DELETE_NOT_EXISTS
 } from "../constants/error-texts";
 import {ROLE} from "../constants/global";
 import {
-    getBadRequestErrorResponseHandling, getConflictingErrorResponseHandling, getForbiddenErrorResponseHandling,
+    getBadRequestErrorResponseHandling, getForbiddenErrorResponseHandling,
     getInternalErrorErrorResponseHandling,
-    getUnauthorizedErrorResponseHandling, wait, WAIT_DELAY_FOR_EXPENSIVE_REQUESTS
+    getUnauthorizedErrorResponseHandling,
 } from "../util/util";
-import {S9UserRepository} from "../repository/user-respository";
+import {UserRepository} from "../repository/user-respository";
 import {UserMapper} from "../mapper/estimation-poker-mapper";
 import {Avatar} from "../model/avatar";
 import {DBUserModel} from "../db/mongodb/db-schemas";
@@ -27,7 +22,7 @@ import {AvatarElement} from "../model/avatar-element.model";
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 
-const s9UserRepository = S9UserRepository.s9UserRepository;
+const userRepository = UserRepository.s9UserRepository;
 
 
 export class UserService {
@@ -78,9 +73,10 @@ export class UserService {
         }
     }
 
-    createUser(userName: string, avatar: Avatar, roles = [ROLE.PARTICIPANT]) {
+    createUser(userName: string, avatar: Avatar, roomId: string, roles = [ROLE.PARTICIPANT]) {
         const dbUserModel = new DBUserModel(DBUser.from({
             id: UUID(),
+            roomId: roomId,
             name: userName,
             roles: roles,
             avatar: avatar ? avatar : new Avatar({
@@ -106,19 +102,27 @@ export class UserService {
     }
 
     getUser(userId: string) {
-        return s9UserRepository.getUser(userId).then(UserMapper.map);
+        return userRepository.getUser(userId).then(UserMapper.map);
+    }
+
+    getDBUsers(userIds: string[]) {
+        return userRepository.getUsers(userIds).then(users => users.map(UserMapper.mapDBUser));
+    }
+
+    getDBUsersByRoomId(roomId: string) {
+        return userRepository.getUsersByRoomId(roomId).then(users => users.map(UserMapper.mapDBUser));
     }
 
     isModerator(userId: string) {
-        return s9UserRepository.getUser(userId).then(user => Promise.resolve(user?.roles.includes(ROLE.MODERATOR)));
+        return userRepository.getUser(userId).then(user => Promise.resolve(user?.roles.includes(ROLE.MODERATOR)));
     }
 
     isAdmin(userId: string) {
-        return s9UserRepository.getUser(userId).then(user => Promise.resolve(user?.roles.includes('admin')));
+        return userRepository.getUser(userId).then(user => Promise.resolve(user?.roles.includes('admin')));
     }
 
     updateUserAvatar(userId: string, avatar: Avatar): PromiseLike<any> {
-        return s9UserRepository.getUser(userId)
+        return userRepository.getUser(userId)
             .then((foundUser: any) => {
                 if (!foundUser) {
                     return getBadRequestErrorResponseHandling(ERROR_WHILE_USERS_REQUEST).toPromise();
@@ -138,7 +142,7 @@ export class UserService {
 
     /**** these methods are currently not used
 
-    onHandleRegister(req: any, res: any) {
+     onHandleRegister(req: any, res: any) {
         const rawToken = req.header('Authorization');
         const verified = this.verifyRegisterToken(rawToken);
         if (verified) {
@@ -151,7 +155,7 @@ export class UserService {
     }
 
 
-    private verifyRegisterToken(rawToken: string) {
+     private verifyRegisterToken(rawToken: string) {
         try {
             const token = rawToken.substring(7);
             const decoded = jwt.verify(token, process.env.JWT_KEY);
@@ -163,11 +167,11 @@ export class UserService {
     }
 
 
-    onLogin(req: any) {
+     onLogin(req: any) {
         return wait(WAIT_DELAY_FOR_EXPENSIVE_REQUESTS, req).then(this.executeLogin.bind(this));
     }
 
-    private async executeLogin(req: any) {
+     private async executeLogin(req: any) {
         try {
             const {username, password} = req.body;
 
@@ -189,12 +193,12 @@ export class UserService {
         }
     }
 
-    findPublicUsers(searchText: string) {
+     findPublicUsers(searchText: string) {
         return s9UserRepository.findUsers(searchText).then(users => users.map(UserMapper.map));
     }
 
 
-    async registerUserFromConfig(configUser: any) {
+     async registerUserFromConfig(configUser: any) {
         try {
             const encryptedPassword = await bcrypt.hash(configUser.password, 10);
 
@@ -213,13 +217,13 @@ export class UserService {
         }
     }
 
-    async registerTestUsers(testUsers: DBUser[]) {
+     async registerTestUsers(testUsers: DBUser[]) {
         testUsers.forEach(testUser => {
             this.registerUserFromConfig(testUser);
         });
     }
 
-    async onRegister(req: any, res?: any) {
+     async onRegister(req: any, res?: any) {
         // Our register logic starts here
         try {
             const {username, email, password} = req.body;
@@ -252,11 +256,11 @@ export class UserService {
             return err;
         }
     }
-    getUserByEmail(email: string) {
+     getUserByEmail(email: string) {
         return s9UserRepository.getUserByEmail(email);
     }
 
-    async validateEditorIdAssignments(editorIds: string[]) {
+     async validateEditorIdAssignments(editorIds: string[]) {
         return s9UserRepository.getUsers(editorIds).then(foundUsers => {
             const invalidEditorsAssignments = editorIds.filter(editorId => !foundUsers.find(u => u.id === editorId));
             const validEditorsAssignments = foundUsers.map(u => u.id);
