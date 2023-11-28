@@ -16,6 +16,7 @@ import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
 import {EstimationPokerRoom} from "../model/estimation-poker-room";
 import {logger} from "./s9logger";
 import {BasicResponse} from "../model/basic-response.model";
+import {RoomSettings} from "../model/room-settings";
 
 export class EstimationRoomService {
     private static INSTANCE: EstimationRoomService = new EstimationRoomService();
@@ -31,12 +32,12 @@ export class EstimationRoomService {
 
     public createRoom(createRoomRequest: {
         userName: string,
-        roomTitle: string,
-        avatar: Avatar
+        avatar: Avatar,
+        roomSettings: RoomSettings
     }): Promise<InitValues | ErrorResponse> {
         try {
             return estimationPokerRoomRepository
-                .createEstimationPokerRoom(createRoomRequest.roomTitle)
+                .createEstimationPokerRoom(createRoomRequest.roomSettings)
                 .then(newRoom => userService.createUser(createRoomRequest.userName, createRoomRequest.avatar, newRoom.id, [ROLE.MODERATOR])
                     .then(creator => this.getJoinedUserResponse(newRoom.id, creator)));
         } catch (error) {

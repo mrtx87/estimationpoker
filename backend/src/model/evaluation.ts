@@ -14,9 +14,8 @@ export class Evaluation {
         this.amountOfVotes = init.amountOfVotes;
 
     }
-    public static of(init: any): ValueByAmount {
-        return new ValueByAmount(init);
+    public static of(init: any): Evaluation {
+        return new Evaluation(init);
     }
-
 
 }

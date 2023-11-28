@@ -51,5 +51,41 @@ export const APP_STATE = {
 
 /** ROUTES **/
 
-export const ROOM_ROUTE = '/estimations/room/'
-export const HOME_ROUTE = '/'
+export const ROOM_ROUTE = '/estimations/room/';
+export const HOME_ROUTE = '/';
+
+/** VALUE TYPES **/
+
+export const fibonacci = {
+    id: 1,
+    name: 'Fibonacci',
+    values: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?']
+}
+
+export const scrum = {
+    id: 2,
+    name: 'Scrum',
+    values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?']
+}
+
+export const sequential = {
+    id: 3,
+    name: 'Sequentiell',
+    values: ['0', '1', '2', '3', '5', '6', '7', '8', '9', '10', '?']
+}
+
+export const tshirt = {
+    id: 4,
+    name: 'T-Shirt',
+    values: ['XS', 'S', 'M', 'L', 'XL', 'XXL', '?']
+}
+
+export const t42 = {
+    id: 5,
+    name: 'Team 42',
+    values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
+}
+
+export const VALUE_TYPE_OPTIONS = [
+    scrum, fibonacci, sequential, tshirt, t42
+]

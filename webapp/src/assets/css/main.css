@@ -25,7 +25,7 @@ html, body, div {
 }
 
 body {
-    font-family: bungee;
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
     color: var(--primary-light-text-color);
     display: flex;
     align-items: flex-start;

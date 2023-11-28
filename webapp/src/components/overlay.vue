@@ -90,7 +90,7 @@ export default {
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(128, 128, 128, 0.57);
+  background: #000000a6;
 }
 
 .overlay-container {
@@ -100,9 +100,9 @@ export default {
   justify-content: center;
   align-items: center;
   background: #f0f8ffb3;
-  padding: 2vh;
-  border-radius: 10px;
-  box-shadow: 4px 3px 15px -2px rgb(0 0 0 / 20%);
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px #00000080;
   width: fit-content;
 }
 

@@ -7,7 +7,7 @@ import {
     INVALID_TOKEN,
     TOKEN_REQUIRED,
 } from "../constants/error-texts";
-import {ROLE} from "../constants/global";
+import {default_avatar, ROLE} from "../constants/global";
 import {
     getBadRequestErrorResponseHandling, getForbiddenErrorResponseHandling,
     getInternalErrorErrorResponseHandling,
@@ -79,23 +79,7 @@ export class UserService {
             roomId: roomId,
             name: userName,
             roles: roles,
-            avatar: avatar ? avatar : new Avatar({
-                hair: new AvatarElement({
-                    type: 'hair',
-                    color: '#CBA670',
-                    code: 1
-                }),
-                head: new AvatarElement({
-                    type: 'head',
-                    color: '#FF861C',
-                    code: 1
-                }),
-                shirt: new AvatarElement({
-                    type: 'shirt',
-                    color: '#9A3EE9',
-                    code: 1
-                })
-            })
+            avatar: avatar ? avatar : default_avatar
         }));
 
         return dbUserModel.save().then(User.from)

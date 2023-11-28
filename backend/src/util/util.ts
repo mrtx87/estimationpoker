@@ -3,6 +3,8 @@ import {InitAppProcess} from "../model/init-app-process";
 import {ErrorResponse, ResponseCode} from "../controller-config/rest-controller-configurator";
 import {EstimationPokerRoom} from "../model/estimation-poker-room";
 import {v4 as UUID} from 'uuid';
+import {RoomSettings} from "../model/room-settings";
+import {ValueOptions} from "../model/value-option";
 
 export const MAX_RESULTS_DOC_SEARCH = 25;
 
@@ -126,5 +128,15 @@ export function hasRequiredAppConfig(init: InitAppProcess) {
 
 // test documents stuff
 export function getTestRoom() {
-    return EstimationPokerRoom.createEstimationPokerRoom("Testraum" + UUID());
+    return EstimationPokerRoom.createEstimationPokerRoom(new RoomSettings({
+        title: "Testraum" + UUID(),
+        voteAfterReveal: false,
+        autoReveal: false,
+        realTimeVoting: false,
+        valueOptions: new ValueOptions({
+            id: 5,
+            name: 'Team 42',
+            values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
+        })
+    }));
 }

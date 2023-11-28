@@ -10,8 +10,6 @@ import {
 import {
     ERROR_WHILE_CREATING_ROOM,
     ERROR_WHILE_JOINING_ROOM,
-    ERROR_WHILE_REGISTER_USER,
-    INVALID_TOKEN,
 } from "../constants/error-texts";
 import {getErrorResponseHandling, getInternalErrorErrorResponseHandling} from "../util/util";
 import {logger} from "../services/s9logger";

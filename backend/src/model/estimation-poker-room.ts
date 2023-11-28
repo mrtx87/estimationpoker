@@ -1,23 +1,24 @@
 import {v4 as UUID} from 'uuid';
 import {CachedEstimationPokerRoom} from "./cached-estimation-poker-room";
+import {RoomSettings} from "./room-settings";
 
 
 export class EstimationPokerRoom {
     id: string;
     createdAt: number;
-    title: string;
+    roomSettings: RoomSettings
 
     constructor(init: Partial<EstimationPokerRoom>) {
         this.id = init.id;
         this.createdAt = init.createdAt;
-        this.title = init.title;
+        this.roomSettings = init.roomSettings;
     }
 
-    public static createEstimationPokerRoom(roomTitle: string): EstimationPokerRoom {
+    public static createEstimationPokerRoom(roomSettings: RoomSettings): EstimationPokerRoom {
         const estimationPokerRoom = new EstimationPokerRoom({
             id: UUID(),
-            title: roomTitle,
             createdAt: Date.now(),
+            roomSettings: new RoomSettings(roomSettings)
         });
         estimationPokerRoom.id = UUID();
         return estimationPokerRoom;
@@ -31,7 +32,7 @@ export class EstimationPokerRoom {
         return new EstimationPokerRoom({
             id: cachedRoom.id,
             createdAt: cachedRoom.createdAt,
-            title: cachedRoom.title,
+            roomSettings: cachedRoom.roomSettings,
         });
     }
 

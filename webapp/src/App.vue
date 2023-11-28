@@ -5,7 +5,7 @@
         <div class="app-content">
             <div class="left-content">
                 <div class="room-title-container">
-                    {{room?.title}}
+                    {{room?.roomSettings.title}}
                 </div>
                 <div class="estimation-title-container">
                     SCHÄTZUNG TITLE
@@ -32,7 +32,7 @@
 
 <script>
 import {
-    DISPLAY_OVERLAY_STATE,
+    DISPLAY_OVERLAY_STATE, VALUE_TYPE_OPTIONS,
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
@@ -86,6 +86,9 @@ export default {
         },
         room() {
             return this.appStore.room;
+        },
+        valueTypeOptions() {
+            return VALUE_TYPE_OPTIONS;
         }
     }
 };

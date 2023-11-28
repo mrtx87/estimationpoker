@@ -15,6 +15,7 @@ import {logger} from "../services/s9logger";
 import {EstimationPokerRoomMapper} from "../mapper/estimation-poker-mapper";
 import {INFO_ROOM_DELETED} from "../constants/logging-texts";
 import {User} from "../model/user";
+import {RoomSettings} from "../model/room-settings";
 
 
 export class EstimationPokerRoomRepository {
@@ -29,8 +30,8 @@ export class EstimationPokerRoomRepository {
     private constructor() {
     }
 
-    createEstimationPokerRoom(roomTitle: string) {
-        const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomTitle);
+    createEstimationPokerRoom(roomSettings: RoomSettings) {
+        const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomSettings);
         const estimationPokerRoomModel = new EstimationPokerRoomModel(estimationPokerRoom);
         return estimationPokerRoomModel
             .save()
@@ -114,8 +115,7 @@ export class EstimationPokerRoomRepository {
     }
 
     private updateCurrentRoomModelSafe(savedRoomModel: any, roomUpdate: EstimationPokerRoom) {
-        savedRoomModel.changedAt = Date.now();
-        savedRoomModel.title = roomUpdate.title;
+        savedRoomModel.roomSettings = roomUpdate.roomSettings;
     }
 
     private postRoomCreationProcessing(room: EstimationPokerRoom) {

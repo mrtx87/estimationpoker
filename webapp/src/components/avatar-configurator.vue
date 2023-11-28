@@ -140,7 +140,6 @@ import {
   SHIRT_COLOR_PLACEHOLDER,
   SKIN_COLOR_PLACEHOLDER
 } from "@/assets/avatar/avatar-constants.ts";
-import {getRandomAvatar} from "@/services/cookie-service";
 
 
 export default {
@@ -166,7 +165,7 @@ export default {
   },
   methods: {
     generateRandomAvatar: function () {
-      const randomAvatar = getRandomAvatar(
+      const randomAvatar = this.$appService.getRandomAvatar(
           this.headsOptions.length,
           this.hairOptions.length,
           this.shirtOptions.length,
