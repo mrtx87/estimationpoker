@@ -10,8 +10,8 @@ import {
 } from "../server";
 import {BasicResponse} from "../model/basic-response.model";
 import {logger} from "../services/s9logger";
-import {connection} from "mongoose";
 import {User} from "../model/user";
+import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -83,7 +83,7 @@ export class WebsocketControllerImpl {
         })
     }
 
-    onPlayerMessageIncoming(request: AuthenticatedRequest, playerConnection: any) {
+    onPlayerMessageIncoming(request: AuthenticatedRequest, connection: any) {
         try {
             const endPoint = this.websocketControllerEndpoints.get(request.type);
             if (!endPoint) {
@@ -94,75 +94,87 @@ export class WebsocketControllerImpl {
                 //TODO answer
             }
 
-            //TODO authorization
-
-            endPoint.action(authenticated.roomId, authenticated.userId, new BasicRequest(request), playerConnection);
-
+            this.preRequestHandling(authenticated.roomId, authenticated.userId, connection)
+                .then(cachedRoom => {
+                    if (!endPoint.authorize(this.getAuthenticatedUser(authenticated.userId, cachedRoom), connection)) {
+                        // TODO answer
+                        return null;
+                    }
+                    return cachedRoom;
+                }, (error) => null)
+                .then(cachedRoom => cachedRoom ? endPoint.action(cachedRoom, authenticated.userId, new BasicRequest(request), connection) : {});
         } catch (e) {
             console.log(e);
         }
     }
 
-    async finalizeJoin(roomId: string, joiningUserId: string, request: AuthenticatedRequest, userWsConnection: any) {
-        let cachedRoom = estimationRoomCache.getCachedRoom(roomId);
-        userWsConnection.userId = joiningUserId;
-        userWsConnection.roomId = roomId;
-        if (!cachedRoom) {
-            const dbRoom = await estimationPokerRoomRepository.getRoomById(roomId);
-            if (!dbRoom) {
-                websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, joiningUserId, null), userWsConnection);
-                return;
-            }
-            cachedRoom = await estimationRoomService.restoreRoomToCache(dbRoom);
-        }
-        logger.info(`user ${joiningUserId} joined room: ${roomId}`);
-        cachedRoom.addConnection(userWsConnection);
-        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, cachedRoom.toPublicDTO()), userWsConnection);
+    getAuthenticatedUser(userId: string, cachedRoom: CachedEstimationPokerRoom) {
+        return cachedRoom.users.find(u => u.id === userId);
+    }
+
+    async finalizeJoin(cachedRoom: CachedEstimationPokerRoom, joiningUserId: string, request: AuthenticatedRequest, connection: any) {
+        connection.userId = joiningUserId;
+        connection.roomId = cachedRoom.id;
+        logger.info(`user ${joiningUserId} joined room: ${cachedRoom.id}`);
+        cachedRoom.addConnection(connection);
+        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, cachedRoom.toPublicDTO()), connection);
         websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId, cachedRoom.toPublicDTO()), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
     }
 
-    ping(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`${request.type} : ${userId} [roomId: ${roomId}]`);
+    ping(cachedRoom: CachedEstimationPokerRoom, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    revealVotes(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    resetVotes(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    nextEstimation(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    deleteRoom(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    deleteRoom(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    deleteUser(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    deleteUser(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    changeRole(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    changeRole(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    changeAvatar(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    changeAvatar(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    changeUsername(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    changeUsername(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
-    changeRoomSettings(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    changeRoomSettings(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
     }
 
+    async preRequestHandling(roomId: string, userId: string, connection: any) {
+        let cachedRoom = estimationRoomCache.getCachedRoom(roomId);
+        if (cachedRoom) {
+            return cachedRoom;
+        }
+        const dbRoom = await estimationPokerRoomRepository.getRoomById(roomId);
+        if (!dbRoom) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, userId, null), connection);
+            return Promise.reject('room does not exists');
+        }
+        return estimationRoomService.restoreRoomToCache(dbRoom);
+    }
 
-    private getRolePredicament(roles: string[]){
+    private getRolePredicament(roles: string[]) {
         return (user: User, connection: any) => user.roles.some(role => roles.includes(role));
     }
 
@@ -170,7 +182,7 @@ export class WebsocketControllerImpl {
         return this.getRolePredicament([ROLE.MODERATOR]);
     }
 
-    private getTruePredicament(){
+    private getTruePredicament() {
         return (user: User, connection: any) => true;
     }
 
@@ -178,7 +190,7 @@ export class WebsocketControllerImpl {
 
 export class WebsocketControllerEndpoint {
     type: string;
-    action: (roomId: string, userId: string, request: BasicRequest, connection: any) => void;
+    action: (cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) => void;
     authorize: (requestingUser: User, connection: any) => boolean
 
     constructor(init: WebsocketControllerEndpoint) {
