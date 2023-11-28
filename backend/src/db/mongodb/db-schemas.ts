@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import {EstimationPokerRoom} from "../../model/estimation-poker-room";
-import {DBUser} from "../../model/user";
+import { User} from "../../model/user";
 import {RoomSettings} from "../../model/room-settings";
 import {ValueOptions} from "../../model/value-option";
 import {Avatar} from "../../model/avatar";
@@ -54,7 +54,7 @@ export const AvatarSchema = new mongoose.Schema<Avatar>({
 })
 
 
-export const UserSchema = new mongoose.Schema<DBUser>({
+export const UserSchema = new mongoose.Schema<User>({
     id: String,
     roomId: String,
     name: String,
@@ -67,4 +67,4 @@ UserSchema.index({name: -1}, {unique: false});
 
 
 export const EstimationPokerRoomModel = mongoose.model('rooms', EstimationPokerRoomSchema);
-export const DBUserModel = mongoose.model('User', UserSchema);
+export const UserModel = mongoose.model('User', UserSchema);

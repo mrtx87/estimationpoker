@@ -1,6 +1,5 @@
-import {DBUserModel} from "../db/mongodb/db-schemas";
-import {DBUser} from "../model/user";
-
+import {UserModel} from "../db/mongodb/db-schemas";
+import {User} from "../model/user";
 export class UserRepository {
     private static INSTANCE: UserRepository = new UserRepository();
 
@@ -11,34 +10,34 @@ export class UserRepository {
     private constructor() {
     }
 
-    createUser(dbUser: DBUser) {
-        const s9UserModel = new DBUserModel(dbUser);
+    createUser(dbUser: User) {
+        const s9UserModel = new UserModel(dbUser);
         return s9UserModel.save();
     }
 
     getUser(userId: string) {
-        return DBUserModel.findOne({id: userId});
+        return UserModel.findOne({id: userId});
     }
 
     getUsers(userIds: string[]) {
-        return DBUserModel.find().where('id').in(userIds);
+        return UserModel.find().where('id').in(userIds);
     }
 
     getUsersByRoomId(roomId: string) {
-        return DBUserModel.find({roomId: roomId});
+        return UserModel.find({roomId: roomId});
     }
     findUsers(searchText: string) {
-        return DBUserModel.find({
+        return UserModel.find({
             name: {$regex: '.*' + searchText + '.*'},
         })
     }
 
     getUserByEmail(email: string) {
-        return DBUserModel.findOne({email: email});
+        return UserModel.findOne({email: email});
     }
 
     getLoginUser(username:string, email:string) {
-        return DBUserModel.findOne({
+        return UserModel.findOne({
             $or: [
                 {'name': username},
                 {'email': email}

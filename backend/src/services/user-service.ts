@@ -1,4 +1,4 @@
-import {DBUser, User} from "../model/user";
+import {User} from "../model/user";
 
 import {v4 as UUID} from 'uuid';
 import {
@@ -14,10 +14,8 @@ import {
     getUnauthorizedErrorResponseHandling,
 } from "../util/util";
 import {UserRepository} from "../repository/user-respository";
-import {UserMapper} from "../mapper/estimation-poker-mapper";
 import {Avatar} from "../model/avatar";
-import {DBUserModel} from "../db/mongodb/db-schemas";
-import {AvatarElement} from "../model/avatar-element.model";
+import {UserModel} from "../db/mongodb/db-schemas";
 
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
@@ -74,7 +72,7 @@ export class UserService {
     }
 
     createUser(userName: string, avatar: Avatar, roomId: string, roles = [ROLE.PARTICIPANT]) {
-        const dbUserModel = new DBUserModel(DBUser.from({
+        const dbUserModel = new UserModel(User.of({
             id: UUID(),
             roomId: roomId,
             name: userName,
@@ -82,19 +80,19 @@ export class UserService {
             avatar: avatar ? avatar : default_avatar
         }));
 
-        return dbUserModel.save().then(User.from)
+        return dbUserModel.save().then(User.of)
     }
 
     getUser(userId: string) {
-        return userRepository.getUser(userId).then(UserMapper.map);
+        return userRepository.getUser(userId).then(User.of);
     }
 
     getDBUsers(userIds: string[]) {
-        return userRepository.getUsers(userIds).then(users => users.map(UserMapper.mapDBUser));
+        return userRepository.getUsers(userIds).then(users => users.map(User.of));
     }
 
     getDBUsersByRoomId(roomId: string) {
-        return userRepository.getUsersByRoomId(roomId).then(users => users.map(UserMapper.mapDBUser));
+        return userRepository.getUsersByRoomId(roomId).then(users => users.map(User.of));
     }
 
     isModerator(userId: string) {

@@ -10,7 +10,7 @@ import {CREATE_ROOM_ERROR} from "../constants/error-texts";
 import {getInternalErrorErrorResponseHandling} from "../util/util";
 import {InitValues} from "../model/init-values";
 import {ResponseMessageType, ROLE} from "../constants/global";
-import {DBUser, User} from "../model/user";
+import {User} from "../model/user";
 import {Avatar} from "../model/avatar";
 import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
 import {EstimationPokerRoom} from "../model/estimation-poker-room";

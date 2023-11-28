@@ -6,8 +6,8 @@ export class Avatar {
     head: AvatarElement;
 
     constructor(init: Avatar) {
-        this.hair = init.hair;
-        this.shirt = init.shirt;
-        this.head = init.head;
+        this.hair = new AvatarElement(init.hair);
+        this.shirt = new AvatarElement(init.shirt);
+        this.head = new AvatarElement(init.head);
     }
 }

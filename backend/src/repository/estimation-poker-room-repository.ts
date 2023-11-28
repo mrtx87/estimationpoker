@@ -14,7 +14,6 @@ import {
 import {logger} from "../services/s9logger";
 import {EstimationPokerRoomMapper} from "../mapper/estimation-poker-mapper";
 import {INFO_ROOM_DELETED} from "../constants/logging-texts";
-import {User} from "../model/user";
 import {RoomSettings} from "../model/room-settings";
 
 
@@ -101,13 +100,13 @@ export class EstimationPokerRoomRepository {
             .limit(MAX_RESULTS_DOC_SEARCH);
     }*/
 
-    private updateDocumentInDB(storedRoom: any, updatedRoom: any) {
-        this.updateCurrentRoomModelSafe(storedRoom, updatedRoom);
-        return storedRoom
+    private updateDocumentInDB(room: any, updatedRoom: any) {
+        this.updateCurrentRoomModelSafe(room, updatedRoom);
+        return room
             .save()
-            .then((storedDoc: any) => {
+            .then((storedRoom: any) => {
                 logger.info('Room updated: ' + storedRoom.id);
-                return EstimationPokerRoomMapper.map(storedDoc);
+                return EstimationPokerRoomMapper.map(storedRoom);
             }, () => new ErrorResponse({
                 code: ResponseCode.BAD_REQUEST,
                 message: 'Fehler beim updaten des Raums'

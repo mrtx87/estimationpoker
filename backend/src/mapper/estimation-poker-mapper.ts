@@ -8,15 +8,3 @@ export class EstimationPokerRoomMapper {
     }
 
 }
-
-
-export class UserMapper {
-    public static mapDBUser(init: any): User {
-        return User.from(init);
-    }
-
-    public static map(init: any): User {
-        return User.of(init);
-    }
-
-}
