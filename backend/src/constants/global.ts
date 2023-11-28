@@ -5,6 +5,14 @@ export const ROLE = {
 };
 
 export const RequestMessageType = {
-   CREATE_GAME: 'create-room',
-   JOIN_GAME: 'join-session'
+   FINALIZE_JOIN: 'finalize-join',
+   JOIN_GAME: 'join-session',
+   PING: 'ping'
+}
+
+export const ResponseMessageType = {
+   JOINED_ESTIMATION_SESSION: 'finalized.join',
+   ANOTHER_USER_JOINED_SESSION: 'another.user.joined',
+   ROOM_NOT_EXISTING: 'room.not.existing',
+   USER_DISCONNECTED: 'user.disconnected.room',
 }

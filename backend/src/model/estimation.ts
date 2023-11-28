@@ -1,22 +1,27 @@
-import {v4 as UUID} from 'uuid';
-
+import {Vote} from "./vote";
+import {EstimationTimer} from "./estimation-timer";
+import {Evaluation} from "./evaluation";
 
 export class Estimation {
     id: string;
+    roomId: string
     createdAt: number;
     title: string;
     state: string; // voting, revealed, closed
-    timer: {
-        start: number;
-        state: number; // running, stopped
-    };
-    votes: string[]; // list of votes
-    // vote -> userId, userName, value
+    timer: EstimationTimer;
+    votes: Vote[];
+    evaluation: Evaluation;
+    valueOptions: string [];
 
     constructor(init: Partial<Estimation>) {
         this.id = init.id;
+        this.roomId = init.roomId;
         this.createdAt = init.createdAt;
         this.title = init.title;
+        this.timer = init.timer;
+        this.votes = init.votes;
+        this.evaluation = init.evaluation;
+        this.valueOptions = init.valueOptions;
     }
 
 

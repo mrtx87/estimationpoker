@@ -9,7 +9,7 @@ import {ErrorResponse} from "../controller-config/rest-controller-configurator";
 import {CREATE_ROOM_ERROR} from "../constants/error-texts";
 import {getInternalErrorErrorResponseHandling} from "../util/util";
 import {InitValues} from "../model/init-values";
-import {ROLE} from "../constants/global";
+import {ResponseMessageType, ROLE} from "../constants/global";
 import {DBUser, User} from "../model/user";
 import {Avatar} from "../model/avatar";
 import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
@@ -72,8 +72,8 @@ export class EstimationRoomService {
         const cachedRoom = estimationRoomCache.getCachedRoom(connection.roomId);
         if (cachedRoom) {
             cachedRoom.removeConnection(connection);
-            websocketService.notifyUsers(new BasicResponse('user.disconnected.room', connection.userId), cachedRoom.connections);
-            logger.log('user ' + connection.userId + ' disconnect from room ' + connection.roomId);
+            websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DISCONNECTED, connection.userId), cachedRoom.connections);
+            logger.log('user ' + connection.userId + ' disconnected from room ' + connection.roomId);
         }
     }
 
@@ -90,13 +90,8 @@ export class EstimationRoomService {
 
     }
 
-    async restoreRoomToCacheFromDB(roomId: string, connection: any) {
-        const dbRoom = await estimationPokerRoomRepository.getRoomById(roomId);
-        if (!dbRoom) {
-            return null;
-        }
+    async restoreRoomToCache(dbRoom: EstimationPokerRoom) {
         const users = await userService.getDBUsersByRoomId(dbRoom.id);
-
         const cachedRoom = CachedEstimationPokerRoom.from(dbRoom, users);
         estimationRoomCache.addRoomToCache(cachedRoom);
         return cachedRoom;
