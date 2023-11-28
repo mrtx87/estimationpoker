@@ -12,6 +12,8 @@
                 </div>
                 <div class="action-area">
                     ACTION AREA
+                    <chart theme="custom" :options="barDataMulti" ref="chart1" auto-resize></chart>
+
                 </div>
                 <div class="estimation-history">
                     SCHÄTZUNG HISTORY
@@ -40,7 +42,14 @@ import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
 import UserList from "@/components/user-list.vue";
+import theme from "echarts/src/theme/dark";
+import ECharts from "vue-echarts/components/ECharts.vue";
+import { initial, barDataMulti, barData } from "./bar";
 
+import "echarts/lib/chart/bar";
+import "echarts/theme/dark";
+
+ECharts.registerTheme("custom", theme);
 
 export default {
     name: "App",
@@ -48,7 +57,8 @@ export default {
         UserList,
         HeaderVue,
         Overlay,
-        Footer
+        Footer,
+        chart: ECharts
     },
     created() {
         this.appStore = useAppStateStore();
@@ -69,6 +79,9 @@ export default {
     data: function () {
         return {
             appStore: null,
+            init: initial,
+            barDataMulti: barDataMulti,
+            barData: barData
         }
     },
     methods: {
