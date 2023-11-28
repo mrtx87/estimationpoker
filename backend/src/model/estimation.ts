@@ -1,27 +1,28 @@
 import {Vote} from "./vote";
 import {EstimationTimer} from "./estimation-timer";
 import {Evaluation} from "./evaluation";
+import {ValueOptions} from "./value-option";
 
 export class Estimation {
     id: string;
     roomId: string
     createdAt: number;
     title: string;
-    state: string; // voting, revealed, closed
+    state: number; // voting, revealed, closed
     timer: EstimationTimer;
     votes: Vote[];
     evaluation: Evaluation;
-    valueOptions: string [];
+    valueOptions: ValueOptions;
 
     constructor(init: Partial<Estimation>) {
         this.id = init.id;
         this.roomId = init.roomId;
         this.createdAt = init.createdAt;
         this.title = init.title;
-        this.timer = init.timer;
-        this.votes = init.votes;
-        this.evaluation = init.evaluation;
-        this.valueOptions = init.valueOptions;
+        this.timer = EstimationTimer.of(init.timer);
+        this.votes = init.votes.map(Vote.of);
+        this.evaluation = Evaluation.of(init.evaluation) ;
+        this.valueOptions = ValueOptions.of(init.valueOptions);
     }
 
 

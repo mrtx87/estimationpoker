@@ -29,8 +29,7 @@ export class EstimationPokerRoomRepository {
     private constructor() {
     }
 
-    createEstimationPokerRoom(roomSettings: RoomSettings) {
-        const estimationPokerRoom = EstimationPokerRoom.createEstimationPokerRoom(roomSettings);
+    createEstimationPokerRoom(estimationPokerRoom: EstimationPokerRoom) {
         const estimationPokerRoomModel = new EstimationPokerRoomModel(estimationPokerRoom);
         return estimationPokerRoomModel
             .save()

@@ -7,18 +7,21 @@ export class EstimationPokerRoom {
     id: string;
     createdAt: number;
     roomSettings: RoomSettings
+    currentEstimationId: string;
 
     constructor(init: Partial<EstimationPokerRoom>) {
         this.id = init.id;
         this.createdAt = init.createdAt;
         this.roomSettings = init.roomSettings;
+        this.currentEstimationId = init.currentEstimationId;
     }
 
-    public static createEstimationPokerRoom(roomSettings: RoomSettings): EstimationPokerRoom {
+    public static createEstimationPokerRoom(roomSettings: RoomSettings, initEstimationId: string): EstimationPokerRoom {
         const estimationPokerRoom = new EstimationPokerRoom({
             id: UUID(),
             createdAt: Date.now(),
-            roomSettings: new RoomSettings(roomSettings)
+            roomSettings: new RoomSettings(roomSettings),
+            currentEstimationId: initEstimationId
         });
         estimationPokerRoom.id = UUID();
         return estimationPokerRoom;
@@ -33,6 +36,7 @@ export class EstimationPokerRoom {
             id: cachedRoom.id,
             createdAt: cachedRoom.createdAt,
             roomSettings: cachedRoom.roomSettings,
+            currentEstimationId: cachedRoom.currentEstimation.id
         });
     }
 

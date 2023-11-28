@@ -2,18 +2,21 @@ import {v4 as UUID} from 'uuid';
 import {User} from "./user";
 import {EstimationPokerRoom} from "./estimation-poker-room";
 import {RoomSettings} from "./room-settings";
+import {Estimation} from "./estimation";
 
 export class CachedPublicEstimationPokerRoom {
     id: string;
     createdAt: number;
     users: User[];
     roomSettings: RoomSettings;
+    currentEstimation: Estimation
 
     constructor(init: Partial<CachedEstimationPokerRoom>) {
         this.id = init.id;
         this.createdAt = init.createdAt;
         this.users = init.users;
         this.roomSettings = init.roomSettings;
+        this.currentEstimation = init.currentEstimation;
     }
 }
 
@@ -39,12 +42,13 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
         return c;
     }
 
-    static from(dbRoom: EstimationPokerRoom, users: User[]) {
+    static from(dbRoom: EstimationPokerRoom, users: User[], currentEstimation: Estimation) {
         return new CachedEstimationPokerRoom({
             id: dbRoom.id,
             createdAt: dbRoom.createdAt,
             users: users,
-            roomSettings: dbRoom.roomSettings
+            roomSettings: dbRoom.roomSettings,
+            currentEstimation: currentEstimation
         })
     }
 

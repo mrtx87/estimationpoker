@@ -10,4 +10,8 @@ export class ValueOptions {
         this.name = init.name;
         this.values = init.values;
     }
+
+    static of(init: Partial<ValueOptions>) {
+        return new ValueOptions(init);
+    }
 }

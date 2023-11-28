@@ -1,7 +1,7 @@
 <template>
     <div class="users-wrapper">
-        <div v-for="user in onlineUsers" :key="user.id">
-            <div> {{user.name}} </div>
+        <div v-for="user in users" :key="user.id">
+            <div> {{ isOnline(user.id) ? '+' : '-'}} {{user.name}} </div>
         </div>
     </div>
 </template>
@@ -29,6 +29,9 @@ export default {
         }
     },
     methods: {
+        isOnline(userId) {
+            return this.room.connections.find(uid => uid === userId);
+        }
     },
     computed: {
         room() {

@@ -1,4 +1,6 @@
 import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
+import {User} from "../model/user";
+import {estimationRoomCache} from "../server";
 
 
 export class EstimationRoomCache {
@@ -18,6 +20,13 @@ export class EstimationRoomCache {
 
     addRoomToCache(roomToCache: CachedEstimationPokerRoom) {
         this.roomCache.set(roomToCache.id, roomToCache);
+    }
+
+    addUserToRoomIfCached(roomId: string, user: User) {
+        const cachedRoom = this.getCachedRoom(roomId);
+        if (cachedRoom) {
+            cachedRoom.users.push(user);
+        }
     }
 
     getAllRoomsFromCache() {

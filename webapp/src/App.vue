@@ -4,14 +4,10 @@
         <HeaderVue></HeaderVue>
         <div class="app-content">
             <div class="left-content">
-                <div class="room-title-container">
-                    {{room?.roomSettings.title}}
-                </div>
-                <div class="estimation-title-container">
-                    SCHÄTZUNG TITLE
-                </div>
+                <input :value="room?.roomSettings.title" class="room-title-container">
+                <input :value="room?.currentEstimation.title" class="estimation-title-container">
                 <div class="action-area">
-                    ACTION AREA
+                    <div v-for="value in room?.currentEstimation.valueOptions.values" :key="value"> {{ value }}</div>
                 </div>
                 <div class="estimation-history">
                     SCHÄTZUNG HISTORY
@@ -19,7 +15,9 @@
             </div>
             <div class="right-content">
                 <div class="moderator-actions">
-                    Moderator Actions
+                    <button>Aufdecken</button>
+                    <button>Zurücksetzen</button>
+                    <button>Neue Schätzung</button>
                 </div>
                 <div class="user-list">
                     <user-list></user-list>
@@ -108,7 +106,7 @@ export default {
 .app-content {
   max-width: 1400px;
   background-color: grey;
- box-sizing: border-box;
+  box-sizing: border-box;
   height: calc(100vh - 60px - 40px);
   width: 1400px;
 
@@ -129,9 +127,26 @@ export default {
     }
 
     .action-area {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
       height: 100%;
       background-color: #9f9254;
+      padding: 15px;
+      box-sizing: border-box;
+      flex-basis: fit-content;
 
+      div {
+        display: flex;
+        width: 10%;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        height: 150px;
+        border: 1px solid black;
+        border-radius: 4px;
+        background-color: #9f92e4;
+      }
     }
 
     .estimation-history {
@@ -146,15 +161,20 @@ export default {
     flex-direction: column;
     gap: 10px;
 
-      .moderator-actions {
-          height: 20%;
-          background-color: #9f9284;
-      }
+    .moderator-actions {
+      display: grid;
+      box-sizing: border-box;
+      gap: 10px;
+      grid-template-columns: calc(50% - 5px) calc(50% - 5px);
+      height: 20%;
+      padding: 10px;
+      background-color: #9f9284;
+    }
 
-      .user-list {
-          height: 100%;
-          background-color: #9f9234;
-      }
+    .user-list {
+      height: 100%;
+      background-color: #9f9234;
+    }
   }
 }
 

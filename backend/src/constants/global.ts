@@ -10,7 +10,16 @@ export const ROLE = {
 export const RequestMessageType = {
     FINALIZE_JOIN: 'finalize-join',
     JOIN_GAME: 'join-session',
-    PING: 'ping'
+    PING: 'ping',
+    REVEAL_VOTES: 'reveal-votes',
+    RESET_VOTES: 'reset-votes',
+    NEXT_ESTIMATION: 'next-estimation',
+    DELETE_ROOM: 'delete-room',
+    DELETE_USER: 'delete-user',
+    CHANGE_ROLE: 'change-role',
+    CHANGE_USERNAME: 'change-username',
+    CHANGE_AVATAR: 'change-avatar',
+    CHANGE_ROOM_SETTINGS: 'change-room-settings'
 }
 
 export const ResponseMessageType = {
@@ -75,3 +84,14 @@ export const default_avatar = new Avatar({
         code: 1
     })
 });
+
+export const VOTING_STATE = {
+    VOTING: 1,
+    REVEALED: 2,
+    CLOSED: 3
+}
+
+export const ESTIMATION_TIMER_STATE = {
+    RUNNING: 1,
+    STOPPED: 0,
+}

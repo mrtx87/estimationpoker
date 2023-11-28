@@ -9,10 +9,9 @@ export class Evaluation {
     constructor(init: Partial<Evaluation>) {
         this.estimationId = init.estimationId;
         this.avg = init.avg;
-        this.valuesByAmount = init.valuesByAmount;
+        this.valuesByAmount = init.valuesByAmount.map(ValueByAmount.of);
         this.deviation = init.deviation;
         this.amountOfVotes = init.amountOfVotes;
-
     }
     public static of(init: any): Evaluation {
         return new Evaluation(init);

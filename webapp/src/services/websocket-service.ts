@@ -121,6 +121,9 @@ export class WebsocketService {
     }
 
     sendMessage(data: any): void {
+        if(this.store.connectionState !== ConnectionState.CONNECTED) {
+            return;
+        }
         Logger.log('>>>', data)
         this.wsConnection?.send(JSON.stringify(data));
         this.initPing();
@@ -148,7 +151,6 @@ export class WebsocketService {
 
     onUserDisconnectRoom(message: any) {
         const room = this.store.room;
-        room.users = room.users.filter((u: any) => u.id !== message.sender);
         room.connections = room.connections.filter((uid: string) => uid !== message.sender);
         this.store.setRoom({...room})
         // TODO TOASTR

@@ -1,25 +1,44 @@
 import mongoose from 'mongoose'
 import {EstimationPokerRoom} from "../../model/estimation-poker-room";
-import { User} from "../../model/user";
-import {RoomSettings} from "../../model/room-settings";
-import {ValueOptions} from "../../model/value-option";
+import {User} from "../../model/user";
 import {Avatar} from "../../model/avatar";
 import {AvatarElement} from "../../model/avatar-element.model";
+import {Estimation} from "../../model/estimation";
 
-
-export const ValueOptionsSchema = new mongoose.Schema<ValueOptions>({
-    id: Number,
-    name: String,
-    values: [String]
-});
-
-export const RoomSettingsSchema = new mongoose.Schema<RoomSettings>({
+export const EstimationSchema = new mongoose.Schema<Estimation>({
+    id: String,
+    roomId: String,
+    createdAt: Number,
     title: String,
-    valueOptions: ValueOptionsSchema,
-    realTimeVoting: Boolean,
-    voteAfterReveal: Boolean,
-    autoReveal: Boolean,
+    state: Number,
+    timer: {
+        startTime: Number,
+        state: Number
+    },
+    votes: [{
+        estimationId: String,
+        userId: String,
+        value: String
+    }],
+    evaluation: {
+        estimationId: String,
+        avg: Number,
+        valuesByAmount: [{
+            value: String,
+            amount: Number
+        }],
+        deviation: Number,
+        amountOfVotes: Number
+    },
+    valueOptions: {
+        id: Number,
+        name: String,
+        values: [String]
+    }
 });
+EstimationSchema.index({id: -1}, {unique: true});
+EstimationSchema.index({roomId: -1}, {unique: false});
+
 
 export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom>({
     id: String,
@@ -34,10 +53,10 @@ export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom
         realTimeVoting: Boolean,
         voteAfterReveal: Boolean,
         autoReveal: Boolean,
-    }
+    },
+    currentEstimationId: String
 });
 
-// TODO INDEX Rooms
 EstimationPokerRoomSchema.index({id: -1}, {unique: true});
 //EstimationPokerRoomSchema.index({ 'body': 'text', 'title': 'text' });
 
@@ -46,7 +65,6 @@ export const AvatarElementSchema = new mongoose.Schema<AvatarElement>({
     code: Number,
     color: String
 })
-
 export const AvatarSchema = new mongoose.Schema<Avatar>({
     hair: AvatarElementSchema,
     shirt: AvatarElementSchema,
@@ -66,5 +84,6 @@ UserSchema.index({roomId: -1}, {unique: false});
 UserSchema.index({name: -1}, {unique: false});
 
 
-export const EstimationPokerRoomModel = mongoose.model('rooms', EstimationPokerRoomSchema);
+export const EstimationPokerRoomModel = mongoose.model('EstmationPokerRoom', EstimationPokerRoomSchema);
 export const UserModel = mongoose.model('User', UserSchema);
+export const EstimationModel = mongoose.model('Estimation', EstimationSchema);

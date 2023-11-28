@@ -1,6 +1,6 @@
 export class EstimationTimer {
     startTime: number; // voting, revealed, closed
-    state: 0 | 1;
+    state: number;
 
     constructor(init: Partial<EstimationTimer>) {
         this.startTime = init.startTime;

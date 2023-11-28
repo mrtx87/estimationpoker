@@ -11,6 +11,7 @@ import {
 import {BasicResponse} from "../model/basic-response.model";
 import {logger} from "../services/s9logger";
 import {connection} from "mongoose";
+import {User} from "../model/user";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -38,11 +39,47 @@ export class WebsocketControllerImpl {
         this.addWebsocketEndpoint({
             type: RequestMessageType.FINALIZE_JOIN,
             action: this.finalizeJoin.bind(this),
-            requiredRole: [ROLE.PARTICIPANT, ROLE.MODERATOR, ROLE.SPECTATOR]
+            authorize: this.getRolePredicament([ROLE.PARTICIPANT, ROLE.MODERATOR, ROLE.SPECTATOR])
         }).addWebsocketEndpoint({
             type: RequestMessageType.PING,
             action: this.ping.bind(this),
-            requiredRole: [ROLE.PARTICIPANT, ROLE.MODERATOR, ROLE.SPECTATOR]
+            authorize: this.getTruePredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.REVEAL_VOTES,
+            action: this.revealVotes.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.RESET_VOTES,
+            action: this.resetVotes.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.NEXT_ESTIMATION,
+            action: this.nextEstimation.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.DELETE_ROOM,
+            action: this.deleteRoom.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.DELETE_USER,
+            action: this.deleteUser.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ROLE,
+            action: this.changeRole.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_USERNAME,
+            action: this.changeUsername.bind(this),
+            authorize: (user: User, connection: any) => user.id === connection.id
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_AVATAR,
+            action: this.changeAvatar.bind(this),
+            authorize: (user: User, connection: any) => user.id === connection.id
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ROOM_SETTINGS,
+            action: this.changeRoomSettings.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
         })
     }
 
@@ -56,6 +93,8 @@ export class WebsocketControllerImpl {
             if (!authenticated) {
                 //TODO answer
             }
+
+            //TODO authorization
 
             endPoint.action(authenticated.roomId, authenticated.userId, new BasicRequest(request), playerConnection);
 
@@ -82,20 +121,68 @@ export class WebsocketControllerImpl {
         websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId, cachedRoom.toPublicDTO()), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
     }
 
-    ping(roomId: string, userId: string, request: AuthenticatedRequest, playerConnection: any) {
+    ping(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
         logger.log(`${request.type} : ${userId} [roomId: ${roomId}]`);
     }
 
+    revealVotes(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    resetVotes(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    nextEstimation(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    deleteRoom(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    deleteUser(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    changeRole(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    changeAvatar(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    changeUsername(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+    changeRoomSettings(roomId: string, userId: string, request: AuthenticatedRequest, connection: any) {
+        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${roomId}]`);
+    }
+
+
+    private getRolePredicament(roles: string[]){
+        return (user: User, connection: any) => user.roles.some(role => roles.includes(role));
+    }
+
+    private getModeratorOnlyPredicament() {
+        return this.getRolePredicament([ROLE.MODERATOR]);
+    }
+
+    private getTruePredicament(){
+        return (user: User, connection: any) => true;
+    }
 
 }
 
 export class WebsocketControllerEndpoint {
     type: string;
     action: (roomId: string, userId: string, request: BasicRequest, connection: any) => void;
-    requiredRole: string[]
+    authorize: (requestingUser: User, connection: any) => boolean
 
     constructor(init: WebsocketControllerEndpoint) {
-        this.requiredRole = init.requiredRole;
+        this.authorize = init.authorize;
         this.action = init.action;
         this.type = init.type;
     }
