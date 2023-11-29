@@ -50,7 +50,7 @@ export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom
             name: String,
             values: [String]
         },
-        realTimeVoting: Boolean,
+        realtimeVoting: Boolean,
         voteAfterReveal: Boolean,
         autoReveal: Boolean,
     },

@@ -132,7 +132,7 @@ export function getTestRoom() {
         title: "Testraum" + UUID(),
         voteAfterReveal: false,
         autoReveal: false,
-        realTimeVoting: false,
+        realtimeVoting: false,
         valueOptions: new ValueOptions({
             id: 5,
             name: 'Team 42',
