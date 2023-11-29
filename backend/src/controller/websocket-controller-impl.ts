@@ -1,6 +1,6 @@
 import {AuthenticatedRequest} from "../model/authenticated-request.model";
 import {BasicRequest} from "../model/basic-request.model";
-import {RequestMessageType, ResponseMessageType, ROLE} from "../constants/global";
+import {RequestMessageType, ResponseMessageType, ROLE, SYSTEM_USER_ID} from "../constants/global";
 import {
     estimationPokerRoomRepository,
     estimationRoomCache,
@@ -138,11 +138,24 @@ export class WebsocketControllerImpl {
     }
 
     deleteRoom(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        estimationRoomService.deleteRoom(cachedRoom).then(removeSuccess => {
+            if(removeSuccess) {
+                websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, SYSTEM_USER_ID, {roomId: cachedRoom.id, title: cachedRoom.roomSettings.title}), cachedRoom.connections);
+                return;
+            }
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, SYSTEM_USER_ID,{roomId: cachedRoom.id, title: cachedRoom.roomSettings.title}), connection);
+        });
     }
 
     deleteUser(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        return userService.deleteUser(request.data.userId).then(deleteSuccess => {
+            if(deleteSuccess) {
+                cachedRoom.removeUser(request.data.userId);
+                websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DELETED, SYSTEM_USER_ID, request.data), cachedRoom.connections);
+                return;
+            }
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.USER_NOT_EXISTING, SYSTEM_USER_ID, request.data), connection);
+        })
     }
 
     changeRole(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {

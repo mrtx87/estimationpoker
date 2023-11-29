@@ -1,6 +1,8 @@
 import {Avatar} from "../model/avatar";
 import {AvatarElement} from "../model/avatar-element.model";
 
+export const SYSTEM_USER_ID = 'system';
+
 export const ROLE = {
     MODERATOR: 'moderator',
     PARTICIPANT: 'participant',
@@ -27,6 +29,9 @@ export const ResponseMessageType = {
     ANOTHER_USER_JOINED_SESSION: 'another.user.joined',
     ROOM_NOT_EXISTING: 'room.not.existing',
     USER_DISCONNECTED: 'user.disconnected.room',
+    ROOM_DELETED: 'room.deleted',
+    USER_NOT_EXISTING: 'user.not.existing',
+    USER_DELETED: 'user.deleted',
 }
 
 

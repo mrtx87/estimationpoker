@@ -29,6 +29,9 @@ export class EstimationRoomCache {
         }
     }
 
+    removeRoomFromCache(roomId: string) {
+        this.roomCache.delete(roomId);
+    }
     getAllRoomsFromCache() {
         return [...this.roomCache.values()];
     }

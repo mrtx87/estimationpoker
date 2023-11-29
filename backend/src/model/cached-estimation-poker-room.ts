@@ -36,6 +36,10 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
         this.connections = this.connections.filter(c => c !== connection);
     }
 
+    removeUser(userId: string) {
+        this.users = this.users.filter(u => u.id !== userId);
+    }
+
     toPublicDTO(): CachedPublicEstimationPokerRoom {
         const c =  new CachedEstimationPokerRoom(this);
         c.connections = this.connections.map(c => c.userId);

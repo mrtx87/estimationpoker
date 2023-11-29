@@ -15,6 +15,7 @@ import {logger} from "../services/s9logger";
 import {EstimationPokerRoomMapper} from "../mapper/estimation-poker-mapper";
 import {INFO_ROOM_DELETED} from "../constants/logging-texts";
 import {RoomSettings} from "../model/room-settings";
+import {stringify} from "uuid/index";
 
 
 export class EstimationPokerRoomRepository {
@@ -63,6 +64,17 @@ export class EstimationPokerRoomRepository {
     getRoomById(roomId: string) {
         return EstimationPokerRoomModel
             .findOne({id: roomId});
+    }
+
+    deleteRoom(roomId: string) {
+        return this.getRoomById(roomId)
+            .then(foundRoomInDB => {
+                    if (foundRoomInDB) {
+                        foundRoomInDB.delete();
+                        return true;
+                    }
+                    return false;
+                });
     }
 
     /*private findDocumentsBySearchText(searchParams: DocumentSearchParams) {

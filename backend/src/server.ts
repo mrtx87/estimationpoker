@@ -15,11 +15,13 @@ import {WebsocketControllerImpl} from "./controller/websocket-controller-impl";
 import {EstimationPokerRoomRepository} from "./repository/estimation-poker-room-repository";
 import {EstimationRoomService} from "./services/estimation-room-service";
 import {EstimationRoomCache} from "./cache/estimation-room-cache";
+import {EstimationService} from "./services/estimation-service";
 
 require('dotenv').config();
 
 export const estimationPokerRoomRepository = EstimationPokerRoomRepository.estimationPokerRoomRepository;
 export const estimationRoomService = EstimationRoomService.estimationRoomService;
+export const estimationService = EstimationService.estimationService;
 export const estimationRoomCache = EstimationRoomCache.estimationRoomCache;
 export const userService = UserService.userService;
 export const websocketService = WebsocketService.websocketService;

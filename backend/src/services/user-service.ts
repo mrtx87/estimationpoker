@@ -17,11 +17,11 @@ import {UserRepository} from "../repository/user-respository";
 import {Avatar} from "../model/avatar";
 import {UserModel} from "../db/mongodb/db-schemas";
 
+
 const jwt = require("jsonwebtoken")
 const bcrypt = require('bcrypt');
 
 const userRepository = UserRepository.s9UserRepository;
-
 
 export class UserService {
 
@@ -87,12 +87,26 @@ export class UserService {
         return userRepository.getUser(userId).then(User.of);
     }
 
-    getDBUsers(userIds: string[]) {
+    getUsers(userIds: string[]) {
         return userRepository.getUsers(userIds).then(users => users.map(User.of));
     }
 
-    getDBUsersByRoomId(roomId: string) {
+    getUsersByRoomId(roomId: string) {
         return userRepository.getUsersByRoomId(roomId).then(users => users.map(User.of));
+    }
+
+    deleteUsers(roomId: string) {
+        userRepository.deleteUsers(roomId);
+    }
+
+    deleteUser(userId: string) {
+        return userRepository.getUser(userId).then(user => {
+            if(user) {
+                user.delete();
+                return true;
+            }
+            return false;
+        });
     }
 
     isModerator(userId: string) {

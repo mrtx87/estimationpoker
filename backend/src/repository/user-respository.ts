@@ -1,5 +1,6 @@
 import {UserModel} from "../db/mongodb/db-schemas";
 import {User} from "../model/user";
+
 export class UserRepository {
     private static INSTANCE: UserRepository = new UserRepository();
 
@@ -26,6 +27,7 @@ export class UserRepository {
     getUsersByRoomId(roomId: string) {
         return UserModel.find({roomId: roomId});
     }
+
     findUsers(searchText: string) {
         return UserModel.find({
             name: {$regex: '.*' + searchText + '.*'},
@@ -36,13 +38,19 @@ export class UserRepository {
         return UserModel.findOne({email: email});
     }
 
-    getLoginUser(username:string, email:string) {
+    getLoginUser(username: string, email: string) {
         return UserModel.findOne({
             $or: [
                 {'name': username},
                 {'email': email}
             ]
         });
+    }
+
+    deleteUsers(roomId: string) {
+        UserModel
+            .find({roomId: roomId})
+            .then(users => users.forEach(u => u.delete()));
     }
 
 }

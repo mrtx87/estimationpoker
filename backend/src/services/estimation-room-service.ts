@@ -1,6 +1,6 @@
 import {
     estimationPokerRoomRepository,
-    estimationRoomCache, estimationRoomService,
+    estimationRoomCache, estimationService,
     userService, websocketService
 } from "../server";
 
@@ -47,7 +47,7 @@ export class EstimationRoomService {
             return estimationPokerRoomRepository
                 .createEstimationPokerRoom(estimationPokerRoom)
                 .then(newRoom => userService.createUser(createRoomRequest.userName, createRoomRequest.avatar, newRoom.id, [ROLE.MODERATOR])
-                    .then(creator => this.createEstimation(newRoom.id, newRoom.roomSettings, initialEstimationId)
+                    .then(creator => estimationService.createEstimation(newRoom.id, newRoom.roomSettings, initialEstimationId)
                         .then(estimation => this.getJoinedUserResponse(newRoom.id, creator))));
         } catch (error) {
             return getInternalErrorErrorResponseHandling(error, CREATE_ROOM_ERROR).toRejectedPromise();
@@ -66,14 +66,6 @@ export class EstimationRoomService {
                 }));
     }
 
-    public async joinRoomAsKnownUser(rejoinRoomRequest: any): Promise<InitValues> {
-        const roomId = rejoinRoomRequest.roomId;
-        const userId = rejoinRoomRequest.userId;
-        return this.getJoiningRoom(roomId)
-            .then(joiningRoom => userService.getUser(userId)
-                .then(user => this.getJoinedUserResponse(joiningRoom.id, user)));
-    }
-
     public processDisconnectClient(connection: any) {
         // TODO if user is last one - update room in DB and remove from cache
         const cachedRoom = estimationRoomCache.getCachedRoom(connection.roomId);
@@ -82,6 +74,36 @@ export class EstimationRoomService {
             websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DISCONNECTED, connection.userId), cachedRoom.connections);
             logger.log('user ' + connection.userId + ' disconnected from room ' + connection.roomId);
         }
+    }
+
+    async restoreRoomToCache(dbRoom: EstimationPokerRoom) {
+        const users = await userService.getUsersByRoomId(dbRoom.id);
+        const currentEstimation = await estimationService.getEstimationById(dbRoom.currentEstimationId);
+        const cachedRoom = CachedEstimationPokerRoom.from(dbRoom, users, currentEstimation);
+        estimationRoomCache.addRoomToCache(cachedRoom);
+        return cachedRoom;
+    }
+
+    deleteRoom(cachedRoom: CachedEstimationPokerRoom) {
+        return estimationPokerRoomRepository.deleteRoom(cachedRoom.id)
+            .then(success => {
+                if (success) {
+                    estimationRoomCache.removeRoomFromCache(cachedRoom.id);
+                    estimationService.deleteEstimations(cachedRoom.id);
+                    userService.deleteUsers(cachedRoom.id);
+                    return success;
+                }
+                return false;
+            })
+    }
+
+    private getJoinedUserResponse(roomId: string, user: User) {
+        const jwtToken = userService.getSignedJwtToken(user.id, roomId);
+        return new InitValues({
+            token: jwtToken,
+            user: user,
+            roomId: roomId
+        });
     }
 
     private async getJoiningRoom(roomId: string) {
@@ -95,52 +117,5 @@ export class EstimationRoomService {
         }
         return Promise.reject();
 
-    }
-
-    async restoreRoomToCache(dbRoom: EstimationPokerRoom) {
-        const users = await userService.getDBUsersByRoomId(dbRoom.id);
-        const currentEstimation = await estimationRoomService.getEstimationById(dbRoom.currentEstimationId);
-        const cachedRoom = CachedEstimationPokerRoom.from(dbRoom, users, currentEstimation);
-        estimationRoomCache.addRoomToCache(cachedRoom);
-        return cachedRoom;
-    }
-
-    createEstimation(roomId: string, roomSettings: RoomSettings, initialEstimationId?:string) {
-        const estimationId = initialEstimationId ? initialEstimationId : UUID();
-        const estimation = new Estimation({
-            id: estimationId,
-            createdAt: Date.now(),
-            roomId: roomId,
-            title: 'Schätzung' + UUID(),
-            state: VOTING_STATE.VOTING,
-            valueOptions: roomSettings.valueOptions,
-            evaluation: new Evaluation({
-                estimationId: estimationId,
-                avg: 0,
-                valuesByAmount: [],
-                deviation: 0,
-                amountOfVotes: 0
-            }),
-            votes: [],
-            timer: new EstimationTimer({
-                startTime: Date.now(),
-                state: ESTIMATION_TIMER_STATE.RUNNING
-            }),
-        });
-        const estimationModel = new EstimationModel(estimation);
-        return estimationModel.save().then(Estimation.of)
-    }
-
-    getEstimationById(estimationId: string) {
-        return EstimationModel.findOne({id: estimationId}).then(Estimation.of);
-    }
-
-    private getJoinedUserResponse(roomId: string, user: User) {
-        const jwtToken = userService.getSignedJwtToken(user.id, roomId);
-        return new InitValues({
-            token: jwtToken,
-            user: user,
-            roomId: roomId
-        });
     }
 }
