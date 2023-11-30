@@ -94,7 +94,6 @@ export class WebsocketService {
             token: token,
             data: data
         });
-        this.store.setState(APP_STATE.JOINING_ROOM);
         this.sendMessage(joinRequest);
     }
 
@@ -186,6 +185,13 @@ export class WebsocketService {
                 case ResponseMessageType.ESTIMATION_TITLE_UPDATED: {
                     const room = {...this.store.room};
                     room.currentEstimation.title = message.data.estimationTitle;
+                    return this.store.setRoom(room);
+                }
+                case ResponseMessageType.AVATAR_CHANGED: {
+                    const userUpdate = message.data;
+                    const room = {...this.store.room};
+                    const foundUser = room.users.find((u: any) => u.id === message.data.id);
+                    foundUser.avatar = userUpdate.avatar;
                     return this.store.setRoom(room);
                 }
                 default:

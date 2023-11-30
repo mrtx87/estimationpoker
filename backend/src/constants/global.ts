@@ -36,7 +36,8 @@ export const ResponseMessageType = {
     REVEALED_VOTES: 'revealed.votes',
     RESETED_VOTES: 'reseted.votes',
     ESTIMATION_UPDATED: 'estimation.updated',
-    ESTIMATION_TITLE_UPDATED: 'estimation.title.updated'
+    ESTIMATION_TITLE_UPDATED: 'estimation.title.updated',
+    AVATAR_CHANGED: 'user.avatar.changed'
 }
 
 

@@ -71,11 +71,11 @@ export class WebsocketControllerImpl {
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_USERNAME,
             action: this.changeUsername.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.id
+            authorize: (user: User, connection: any) => user.id === connection.userId
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_AVATAR,
             action: this.changeAvatar.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.id
+            authorize: (user: User, connection: any) => user.id === connection.userId
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_ROOM_SETTINGS,
             action: this.changeRoomSettings.bind(this),
@@ -181,7 +181,10 @@ export class WebsocketControllerImpl {
     }
 
     changeAvatar(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        const newAvatar = request.data;
+        const user = cachedRoom.users.find(u => u.id === userId);
+        user.avatar = newAvatar;
+        this.notifyAllUserAboutUpdate(ResponseMessageType.AVATAR_CHANGED, user, cachedRoom.connections, userId);
     }
 
     changeUsername(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
@@ -195,7 +198,7 @@ export class WebsocketControllerImpl {
     changeEstimationTitle(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         if(cachedRoom.currentEstimation.id === request.data.estimationId) {
             cachedRoom.currentEstimation.title = request.data.title;
-            this.notifyAllUserAboutRoomUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
+            this.notifyAllUserAboutUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
         }
 
     }
@@ -225,7 +228,7 @@ export class WebsocketControllerImpl {
         return (user: User, connection: any) => true;
     }
 
-    private notifyAllUserAboutRoomUpdate(responseMessageType: string, data: any, connections: any[],  triggeredBy: string = 'system', ) {
+    private notifyAllUserAboutUpdate(responseMessageType: string, data: any, connections: any[],  triggeredBy: string = 'system', ) {
         websocketService.notifyUsers(new BasicResponse(responseMessageType, triggeredBy, data), connections);
     }
 
