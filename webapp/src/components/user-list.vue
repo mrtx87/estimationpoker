@@ -67,8 +67,6 @@ export default {
 
 .avatar-icon {
   position: relative;
-  width: 50px;
-  height: 50px;
 }
 
 .is-admin {

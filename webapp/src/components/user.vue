@@ -91,10 +91,10 @@ export default {
   flex-direction: column;
   margin: calc(5px + 0.25vw);
   position: relative;
-  height: 6vw;
-  width: 6vw;
-  min-width: 70px;
-  min-height: 70px;
+  height: 3vh;
+  width: 3vh;
+  min-width: 2vh;
+  min-height: 2vh;
 
   .host-icon {
     position: absolute;
