@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     openBurgerMenu: function () {
-      if (this.appState._overlayId !== 5) {
+      if (this.appStore.overlayId !== 5) {
         this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.BURGER_MENU)
       } else {
         this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
