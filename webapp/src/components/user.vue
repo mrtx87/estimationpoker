@@ -8,23 +8,6 @@
       <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
       </div>
     </div>
-    <!--
-    <div class="player-name" v-if="!noPlayerName"><span class="player-name-text"
-                                                        :class="{'plain':plainName}"> {{ lobbyPlayer.name }}</span>
-    </div>
-    <img title="host" v-if="lobbyPlayer.role==='host'" class="host-icon" :src="require(`../assets/crown.svg`)">
-    <img title="ready to play" v-if="lobbyPlayer.ready" class="check-icon" src="../assets/check.svg">
-
-
-    <div class="remote-player-muted" v-if="lobbyPlayer?.voiceChatActive">
-      <img class="mic" src="../assets/mic.svg">
-      <img v-show="lobbyPlayer?.pc?.remoteMuted" class="mic-mute" src="../assets/slash.svg">
-    </div>
-
-    <div class="remote-player-full-mute" v-if="lobbyPlayer?.voiceChatActive">
-      <img class="headphones" src="../assets/headphones.svg">
-      <img v-show="lobbyPlayer?.pc?.remoteFullMute" class="headphones-mute" src="../assets/slash.svg">
-    </div> -->
   </div>
 </template>
 
