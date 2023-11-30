@@ -21,7 +21,9 @@
     "vue-cookie-next": "^1.0.3",
     "vuex": "^4.0.0-0",
     "pinia": "^2.0.17",
-    "vue-router": "4"
+    "vue-router": "4",
+    "echarts": "^4.1.0",
+    "vue-echarts": "^4.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

@@ -1,7 +1,7 @@
 import {getCookie} from "@/services/cookie-service";
 import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
-import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageTypes} from "@/constants/vue-constants";
+import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageType} from "@/constants/vue-constants";
 import {AppService} from "@/services/app-service";
 
 
@@ -83,15 +83,21 @@ export class WebsocketService {
     }
 
     sendFinalizeJoinRequest(roomId: string) {
-        const token = getCookie(roomId);
+        this.store.setState(APP_STATE.JOINING_ROOM);
+        this.sendAuthenticatedRequest('finalize-join', null, roomId);
+    }
+
+    sendAuthenticatedRequest(type: string, data: any = null, roomId = '') {
+        const token = getCookie(roomId ? roomId : this.store.room.id);
         const joinRequest = new AuthenticatedRequest({
-            type: 'finalize-join',
+            type: type,
             token: token,
-            data: null
+            data: data
         });
         this.store.setState(APP_STATE.JOINING_ROOM);
         this.sendMessage(joinRequest);
     }
+
 
     onError(error: any): void {
         console.error("websocket server could not be reached");
@@ -120,8 +126,8 @@ export class WebsocketService {
         return this.retries < MAX_RECONNECT_RETRIES;
     }
 
-    sendMessage(data: any): void {
-        if(this.store.connectionState !== ConnectionState.CONNECTED) {
+    sendMessage(data: AuthenticatedRequest | any): void {
+        if (this.store.connectionState !== ConnectionState.CONNECTED) {
             return;
         }
         Logger.log('>>>', data)
@@ -139,6 +145,7 @@ export class WebsocketService {
     /** handle responses **/
 
     onRoomJoinFinalizeResponse(message: any) {
+        this.store.setLocalUserId(message.sender);
         this.store.setRoom(message.data);
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         // TODO TOASTR
@@ -164,14 +171,23 @@ export class WebsocketService {
                 Logger.error('Error: No Response Type received', message);
             }
             switch (message.type) {
-                case ResponseMessageTypes.JOINED_ESTIMATION_SESSION:
+                case ResponseMessageType.JOINED_ESTIMATION_SESSION:
                     return this.onRoomJoinFinalizeResponse(message);
-                case ResponseMessageTypes.ROOM_NOT_EXISTING:
+                case ResponseMessageType.ROOM_NOT_EXISTING:
                     return console.log('raum existiert nicht')
-                case ResponseMessageTypes.USER_DISCONNECTED:
+                case ResponseMessageType.USER_DISCONNECTED:
                     return this.onUserDisconnectRoom(message);
-                case ResponseMessageTypes.ANOTHER_USER_JOINED_SESSION:
+                case ResponseMessageType.ANOTHER_USER_JOINED_SESSION:
                     return this.onOtherUserJoinedRoom(message);
+                case ResponseMessageType.REVEALED_VOTES:
+                    return this.store.setRoom(message.data);
+                case ResponseMessageType.RESETED_VOTES:
+                    return this.store.setRoom(message.data);
+                case ResponseMessageType.ESTIMATION_TITLE_UPDATED: {
+                    const room = {...this.store.room};
+                    room.currentEstimation.title = message.data.estimationTitle;
+                    return this.store.setRoom(room);
+                }
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);
             }

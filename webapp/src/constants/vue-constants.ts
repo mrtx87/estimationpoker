@@ -1,18 +1,32 @@
 export const RequestMessageType = {
-    CREATE_GAME: 'create-room',
-    JOIN_GAME: 'finalize-join',
-
+    FINALIZE_JOIN: 'finalize-join',
+    JOIN_GAME: 'join-session',
+    PING: 'ping',
+    REVEAL_VOTES: 'reveal-votes',
+    RESET_VOTES: 'reset-votes',
+    NEXT_ESTIMATION: 'next-estimation',
+    DELETE_ROOM: 'delete-room',
+    DELETE_USER: 'delete-user',
+    CHANGE_ROLE: 'change-role',
+    CHANGE_USERNAME: 'change-username',
+    CHANGE_AVATAR: 'change-avatar',
+    CHANGE_ROOM_SETTINGS: 'change-room-settings',
+    CHANGE_ESTIMATION_TITLE: 'change-estimation-title'
 }
 
-export const ResponseMessageTypes = {
+export const ResponseMessageType = {
     JOINED_ESTIMATION_SESSION: 'finalized.join',
     ANOTHER_USER_JOINED_SESSION: 'another.user.joined',
     ROOM_NOT_EXISTING: 'room.not.existing',
     USER_DISCONNECTED: 'user.disconnected.room',
+    ROOM_DELETED: 'room.deleted',
+    USER_NOT_EXISTING: 'user.not.existing',
+    USER_DELETED: 'user.deleted',
+    REVEALED_VOTES: 'revealed.votes',
+    RESETED_VOTES: 'reseted.votes',
+    ESTIMATION_UPDATED: 'estimation.updated',
+    ESTIMATION_TITLE_UPDATED: 'estimation.title.updated'
 }
-
-
-
 
 export const MenuItemKey = {
     CREATE_NEW_GAME : 'create-new-game',

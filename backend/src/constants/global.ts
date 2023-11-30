@@ -21,7 +21,8 @@ export const RequestMessageType = {
     CHANGE_ROLE: 'change-role',
     CHANGE_USERNAME: 'change-username',
     CHANGE_AVATAR: 'change-avatar',
-    CHANGE_ROOM_SETTINGS: 'change-room-settings'
+    CHANGE_ROOM_SETTINGS: 'change-room-settings',
+    CHANGE_ESTIMATION_TITLE: 'change-estimation-title'
 }
 
 export const ResponseMessageType = {
@@ -32,6 +33,10 @@ export const ResponseMessageType = {
     ROOM_DELETED: 'room.deleted',
     USER_NOT_EXISTING: 'user.not.existing',
     USER_DELETED: 'user.deleted',
+    REVEALED_VOTES: 'revealed.votes',
+    RESETED_VOTES: 'reseted.votes',
+    ESTIMATION_UPDATED: 'estimation.updated',
+    ESTIMATION_TITLE_UPDATED: 'estimation.title.updated'
 }
 
 

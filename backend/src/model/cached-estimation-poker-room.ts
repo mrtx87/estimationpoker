@@ -40,6 +40,10 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
         this.users = this.users.filter(u => u.id !== userId);
     }
 
+    setEstimation(estimation: Estimation) {
+        this.currentEstimation = estimation;
+    }
+
     toPublicDTO(): CachedPublicEstimationPokerRoom {
         const c =  new CachedEstimationPokerRoom(this);
         c.connections = this.connections.map(c => c.userId);
