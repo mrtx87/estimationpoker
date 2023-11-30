@@ -65,24 +65,24 @@ export class WebsocketControllerImpl {
             action: this.deleteUser.bind(this),
             authorize: this.getModeratorOnlyPredicament()
         }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_ROLE,
-            action: this.changeRole.bind(this),
+            type: RequestMessageType.CHANGE_AVATAR,
+            action: this.changeAvatar.bind(this),
+            authorize: (user: User, connection: any) => user.id === connection.userId
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
+            action: this.changeEstimationTitle.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ROOM_SETTINGS,
+            action: this.changeRoomSettings.bind(this),
             authorize: this.getModeratorOnlyPredicament()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_USERNAME,
             action: this.changeUsername.bind(this),
             authorize: (user: User, connection: any) => user.id === connection.userId
         }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_AVATAR,
-            action: this.changeAvatar.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.userId
-        }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_ROOM_SETTINGS,
-            action: this.changeRoomSettings.bind(this),
-            authorize: this.getModeratorOnlyPredicament()
-        }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
-            action: this.changeEstimationTitle.bind(this),
+            type: RequestMessageType.CHANGE_ROLE,
+            action: this.changeRole.bind(this),
             authorize: this.getModeratorOnlyPredicament()
         })
     }
@@ -91,17 +91,20 @@ export class WebsocketControllerImpl {
         try {
             const endPoint = this.websocketControllerEndpoints.get(request.type);
             if (!endPoint) {
-                //TODO answer
+                websocketService.notifyUser(new BasicResponse(ResponseMessageType.ACTION_UNKNOWN), connection);
+                return;
             }
+
             const authenticated = userService.authenticateToken(request.token);
             if (!authenticated) {
-                //TODO answer
+                websocketService.notifyUser(new BasicResponse(ResponseMessageType.UNKNOWN_USER), connection);
+                return;
             }
 
             this.preRequestHandling(authenticated.roomId, authenticated.userId, connection)
                 .then(cachedRoom => {
                     if (!endPoint.authorize(this.getAuthenticatedUser(authenticated.userId, cachedRoom), connection)) {
-                        // TODO answer
+                        websocketService.notifyUser(new BasicResponse(ResponseMessageType.REMOVED_FROM_ROOM), connection);
                         return null;
                     }
                     return cachedRoom;
