@@ -102,7 +102,7 @@ export default {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {estimationId: this.room.currentEstimation.id, title: value})
         },
         isLocalUserModerator() {
-            return this.localUser.roles.includes(Roles.MODERATOR);
+            return this.localUser?.roles.includes(Roles.MODERATOR);
         }
     },
     computed: {
@@ -116,7 +116,7 @@ export default {
             return VALUE_TYPE_OPTIONS;
         },
         localUser() {
-            return this.room.users.find(u => u.id === this.appStore.localUserId);
+            return this.room ? this.room.users.find(u => u.id === this.appStore.localUserId) : null;
         }
     }
 };
