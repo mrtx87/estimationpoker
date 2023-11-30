@@ -116,7 +116,7 @@ export default {
             return VALUE_TYPE_OPTIONS;
         },
         localUser() {
-            return this.room ? this.room.users.find(u => u.id === this.appStore.localUserId) : null;
+            return this.appStore.localUser;
         }
     }
 };

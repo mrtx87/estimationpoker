@@ -44,7 +44,7 @@ export const useAppStateStore = defineStore('AppStore', {
     },
     getters: {
         localUserId: (state: any) => state._localUserId,
-        localUser: (state: any) => state._room ? state._room.users.find((u: any) => u.id === state._localUserId) : null,
+        localUser: (state: any) => state._room && state._localUserId? state._room.users.find((u: any) => u.id === state._localUserId) : null,
         room: (state: any) => state._room,
         avatar: (state: any) => state._avatar,
         overlayId: (state: any) => state._overlayId,

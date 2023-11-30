@@ -3,22 +3,14 @@
         <div class="overlay-container">
             <div v-on:click="closeOverlay" class="close-btn">X</div>
             <avatar-configurator v-if="overlayId === DISPLAY_OVERLAY_STATE.AVATAR_EDITOR"
-                                 v-bind:avatar="avatar"
+                                 v-bind:avatar="appStore.localUser.avatar"
                                  v-bind:disabled="false"
-                                 v-on:onToggleSelectorsHidden="avatarConfiguratorToggle"
                                  v-on:onAvatarChange="onAvatarConfiguratorChange($event)">
             </avatar-configurator>
             <Impressum v-if="overlayId === DISPLAY_OVERLAY_STATE.IMPRESSUM"></Impressum>
             <dsgvo v-if="overlayId === DISPLAY_OVERLAY_STATE.DSGVO"></dsgvo>
             <JoiningRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.JOIN_ROOM"></JoiningRoom>
             <CreateRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.CREATE_ROOM"></CreateRoom>
-        </div>
-    </div>
-
-    <div v-if="overlayId === 5" class="burger-menu-wrapper">
-        <!--- needs to be moved away from here -->
-        <div class="burger-menu">
-            <div v-on:click="openAvatarEditor" class="change-avatar-Btn">Change Avatar</div>
         </div>
     </div>
 </template>
@@ -52,25 +44,17 @@ export default {
         }
     },
     methods: {
-        openAvatarEditor: function () {
-            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
-        },
+
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
         },
         onAvatarConfiguratorChange: function (avatar) {
             this.appStore.addAvatar(avatar);
         },
-        avatarConfiguratorToggle: function (value) {
-            this.avatarConfiguratorActive = !!value;
-        },
     },
     computed: {
         DISPLAY_OVERLAY_STATE() {
             return DISPLAY_OVERLAY_STATE
-        },
-        avatar: function () {
-            return this.appStore.avatar;
         },
         overlayId() {
             return this.appStore.overlayId;
