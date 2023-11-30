@@ -77,4 +77,18 @@ export class EstimationService {
     deleteEstimations(roomId: string) {
         EstimationModel.find({roomId: roomId}).then(estimationModels => estimationModels.forEach(em => em.delete()));
     }
+
+    saveEstimation(estimation: Estimation){
+        EstimationModel.findOne({id: estimation.id}).then(foundEstimation => {
+            this.updateEstimationSafe(foundEstimation, estimation);
+        });
+    }
+
+    private updateEstimationSafe(storedEstimation: any, cachedEstimation: Estimation) {
+        storedEstimation.title = cachedEstimation.title;
+        storedEstimation.state = cachedEstimation.state;
+        storedEstimation.time = cachedEstimation.timer;
+        storedEstimation.votes = cachedEstimation.votes;
+        storedEstimation.evaluation = cachedEstimation.evaluation;
+    }
 }

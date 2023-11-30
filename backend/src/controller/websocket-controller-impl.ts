@@ -1,10 +1,10 @@
 import {AuthenticatedRequest} from "../model/authenticated-request.model";
 import {BasicRequest} from "../model/basic-request.model";
-import {RequestMessageType, ResponseMessageType, ROLE, SYSTEM_USER_ID} from "../constants/global";
+import {RequestMessageType, ResponseMessageType, ROLE, SYSTEM_USER_ID, VOTING_STATE} from "../constants/global";
 import {
     estimationPokerRoomRepository,
     estimationRoomCache,
-    estimationRoomService,
+    estimationRoomService, estimationService,
     userService,
     websocketService
 } from "../server";
@@ -80,6 +80,10 @@ export class WebsocketControllerImpl {
             type: RequestMessageType.CHANGE_ROOM_SETTINGS,
             action: this.changeRoomSettings.bind(this),
             authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
+            action: this.changeEstimationTitle.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
         })
     }
 
@@ -126,30 +130,44 @@ export class WebsocketControllerImpl {
     }
 
     revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
+        // TODO evaluation
+        this.notifyAllUserAboutCompleteRoomUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom, userId);
     }
 
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        cachedRoom.currentEstimation.state = VOTING_STATE.VOTING;
+        cachedRoom.currentEstimation.votes = [];
+        this.notifyAllUserAboutCompleteRoomUpdate(ResponseMessageType.RESETED_VOTES, cachedRoom, userId);
     }
 
-    nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+    async nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        const previousEstimation = cachedRoom.currentEstimation;
+        estimationService.saveEstimation(previousEstimation);
+        const nextEstimation = await estimationService.createEstimation(cachedRoom.id, cachedRoom.roomSettings);
+        cachedRoom.setEstimation(nextEstimation);
+        this.notifyAllUserAboutCompleteRoomUpdate(ResponseMessageType.RESETED_VOTES, cachedRoom, userId);
     }
 
     deleteRoom(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         estimationRoomService.deleteRoom(cachedRoom).then(removeSuccess => {
-            if(removeSuccess) {
-                websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, SYSTEM_USER_ID, {roomId: cachedRoom.id, title: cachedRoom.roomSettings.title}), cachedRoom.connections);
+            if (removeSuccess) {
+                websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, SYSTEM_USER_ID, {
+                    roomId: cachedRoom.id,
+                    title: cachedRoom.roomSettings.title
+                }), cachedRoom.connections);
                 return;
             }
-            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, SYSTEM_USER_ID,{roomId: cachedRoom.id, title: cachedRoom.roomSettings.title}), connection);
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, SYSTEM_USER_ID, {
+                roomId: cachedRoom.id,
+                title: cachedRoom.roomSettings.title
+            }), connection);
         });
     }
 
     deleteUser(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         return userService.deleteUser(request.data.userId).then(deleteSuccess => {
-            if(deleteSuccess) {
+            if (deleteSuccess) {
                 cachedRoom.removeUser(request.data.userId);
                 websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DELETED, SYSTEM_USER_ID, request.data), cachedRoom.connections);
                 return;
@@ -172,6 +190,14 @@ export class WebsocketControllerImpl {
 
     changeRoomSettings(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+    }
+
+    changeEstimationTitle(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        if(cachedRoom.currentEstimation.id === request.data.estimationId) {
+            cachedRoom.currentEstimation.title = request.data.title;
+            this.notifyAllUserAboutRoomUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
+        }
+
     }
 
     async preRequestHandling(roomId: string, userId: string, connection: any) {
@@ -197,6 +223,14 @@ export class WebsocketControllerImpl {
 
     private getTruePredicament() {
         return (user: User, connection: any) => true;
+    }
+
+    private notifyAllUserAboutRoomUpdate(responseMessageType: string, data: any, connections: any[],  triggeredBy: string = 'system', ) {
+        websocketService.notifyUsers(new BasicResponse(responseMessageType, triggeredBy, data), connections);
+    }
+
+    private notifyAllUserAboutCompleteRoomUpdate(responseMessageType: string, cachedRoom: CachedEstimationPokerRoom, triggeredBy: string = 'system') {
+        websocketService.notifyUsers(new BasicResponse(responseMessageType, triggeredBy, cachedRoom.toPublicDTO()), cachedRoom.connections);
     }
 
 }

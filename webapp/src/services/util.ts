@@ -41,3 +41,55 @@ export function randomSelection(arr: any[]) {
 export function randomColor(colorOptions: string[]): string {
     return randomSelection(colorOptions);
 }
+
+export function getPieChartObj(title: { text: string, subtext: string },
+                               series: {
+                                   title: string,
+                                   data: [{ value: number, name: string }],
+                                   radius?: string | string[]
+                               }) {
+    return {
+        title: {
+            text: title.text,
+            subtext: title.subtext,
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: series.title,
+                type: 'pie',
+                radius: series.radius ? series.radius : ['40%', '85%'],
+                color: [
+                    '#37A2DA',
+                    '#32C5E9',
+                    '#67E0E3',
+                    '#9FE6B8',
+                    '#FFDB5C',
+                    '#ff9f7f',
+                    '#fb7293',
+                    '#E062AE',
+                    '#E690D1',
+                    '#e7bcf3',
+                    '#9d96f5',
+                    '#8378EA',
+                    '#96BFFF'
+                ],
+                data: series.data,
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    }
+}

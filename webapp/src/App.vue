@@ -4,20 +4,27 @@
         <HeaderVue></HeaderVue>
         <div class="app-content">
             <div class="left-content">
-                <input :value="room?.roomSettings.title" class="room-title-container">
-                <input :value="room?.currentEstimation.title" class="estimation-title-container">
+                <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title" class="room-title-container">
+                <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title" v-on:change="updateEstimationName($event.target.value)" class="estimation-title-container">
                 <div class="action-area">
-                    <div v-for="value in room?.currentEstimation.valueOptions.values" :key="value"> {{ value }}</div>
+                    <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
+                        <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
+                                  v-bind:value="value">
+                            {{ value }}
+                        </VoteCard>
+                    </div>
+
+                    <Evaluation v-bind:estimation="room?.currentEstimation" v-if="room?.currentEstimation.state !== 1"></Evaluation>
                 </div>
                 <div class="estimation-history">
                     SCHÄTZUNG HISTORY
                 </div>
             </div>
             <div class="right-content">
-                <div class="moderator-actions">
-                    <button>Aufdecken</button>
-                    <button>Zurücksetzen</button>
-                    <button>Neue Schätzung</button>
+                <div class="moderator-actions" v-if="isLocalUserModerator()">
+                    <button v-on:click="triggerRevealVotes()">Aufdecken</button>
+                    <button v-on:click="triggerResetVotes()">Zurücksetzen</button>
+                    <button v-on:click="triggerNextEstimation()">Neue Schätzung</button>
                 </div>
                 <div class="user-list">
                     <user-list></user-list>
@@ -30,7 +37,7 @@
 
 <script>
 import {
-    DISPLAY_OVERLAY_STATE, VALUE_TYPE_OPTIONS,
+    DISPLAY_OVERLAY_STATE, RequestMessageType, Roles, VALUE_TYPE_OPTIONS,
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
 import HeaderVue from "@/components/header-vue.vue";
@@ -38,15 +45,19 @@ import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
 import UserList from "@/components/user-list.vue";
+import Evaluation from "@/components/evaluation.vue";
+import VoteCard from "@/components/vote-card.vue";
 
 
 export default {
     name: "App",
     components: {
+        VoteCard,
         UserList,
         HeaderVue,
         Overlay,
-        Footer
+        Footer,
+        Evaluation
     },
     created() {
         this.appStore = useAppStateStore();
@@ -76,6 +87,22 @@ export default {
         },
         initUserRandom() {
             this.appStore.addAvatar(this.$appService.getRandomAvatar());
+        },
+        triggerRevealVotes() {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.REVEAL_VOTES);
+        },
+        triggerResetVotes() {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.RESET_VOTES);
+        },
+        triggerNextEstimation() {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.NEXT_ESTIMATION);
+        },
+        updateEstimationName(value) {
+            console.log(value);
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {estimationId: this.room.currentEstimation.id, title: value})
+        },
+        isLocalUserModerator() {
+            return this.localUser.roles.includes(Roles.MODERATOR);
         }
     },
     computed: {
@@ -87,6 +114,9 @@ export default {
         },
         valueTypeOptions() {
             return VALUE_TYPE_OPTIONS;
+        },
+        localUser() {
+            return this.room.users.find(u => u.id === this.appStore.localUserId);
         }
     }
 };
@@ -127,25 +157,17 @@ export default {
     }
 
     .action-area {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
       height: 100%;
       background-color: #9f9254;
-      padding: 15px;
-      box-sizing: border-box;
-      flex-basis: fit-content;
 
-      div {
+      .vote-cards {
+        width: 100%;
         display: flex;
-        width: 10%;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-        height: 150px;
-        border: 1px solid black;
-        border-radius: 4px;
-        background-color: #9f92e4;
+        flex-wrap: wrap;
+        gap: 20px 20px;
+        padding: 15px;
+        box-sizing: border-box;
+        height: min-content;
       }
     }
 

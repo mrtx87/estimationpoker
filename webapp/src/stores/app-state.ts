@@ -37,6 +37,9 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setRoom(room: any) {
             this._room = room;
+        },
+        setLocalUserId(userId: string) {
+            this._localUserId = userId;
         }
     },
     getters: {

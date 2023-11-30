@@ -23,6 +23,7 @@ export class Estimation {
         this.votes = init.votes.map(Vote.of);
         this.evaluation = Evaluation.of(init.evaluation) ;
         this.valueOptions = ValueOptions.of(init.valueOptions);
+        this.state = init.state;
     }
 
 
