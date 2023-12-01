@@ -4,7 +4,7 @@
         <HeaderVue></HeaderVue>
         <div class="app-content">
             <div class="left-content">
-                <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title" class="room-title-container">
+                <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title" v-on:change="changeRoomTitle($event.target.value)"  class="room-title-container">
                 <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title" v-on:change="updateEstimationName($event.target.value)" class="estimation-title-container">
                 <div class="action-area">
                     <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
@@ -98,8 +98,10 @@ export default {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.NEXT_ESTIMATION);
         },
         updateEstimationName(value) {
-            console.log(value);
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {estimationId: this.room.currentEstimation.id, title: value})
+        },
+        changeRoomTitle(value) {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {...this.room.roomSettings, title: value})
         },
         isLocalUserModerator() {
             return this.localUser?.roles.includes(Roles.MODERATOR);

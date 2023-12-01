@@ -40,7 +40,8 @@ export const ResponseMessageType = {
     AVATAR_CHANGED: 'user.avatar.changed',
     ACTION_UNKNOWN: 'action.unknown',
     UNKNOWN_USER: 'user.unknown',
-    REMOVED_FROM_ROOM: 'user.removed.from.room'
+    REMOVED_FROM_ROOM: 'user.removed.from.room',
+    UPDATED_ROOM_SETTINGS: 'room.settings.updated'
 }
 
 

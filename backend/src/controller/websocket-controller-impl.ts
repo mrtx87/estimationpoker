@@ -12,6 +12,7 @@ import {BasicResponse} from "../model/basic-response.model";
 import {logger} from "../services/s9logger";
 import {User} from "../model/user";
 import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
+import {RoomSettings} from "../model/room-settings";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -195,7 +196,8 @@ export class WebsocketControllerImpl {
     }
 
     changeRoomSettings(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        cachedRoom.roomSettings = RoomSettings.of(request.data);
+        this.notifyAllUserAboutUpdate(ResponseMessageType.UPDATED_ROOM_SETTINGS, cachedRoom.roomSettings, cachedRoom.connections, userId);
     }
 
     changeEstimationTitle(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {

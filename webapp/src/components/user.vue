@@ -37,7 +37,6 @@ export default {
     }
   },
   methods: {
-
     findElementByTypeAndCode: function (options, code) {
       const found = options.find(o => +o.code === +code);
       return found ? found : options[0];

@@ -194,6 +194,11 @@ export class WebsocketService {
                     foundUser.avatar = userUpdate.avatar;
                     return this.store.setRoom(room);
                 }
+                case ResponseMessageType.UPDATED_ROOM_SETTINGS: {
+                    const roomSettings = message.data;
+                    const room = {...this.store.room, roomSettings}
+                    return this.store.setRoom(room);
+                }
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);
             }
