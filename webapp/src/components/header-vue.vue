@@ -3,9 +3,9 @@
         <div class="header">
             <user v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noPlayerRoleIcon="true" v-on:click="toggleUserMenu"></user>
             <div v-if="displayUserMenu" class="user-menu">
+                <div class="user-menu-header"> {{ localUser.name }}</div>
                 <span v-on:click="openAvatarEditor">Edit User</span>
-                <span>-punkt2</span>
-                <span>-punkt3</span>
+                <span>delete user</span>
             </div>
         </div>
     </div>
@@ -72,12 +72,18 @@ export default {
 
 .user-menu {
   background-color: #9f92e4;
+
   position: absolute;
   display: flex;
   flex-direction: column;
-  top: 40px;
+  top: 45px;
   right: 25px;
   z-index: 5;
+
+  .user-menu-header {
+    min-width: 150px;
+    min-height: 30px;
+  }
 }
 
 </style>

@@ -5,6 +5,7 @@ import {EstimationPokerRoom} from "../model/estimation-poker-room";
 import {v4 as UUID} from 'uuid';
 import {RoomSettings} from "../model/room-settings";
 import {ValueOptions} from "../model/value-option";
+import {Vote} from "../model/vote";
 
 export const MAX_RESULTS_DOC_SEARCH = 25;
 
@@ -139,4 +140,10 @@ export function getTestRoom() {
             values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
         })
     }), UUID());
+}
+
+export function maskVoteValues(votes: Vote[]) {
+    return votes.map(v => {
+        return Vote.of({...v, value: '_'})
+    });
 }

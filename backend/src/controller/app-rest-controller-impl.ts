@@ -14,24 +14,12 @@ import {
 import {getErrorResponseHandling, getInternalErrorErrorResponseHandling} from "../util/util";
 import {logger} from "../services/s9logger";
 
-
-const MongoClient = require("mongodb").MongoClient;
-
-
 export function applyAppRestControllerConfig(app: Express) {
 
     new RestControllerConfigurator(app)
         .addPrefix(APP_REST_PREFIX)
         .addPostEndPoint('/create-room', handleCreateRoomRequest)
-        //.addGetEndPoint('/rejoin-room', handleRejoinRoomRequest)
         .addPostEndPoint('/join-room', handleNewJoinRoomRequest)
-
-    //.addPostEndPoint('/register', handleRegisterRequest)
-    //.addPostEndPoint('/search-document', handleSearchDocumentsRequest)
-    //.addPostEndPoint('/get-document', handleGetDocumentRequest)
-    //.addPostEndPoint('/create-document', handleCreateDocumentRequest)
-
-
 }
 
 function handleCreateRoomRequest(req: any, res: any) {

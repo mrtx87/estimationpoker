@@ -47,10 +47,24 @@ export class UserRepository {
         });
     }
 
+    updateUser(userUpdate: User) {
+        return this.getUser(userUpdate.id)
+            .then(userModel => {
+                this.updateUserSafe(userModel, userUpdate);
+                return userModel.save();
+            });
+    }
+
     deleteUsers(roomId: string) {
         UserModel
             .find({roomId: roomId})
             .then(users => users.forEach(u => u.delete()));
     }
 
+
+    private updateUserSafe(userModel: any, userUpdate: User) {
+        userModel.name = userUpdate.name;
+        userModel.avatar = userUpdate.avatar;
+        userModel.roles = userUpdate.roles;
+    }
 }

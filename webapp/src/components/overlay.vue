@@ -4,8 +4,7 @@
             <div v-on:click="closeOverlay" class="close-btn">X</div>
             <avatar-configurator v-if="overlayId === DISPLAY_OVERLAY_STATE.AVATAR_EDITOR"
                                  v-bind:avatar="appStore.localUser.avatar"
-                                 v-bind:disabled="false"
-                                 v-on:onAvatarChange="onAvatarConfiguratorChange($event)">
+                                 v-bind:disabled="false">
             </avatar-configurator>
             <Impressum v-if="overlayId === DISPLAY_OVERLAY_STATE.IMPRESSUM"></Impressum>
             <dsgvo v-if="overlayId === DISPLAY_OVERLAY_STATE.DSGVO"></dsgvo>
@@ -44,13 +43,9 @@ export default {
         }
     },
     methods: {
-
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
-        },
-        onAvatarConfiguratorChange: function (avatar) {
-            this.appStore.addAvatar(avatar);
-        },
+        }
     },
     computed: {
         DISPLAY_OVERLAY_STATE() {
@@ -101,7 +96,7 @@ export default {
   display: flex;
   background: #f0f8ffb3;
   width: 50vw;
-  height: 55 h;
+  height: 55vh;
   padding: 2vh;
   border-radius: 10px;
   box-shadow: 4px 3px 15px -2px rgb(0 0 0 / 20%);

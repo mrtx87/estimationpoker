@@ -12,6 +12,9 @@ import {BasicResponse} from "../model/basic-response.model";
 import {logger} from "../services/s9logger";
 import {User} from "../model/user";
 import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
+import {RoomSettings} from "../model/room-settings";
+import {Vote} from "../model/vote";
+import {maskVoteValues} from "../util/util";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -65,25 +68,29 @@ export class WebsocketControllerImpl {
             action: this.deleteUser.bind(this),
             authorize: this.getModeratorOnlyPredicament()
         }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_ROLE,
-            action: this.changeRole.bind(this),
-            authorize: this.getModeratorOnlyPredicament()
-        }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_USERNAME,
-            action: this.changeUsername.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.id
-        }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_AVATAR,
             action: this.changeAvatar.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.id
+            authorize: (user: User, connection: any) => user.id === connection.userId
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
+            action: this.changeEstimationTitle.bind(this),
+            authorize: this.getModeratorOnlyPredicament()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_ROOM_SETTINGS,
             action: this.changeRoomSettings.bind(this),
             authorize: this.getModeratorOnlyPredicament()
         }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
-            action: this.changeEstimationTitle.bind(this),
+            type: RequestMessageType.CHANGE_USERNAME,
+            action: this.changeUsername.bind(this),
+            authorize: (user: User, connection: any) => user.id === connection.userId
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.CHANGE_ROLE,
+            action: this.changeRole.bind(this),
             authorize: this.getModeratorOnlyPredicament()
+        }).addWebsocketEndpoint({
+            type: RequestMessageType.VOTE_REQUEST,
+            action: this.userVote.bind(this),
+            authorize: this.getRolePredicament([ROLE.PARTICIPANT])
         })
     }
 
@@ -91,17 +98,26 @@ export class WebsocketControllerImpl {
         try {
             const endPoint = this.websocketControllerEndpoints.get(request.type);
             if (!endPoint) {
-                //TODO answer
+                websocketService.notifyUser(new BasicResponse(ResponseMessageType.ACTION_UNKNOWN), connection);
+                return;
             }
+
             const authenticated = userService.authenticateToken(request.token);
             if (!authenticated) {
-                //TODO answer
+                websocketService.notifyUser(new BasicResponse(ResponseMessageType.UNKNOWN_USER), connection);
+                return;
             }
 
             this.preRequestHandling(authenticated.roomId, authenticated.userId, connection)
                 .then(cachedRoom => {
-                    if (!endPoint.authorize(this.getAuthenticatedUser(authenticated.userId, cachedRoom), connection)) {
-                        // TODO answer
+                    const authenticatedUser = this.getAuthenticatedUser(authenticated.userId, cachedRoom);
+                    if (!authenticatedUser) {
+                        websocketService.notifyUser(new BasicResponse(ResponseMessageType.REMOVED_FROM_ROOM), connection);
+                        return;
+                    }
+
+                    if (!endPoint.authorize(authenticatedUser, connection)) {
+                        websocketService.notifyUser(new BasicResponse(ResponseMessageType.NOT_PERMITTED), connection);
                         return null;
                     }
                     return cachedRoom;
@@ -121,8 +137,9 @@ export class WebsocketControllerImpl {
         connection.roomId = cachedRoom.id;
         logger.info(`user ${joiningUserId} joined room: ${cachedRoom.id}`);
         cachedRoom.addConnection(connection);
-        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, cachedRoom.toPublicDTO()), connection);
-        websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId, cachedRoom.toPublicDTO()), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
+
+        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, cachedRoom.toPublicDTO(joiningUserId)), connection);
+        websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
     }
 
     ping(cachedRoom: CachedEstimationPokerRoom, userId: string, request: AuthenticatedRequest, connection: any) {
@@ -132,13 +149,13 @@ export class WebsocketControllerImpl {
     revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
         // TODO evaluation
-        this.notifyAllUserAboutCompleteRoomUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom, userId);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, VOTING_STATE.REVEALED, cachedRoom.connections, userId);
     }
 
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         cachedRoom.currentEstimation.state = VOTING_STATE.VOTING;
         cachedRoom.currentEstimation.votes = [];
-        this.notifyAllUserAboutCompleteRoomUpdate(ResponseMessageType.RESETED_VOTES, cachedRoom, userId);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.RESETED_VOTES, VOTING_STATE.VOTING, cachedRoom.connections ,userId);
     }
 
     async nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
@@ -146,7 +163,7 @@ export class WebsocketControllerImpl {
         estimationService.saveEstimation(previousEstimation);
         const nextEstimation = await estimationService.createEstimation(cachedRoom.id, cachedRoom.roomSettings);
         cachedRoom.setEstimation(nextEstimation);
-        this.notifyAllUserAboutCompleteRoomUpdate(ResponseMessageType.RESETED_VOTES, cachedRoom, userId);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.NEXT_ESTIMATION, nextEstimation, cachedRoom.connections, userId);
     }
 
     deleteRoom(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
@@ -177,28 +194,69 @@ export class WebsocketControllerImpl {
     }
 
     changeRole(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        const user = cachedRoom.getUser(userId);
+        const roles = request.data;
+        user.roles = roles;
+        userService.updateUser(user);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_ROLE, user, cachedRoom.connections, userId);
     }
 
     changeAvatar(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        const newAvatar = request.data;
+        const user = cachedRoom.users.find(u => u.id === userId);
+        user.avatar = newAvatar;
+        userService.updateUser(user);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.AVATAR_CHANGED, user, cachedRoom.connections, userId);
     }
 
     changeUsername(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        const userName = request.data;
+        const user = cachedRoom.getUser(userId);
+        user.name = userName;
+        userService.updateUser(user);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_NAME, user, cachedRoom.connections, userId);
     }
 
     changeRoomSettings(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        logger.log(`not implemented: ${request.type} : ${userId} [roomId: ${cachedRoom.id}]`);
+        cachedRoom.roomSettings = RoomSettings.of(request.data);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.UPDATED_ROOM_SETTINGS, cachedRoom.roomSettings, cachedRoom.connections, userId);
     }
 
     changeEstimationTitle(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        if(cachedRoom.currentEstimation.id === request.data.estimationId) {
+        if (cachedRoom.currentEstimation.id === request.data.estimationId) {
             cachedRoom.currentEstimation.title = request.data.title;
-            this.notifyAllUserAboutRoomUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
         }
-
     }
+
+    userVote(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+        if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && (cachedRoom.currentEstimation.state === VOTING_STATE.VOTING || cachedRoom.roomSettings.voteAfterReveal)) {
+            if (request.data) {
+                const vote = Vote.of(request.data)
+                cachedRoom.setVotes([...cachedRoom.getVotes().filter(v => v.userId !== userId), vote]);
+            } else {
+                cachedRoom.setVotes(cachedRoom.getVotes().filter(v => v.userId !== userId));
+            }
+
+            if (cachedRoom.currentEstimation.state === VOTING_STATE.REVEALED) {
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), cachedRoom.connections);
+                return;
+            }
+
+            if (!cachedRoom.roomSettings.realtimeVoting) {
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), cachedRoom.connections);
+                return;
+            }
+
+            const moderatorConnections = cachedRoom.getAllConnectionsByRole(ROLE.MODERATOR);
+            const otherConnections = cachedRoom.getAllConnectionsWithoutRole(ROLE.MODERATOR);
+
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), moderatorConnections);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), otherConnections);
+        }
+    }
+
+
 
     async preRequestHandling(roomId: string, userId: string, connection: any) {
         let cachedRoom = estimationRoomCache.getCachedRoom(roomId);
@@ -225,12 +283,8 @@ export class WebsocketControllerImpl {
         return (user: User, connection: any) => true;
     }
 
-    private notifyAllUserAboutRoomUpdate(responseMessageType: string, data: any, connections: any[],  triggeredBy: string = 'system', ) {
+    private notifyAllUsersAboutUpdate(responseMessageType: string, data: any, connections: any[], triggeredBy: string = 'system',) {
         websocketService.notifyUsers(new BasicResponse(responseMessageType, triggeredBy, data), connections);
-    }
-
-    private notifyAllUserAboutCompleteRoomUpdate(responseMessageType: string, cachedRoom: CachedEstimationPokerRoom, triggeredBy: string = 'system') {
-        websocketService.notifyUsers(new BasicResponse(responseMessageType, triggeredBy, cachedRoom.toPublicDTO()), cachedRoom.connections);
     }
 
 }
