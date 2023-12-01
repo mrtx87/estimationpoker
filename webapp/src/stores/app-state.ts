@@ -13,7 +13,8 @@ export const useAppStateStore = defineStore('AppStore', {
             _connectionState: ConnectionState.DISCONNECTED,
             _roomId: '',
             _state: APP_STATE.NO_ROOM_ENTERED,
-            _pendingRedirect: null
+            _pendingRedirect: null,
+            _localVoteValue: ''
         }
     },
     actions: {
@@ -40,17 +41,22 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setLocalUserId(userId: string) {
             this._localUserId = userId;
+        },
+        setLocalVoteValue(value: string) {
+            this._localVoteValue = value;
         }
     },
     getters: {
         localUserId: (state: any) => state._localUserId,
         localUser: (state: any) => state._room && state._localUserId? state._room.users.find((u: any) => u.id === state._localUserId) : null,
         room: (state: any) => state._room,
+        users: (state: any) => state._room ? state._room.users : [],
         avatar: (state: any) => state._avatar,
         overlayId: (state: any) => state._overlayId,
         connectionState: (state: any) => state._connectionState,
         roomId: (state: any) => state._roomId,
         pendingRedirect: (state: any) => state._pendingRedirect,
         state: (state: any) => state._state,
+        localVoteValue: (state: any) => state._localVoteValue,
     }
 });

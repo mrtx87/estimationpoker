@@ -168,11 +168,7 @@ export default {
     },
     methods: {
         generateRandomAvatar: function () {
-            const randomAvatar = this.$appService.getRandomAvatar(
-                this.headsOptions.length,
-                this.hairOptions.length,
-                this.shirtOptions.length,
-                this.colorOptions);
+            const randomAvatar = this.$appService.getRandomAvatar();
             this.editedAvatar = randomAvatar;
             this.externalUpdate(this.editedAvatar);
         },

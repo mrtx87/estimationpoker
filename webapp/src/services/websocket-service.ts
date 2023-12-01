@@ -70,14 +70,9 @@ export class WebsocketService {
 
     sendPing() {
         if (this.wsConnection) {
-            const token = getCookie(this.store.roomId);
             Logger.warn('send ping');
             const pingData = {ping: 1}
-            this.sendMessage(new AuthenticatedRequest({
-                type: 'ping',
-                token: token,
-                data: null
-            }));
+            this.sendAuthenticatedRequest('ping');
             this.initPing();
         }
     }
@@ -147,11 +142,17 @@ export class WebsocketService {
         this.store.setLocalUserId(message.sender);
         this.store.setRoom(message.data);
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
+        const joiningUserVote = message.data.currentEstimation.votes.find((v: any) => v.userId === message.sender);
+        if (joiningUserVote) {
+            this.store.setLocalVoteValue(joiningUserVote.value)
+        }
         // TODO TOASTR
     }
 
     onOtherUserJoinedRoom(message: any) {
-        this.store.setRoom(message.data);
+        const room = this.store.room;
+        room.connections.push(message.sender);
+        this.store.setRoom({...room})
         // TODO TOASTR
     }
 
@@ -165,6 +166,7 @@ export class WebsocketService {
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
+            Logger.log('<<<');
             Logger.log(message);
             if (!message.type) {
                 Logger.error('Error: No Response Type received', message);
@@ -178,10 +180,23 @@ export class WebsocketService {
                     return this.onUserDisconnectRoom(message);
                 case ResponseMessageType.ANOTHER_USER_JOINED_SESSION:
                     return this.onOtherUserJoinedRoom(message);
-                case ResponseMessageType.REVEALED_VOTES:
-                    return this.store.setRoom(message.data);
-                case ResponseMessageType.RESETED_VOTES:
-                    return this.store.setRoom(message.data);
+                case ResponseMessageType.REVEALED_VOTES: {
+                    const room = {...this.store.room};
+                    room.currentEstimation.state = message.data;
+                    return this.store.setRoom(room);
+                }
+                case ResponseMessageType.RESETED_VOTES: {
+                    const room = {...this.store.room};
+                    room.currentEstimation.state = message.data;
+                    room.currentEstimation.votes = [];
+                    this.store.setLocalVoteValue('')
+                    return this.store.setRoom(room);
+                }
+                case ResponseMessageType.NEXT_ESTIMATION: {
+                    const room = {...this.store.room};
+                    room.currentEstimation = message.data;
+                    return this.store.setRoom(room);
+                }
                 case ResponseMessageType.ESTIMATION_TITLE_UPDATED: {
                     const room = {...this.store.room};
                     room.currentEstimation.title = message.data.estimationTitle;
@@ -194,9 +209,30 @@ export class WebsocketService {
                     foundUser.avatar = userUpdate.avatar;
                     return this.store.setRoom(room);
                 }
+                case ResponseMessageType.CHANGED_USER_NAME: {
+                    const userUpdate = message.data;
+                    const room = {...this.store.room};
+                    const foundUser = room.users.find((u: any) => u.id === message.data.id);
+                    foundUser.name = userUpdate.name;
+                    return this.store.setRoom(room);
+                }
+                case ResponseMessageType.CHANGED_USER_ROLE: {
+                    const userUpdate = message.data;
+                    const room = {...this.store.room};
+                    const foundUser = room.users.find((u: any) => u.id === message.data.id);
+                    foundUser.roles = userUpdate.rles;
+                    return this.store.setRoom(room);
+                }
                 case ResponseMessageType.UPDATED_ROOM_SETTINGS: {
                     const roomSettings = message.data;
                     const room = {...this.store.room, roomSettings}
+                    return this.store.setRoom(room);
+                }
+                case ResponseMessageType.USER_VOTED: {
+                    const votes = message.data;
+                    const currentEstimation = this.store.room.currentEstimation;
+                    currentEstimation.votes = votes;
+                    const room = {...this.store.room}
                     return this.store.setRoom(room);
                 }
                 default:

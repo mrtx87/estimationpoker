@@ -12,6 +12,7 @@ export const RequestMessageType = {
     CHANGE_AVATAR: 'change-avatar',
     CHANGE_ROOM_SETTINGS: 'change-room-settings',
     CHANGE_ESTIMATION_TITLE: 'change-estimation-title',
+    VOTE_REQUEST: 'vote-request'
 }
 
 export const ResponseMessageType = {
@@ -25,9 +26,14 @@ export const ResponseMessageType = {
     REVEALED_VOTES: 'revealed.votes',
     RESETED_VOTES: 'reseted.votes',
     ESTIMATION_UPDATED: 'estimation.updated',
+    NEXT_ESTIMATION: 'next.estimation',
     ESTIMATION_TITLE_UPDATED: 'estimation.title.updated',
     AVATAR_CHANGED: 'user.avatar.changed',
-    UPDATED_ROOM_SETTINGS: 'room.settings.updated'
+    UPDATED_ROOM_SETTINGS: 'room.settings.updated',
+    CHANGED_USER_NAME: 'user.updated',
+    CHANGED_USER_ROLE: 'user.role.updated',
+    USER_VOTED: 'user.voted',
+    NOT_PERMITTED: 'user.not.permitted'
 }
 
 export const MenuItemKey = {

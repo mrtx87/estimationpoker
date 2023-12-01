@@ -3,6 +3,9 @@ import {User} from "./user";
 import {EstimationPokerRoom} from "./estimation-poker-room";
 import {RoomSettings} from "./room-settings";
 import {Estimation} from "./estimation";
+import {Vote} from "./vote";
+import {ResponseMessageType, ROLE, VOTING_STATE} from "../constants/global";
+import {maskVoteValues} from "../util/util";
 
 export class CachedPublicEstimationPokerRoom {
     id: string;
@@ -15,8 +18,8 @@ export class CachedPublicEstimationPokerRoom {
         this.id = init.id;
         this.createdAt = init.createdAt;
         this.users = init.users;
-        this.roomSettings = init.roomSettings;
-        this.currentEstimation = init.currentEstimation;
+        this.roomSettings = RoomSettings.of(init.roomSettings);
+        this.currentEstimation = Estimation.of(init.currentEstimation);
     }
 }
 
@@ -29,7 +32,9 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
     }
 
     addConnection(connection: any) {
-        this.connections.push(connection);
+        const connections = this.connections.filter(c => c.userId !== connection.userId);
+        connections.push(connection);
+        this.connections = connections;
     }
 
     removeConnection(connection: any) {
@@ -40,15 +45,56 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
         this.users = this.users.filter(u => u.id !== userId);
     }
 
+    getUser(userId: string) {
+        return this.users.find(u => u.id === userId);
+    }
+
+    getVotes() {
+        return this.currentEstimation.votes;
+    }
+
     setEstimation(estimation: Estimation) {
         this.currentEstimation = estimation;
     }
 
-    toPublicDTO(): CachedPublicEstimationPokerRoom {
-        const c =  new CachedEstimationPokerRoom(this);
-        c.connections = this.connections.map(c => c.userId);
-        return c;
+    toPublicDTO(userId = ''): CachedPublicEstimationPokerRoom {
+        const dto = new CachedEstimationPokerRoom(this);
+        dto.connections = this.connections.map(c => c.userId);
+
+        if (this.currentEstimation.state === VOTING_STATE.REVEALED) {
+            return dto;
+        }
+
+        if (!this.roomSettings.realtimeVoting) {
+            dto.setVotes(maskVoteValues(this.getVotes()));
+            return dto;
+        }
+
+        if(this.getUser(userId).roles.includes(ROLE.MODERATOR)) {
+            return dto;
+        }
+
+        dto.setVotes(maskVoteValues(this.getVotes()));
+        return dto;
     }
+
+    setVotes(votes: Vote[]) {
+        this.currentEstimation.votes = votes;
+    }
+
+    getAllConnectionsByRole(role: string) {
+        return this.connections.filter(connection => {
+            const foundUser = this.users.find(u => u.id === connection.userId);
+            return foundUser.roles.includes(role);
+        });
+    }
+    getAllConnectionsWithoutRole(role: string) {
+        return this.connections.filter(connection => {
+            const foundUser = this.users.find(u => u.id === connection.userId);
+            return !foundUser.roles.includes(role);
+        });
+    }
+
 
     static from(dbRoom: EstimationPokerRoom, users: User[], currentEstimation: Estimation) {
         return new CachedEstimationPokerRoom({

@@ -22,11 +22,11 @@ export default {
     },
     props: ['estimation'],
     created() {
-        this.appState = useAppStateStore();
+        this.appStore = useAppStateStore();
     },
     data: function () {
         return {
-            appState: null,
+            appStore: null,
             donut: getPieChartObj({
                     text: '',
                     subtext: ''

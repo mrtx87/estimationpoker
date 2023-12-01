@@ -7,7 +7,7 @@
                 <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title" v-on:change="changeRoomTitle($event.target.value)"  class="room-title-container">
                 <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title" v-on:change="updateEstimationName($event.target.value)" class="estimation-title-container">
                 <div class="action-area">
-                    <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
+                    <div class="vote-cards" v-if="room?.currentEstimation.state === 1 && isLocalUserParticipant">
                         <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
                                   v-bind:value="value">
                             {{ value }}
@@ -16,6 +16,7 @@
 
                     <Evaluation v-bind:estimation="room?.currentEstimation" v-if="room?.currentEstimation.state !== 1"></Evaluation>
                 </div>
+                <voting-information></voting-information>
                 <div class="estimation-history">
                     SCHÄTZUNG HISTORY
                 </div>
@@ -47,11 +48,13 @@ import Footer from "@/components/footer.vue";
 import UserList from "@/components/user-list.vue";
 import Evaluation from "@/components/evaluation.vue";
 import VoteCard from "@/components/vote-card.vue";
+import VotingInformation from "@/components/voting-information.vue";
 
 
 export default {
     name: "App",
     components: {
+        VotingInformation,
         VoteCard,
         UserList,
         HeaderVue,
@@ -119,6 +122,9 @@ export default {
         },
         localUser() {
             return this.appStore.localUser;
+        },
+        isLocalUserParticipant() {
+            return this.localUser?.roles.includes(Roles.PARTICIPANT);
         }
     }
 };

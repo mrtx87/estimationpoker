@@ -53,7 +53,7 @@ export class EstimationPokerRoomRepository {
         return EstimationPokerRoomModel
             .findOne({id: roomUpdate.id})
             .then((storedRoom: any) =>
-                this.executeRoomUpdate(request.user.id, EstimationPokerRoom.of(roomUpdate), storedRoom)
+                this.executeRoomUpdate(EstimationPokerRoom.of(roomUpdate), storedRoom)
             );
     }
 
@@ -151,7 +151,7 @@ export class EstimationPokerRoomRepository {
         }
     }
 
-    private async executeRoomUpdate(userId: any, room: EstimationPokerRoom, storedRoom: any) {
+    private async executeRoomUpdate(room: EstimationPokerRoom, storedRoom: any) {
         try {
             if (!storedRoom) {
                 return getNotFoundErrorResponseHandling(ROOM_TO_BE_STORED_NOT_EXIST);
