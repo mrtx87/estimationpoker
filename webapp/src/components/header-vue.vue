@@ -1,7 +1,7 @@
 <template>
     <div class="header-wrapper">
         <div class="header">
-            <user v-if="localUser" v-bind:avatar="localUser.avatar" v-on:click="toggleUserMenu"></user>
+            <user v-if="localUser" v-bind:user="localUser" v-bind:noPlayerName="true" v-on:click="toggleUserMenu"></user>
             <div v-if="displayUserMenu" class="user-menu">
                 <span v-on:click="openAvatarEditor">Edit User</span>
                 <span>-punkt2</span>
