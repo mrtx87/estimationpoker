@@ -9,15 +9,11 @@
         <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
         </div>
       </div>
-      <div :class="[isOnline(user?.id) ? 'is-online' : 'is-offline' ]"></div>
-      <div :class="[isModerator(user) ? 'is-moderator' : '']">
-        <img v-if="isModerator(user)" :src="require('../assets/crown2.svg')">
-      </div>
-      <div :class="[isSpectator(user) ? 'is-spectator' : '']">
-        <img v-if="isSpectator(user)" :src="require('../assets/eye.svg')">
-      </div>
+      <div v-if="!noUserRoleIcon" :class="[isOnline(user?.id) ? 'is-online' : 'is-offline' ]"></div>
+        <img v-if="isModerator(user) && !noUserRoleIcon" :src="require('../assets/crown2.svg')" :class="[isModerator(user) ? 'is-moderator' : '']">
+        <img v-if="isSpectator(user) && !noUserRoleIcon" :src="require('../assets/eye.svg')" :class="[isSpectator(user) ? 'is-spectator' : '']">
     </div>
-    <div v-if="!noPlayerName" class="user-name"> {{ user?.name }}</div>
+    <div v-if="!noUserName" class="user-name"> {{ user?.name }}</div>
   </div>
 </template>
 
@@ -34,7 +30,7 @@ import {Roles} from "@/constants/vue-constants";
 
 export default {
   name: 'User',
-  props: ['noPlayerName', 'user'],
+  props: ['noUserName', 'user', 'noUserRoleIcon'],
   components: {},
   created() {
     this.appState = useAppStateStore();
