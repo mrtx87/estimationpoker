@@ -112,30 +112,6 @@ export const restService = {
 function isOnMultipleToastByStatusBlacklist(errorCode: number) {
     return errorCode && ERROR_CODES_ALLOW_MULTIPLE_BLACKLIST.includes(errorCode);
 }
-
-export function preventMultipleToastRequired(errorCode: number, toasts: any[]) {
-    if (isOnMultipleToastByStatusBlacklist(errorCode)) {
-        return toasts?.filter(toast => toast.errorCode !== errorCode);
-    }
-    return toasts;
-}
-
-export function getToast(id: number, message: string, type:string, timeOutId: number, errorCode = null) {
-    return {
-        message: message,
-        id: id,
-        timeOutId: timeOutId,
-        type: type,
-        errorCode: errorCode
-    };
-}
-
-
-
-
-
-
-
 function getLoadingText(path:string) {
     switch (path) {
         default:

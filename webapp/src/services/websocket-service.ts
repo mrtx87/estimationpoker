@@ -155,8 +155,8 @@ export class WebsocketService {
         if (joiningUserVote) {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }
-        restService.sendGetRequest('/estimation-history', ).then(request => this.store.setEstimationHistory(request.data))
-        // TODO TOASTR
+        restService.sendGetRequest('/estimation-history', ).then(request => this.store.setEstimationHistory(request.data));
+        this.store.toast.info(`${this.store.localUser.name} has joined the room.`)
     }
 
     onOtherUserJoinedRoom(message: any) {
@@ -164,15 +164,16 @@ export class WebsocketService {
         const joiningUser = message.data;
         room.users = [...room.users.filter((u: any) => u.id !== joiningUser.id), joiningUser];
         room.connections = [...room.connections.filter((uid: any) => uid !== joiningUser.id), joiningUser.id];
-        this.store.setRoom({...room})
-        // TODO TOASTR
+        this.store.setRoom({...room});
+        this.store.toast.info(`${joiningUser.name} has joined the room.`)
     }
 
     onUserDisconnectRoom(message: any) {
         const room = this.store.room;
         room.connections = room.connections.filter((uid: string) => uid !== message.sender);
-        this.store.setRoom({...room})
-        // TODO TOASTR
+        this.store.setRoom({...room});
+        const user = this.store.getUser(message.sender);
+        this.store.toast.info(`${user.name} has left the room.`)
     }
 
     onReceiveMessage(response: { data: string; }): void {

@@ -23,7 +23,9 @@ export default {
     methods: {
         triggerVote(value) {
             if (!this.isLocalUserParticipant) {
-                // TODO toastr
+                this.appStore.toast.warning("Only Participants may vote.", {
+                    timeout: 2000
+                });
                 return
             }
             if (this.isSelected) {

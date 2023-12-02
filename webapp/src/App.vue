@@ -62,6 +62,7 @@ import VoteCard from "@/components/vote-card.vue";
 import VotingInformation from "@/components/voting-information.vue";
 import EstimationHistory from "@/components/estimation-history.vue";
 import {Logger} from "@/services/util";
+import { useToast } from "vue-toastification";
 
 
 export default {
@@ -86,6 +87,10 @@ export default {
 
         this.onRouteChange(this.$route)
         this.initUserRandom();
+
+        const toast = useToast();
+        this.appStore.addToastImpl(toast);
+
     },
     watch: {
         $route(to) {

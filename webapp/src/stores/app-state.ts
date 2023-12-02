@@ -6,6 +6,7 @@ export const useAppStateStore = defineStore('AppStore', {
     state: () => {
         return {
             // states to reset after login
+            _toast: null,
             _localUserId: '',
             _room: null,
             _avatar: null,
@@ -49,6 +50,12 @@ export const useAppStateStore = defineStore('AppStore', {
         setEstimationHistory(estimationHistory: any) {
             this._estimationHistory = estimationHistory;
         },
+        addToastImpl(toast: any) {
+            this._toast = toast;
+        },
+        getUser(userId: string) {
+          this._room ? this.users.find((u: any) => u.id === userId) : null;
+        },
         reset() {
             this._localUserId = ''
             this._room = null
@@ -89,7 +96,8 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         isLocalUserModerator: (state: any) => {
             return state.localUser?.roles.includes(Roles.MODERATOR)
-        }
+        },
+        toast: (state: any) => state._toast,
 
     }
 });
