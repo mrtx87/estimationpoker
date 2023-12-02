@@ -1,6 +1,10 @@
 <template>
     <div class="user-list-wrapper">
-        <User v-for="user in sortedUsers" :key="user.id" v-bind:user="user"></User>
+        <div class="users-heading">Users</div>
+        <div class="user-and-submenu" v-for="user in sortedUsers" :key="user.id">
+            <User v-bind:user="user"></User>
+            <button class="plain-button-with-image show-on-hover"><img src="../assets/three_dots.svg"></button>
+        </div>
     </div>
 </template>
 
@@ -55,7 +59,35 @@ export default {
 .user-list-wrapper {
   display: flex;
   flex-direction: column;
-    box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: white;
+  padding: 10px;
+
+  .users-heading {
+    border-bottom: 1px solid #f2f3f4;
+    padding: 5px;
+    font-weight: bold;
+    font-size: 1.333rem;
+  }
+
+  .user-and-submenu {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid #f2f3f4;
+
+    &:hover {
+      .show-on-hover {
+        display: flex;
+      }
+    }
+
+    .show-on-hover {
+      display: none;
+    }
+  }
+
+
 }
 
 

@@ -10,7 +10,8 @@
             <dsgvo v-if="overlayId === DISPLAY_OVERLAY_STATE.DSGVO"></dsgvo>
             <JoiningRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.JOIN_ROOM"></JoiningRoom>
             <CreateRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.CREATE_ROOM"></CreateRoom>
-            <room-settings v-bind:roomSettings="roomSettings" v-if="overlayId === DISPLAY_OVERLAY_STATE.ROOM_SETTINGS"></room-settings>
+            <room-settings v-bind:roomSettings="roomSettings"
+                           v-if="overlayId === DISPLAY_OVERLAY_STATE.ROOM_SETTINGS"></room-settings>
         </div>
     </div>
 </template>
@@ -76,6 +77,7 @@ export default {
   left: 0;
   right: 0;
   background: #000000a6;
+  z-index: 99;
 }
 
 .overlay-container {

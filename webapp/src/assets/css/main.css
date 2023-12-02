@@ -6,7 +6,8 @@
     --primary-dark-color: #594a9e;
 
 
-    --input-bg-color: #6150a8;
+    --primary-color: #a1c9dd;
+    --primary-color-darkend: #78B2CE;
 
     --highlight-color: #09EFAF;
     --highlight-color-light-shade: #B0FCE7;
@@ -33,9 +34,8 @@ body {
     margin: unset;
     overflow: hidden;
     background-position: top;
-    background-repeat: repeat-y;
-    background-color: #eaeff6;
-    background-size:125%;
+    background-color: #f5f5f5;
+    color: black;
 }
 
 ::-webkit-scrollbar {
@@ -105,186 +105,73 @@ body {
     margin: 5px;
 }
 
-.plain-btn {
-    background-color: transparent;
-    position: relative;
+
+/* CSS */
+.button-activate {
     display: flex;
-    border: none;
-    width: min-content;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
     text-align: center;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    text-overflow: ellipsis;
     appearance: none;
-    padding: 0;
-    cursor: pointer;
-    font-family: bungee;
-    animation: opIn 0.3s linear;
-    transition: transform 0.2s ease-in-out;
-    color: var(--primary-dark-text-button-color);
-    user-select: none;
-}
-
-.plain-btn a {
-    color: inherit;
-    text-decoration: none;
-}
-
-/* main button */
-
-.main-button {
-    position: relative;
-    display: flex;
-    background-color: white;
-    border-radius: 11px;
-    border: none;
-    width: min-content;
-    font-family: bungee;
-    color: var(--primary-dark-text-button-color);
-    font-size: min(max(14px, 3vw), 25px);
-    line-height: min(max(14px, 3vw), 25px);
+    backface-visibility: hidden;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    border-style: none;
     box-sizing: border-box;
-    box-shadow: rgb(84 70 14) 2.95px 2.95px 0.6px;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-    appearance: none;
-    padding: 8px 12px;
+    color: #fff;
     cursor: pointer;
-    animation: opIn 0.3s linear;
-    transition: transform 0.2s ease-in-out;
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    height: 50px;
+    letter-spacing: normal;
+    line-height: 1.5;
+    outline: none;
+    overflow: hidden;
+    padding: 14px 30px;
+    position: relative;
+    text-decoration: none;
+    transform: translate3d(0, 0, 0);
+    transition: all .3s;
     user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: top;
+    white-space: nowrap;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    font-weight: bold;
 }
 
-.main-button.small {
-    font-size: calc(6px + 0.55vw);
-    line-height: calc(8px + 0.55vw);
+.button-activate:hover {
+    background-color: var(--primary-color-darkend);
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: .35s;
 }
 
-.main-button:not(.disabled):not(.disabled-shy):active {
-    transform: scale(0.95);
+.button-activate:active {
+    box-shadow: rgba(0, 0, 0, .1) 0 3px 6px 0, rgba(0, 0, 0, .1) 0 0 10px 0, rgba(0, 0, 0, .1) 0 1px 4px -1px;
+    transform: translateY(2px);
+    transition-duration: .3s;
+}
+
+.button-activate:active:after {
+    opacity: 1;
 }
 
 
-.main-button:not(.disabled):not(.disabled-shy):hover {
-    transform: scale(1.05);
+.centered {
+    align-self: center;
 }
 
-.plain-btn:not(.disabled-shy):hover {
-    transform: scale(1.05);
-}
-
-.plain-btn:not(.disabled-shy):active {
-    transform: scale(0.95);
-}
-
-.main-button.disabled {
-    opacity: 0.65;
-    cursor: unset;
-}
-
-.disabled-shy {
-    opacity: 0.99;
-    cursor: unset;
-}
-
-.main-button.overflow-allowed {
-    overflow: visible;
-}
-
-.main-button-placeholder {
-    color: transparent !important;
-    background-color: transparent;
-    box-shadow: unset;
-    cursor: unset;
-    max-height: 0px;
-    padding: 0;
-    animation: plshrink 0.3s linear;
-    z-index: -1;
-}
-
-@keyframes plshrink {
-    from {
-        max-height: 50px;
-        padding: 10px 15px;
-    }
-    to {
-        max-height: 0;
-        padding: 0;
-        height: 0;
-    }
-}
-
-/* resuable animations */
-@keyframes opIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-/* overlay css */
-.overlay {
-    background-color: rgba(0, 0, 0, 0.85);
+#app {
     position: fixed;
-    width: 100%;
     top: 0;
     left: 0;
     right: 0;
-    height: 100vh;
-}
-
-.global-notification {
-    background-color: #5E4FA3;
-    border-radius: 10px;
-    padding: 10px;
-    position: fixed;
-    justify-self: center;
-    font-size: 12px;
-    line-height: 15px;
-    font-family: 'Source Sans Pro', sans-serif;
-    animation: notificationSlideIn 0.3s ease-in-out;
-    top: 50px;
-}
-
-@keyframes notificationSlideIn {
-    from {
-        top: -50px;
-    }
-    to {
-        top: 50px;
-    }
-}
-
-/** timer  **/
-.timer-layout {
-    width: min-content;
-}
-
-
-.pretty-timer {
-    background-color: #4430a0ba;
-    border-radius: 15px;
-    border: 2px rgba(190, 180, 233, 0.8) solid;
-    font-family: bungee;
-    color: var(--primary-light-text-color);
-    font-size: min(max(15px, 4vh), 25px);
-    line-height: min(max(15px, 4vh), 25px);
-    text-align: center;
-    margin: 1vw 0;
-    padding: calc(5px + 0.2vw);
-    overflow: hidden;
-    box-sizing: border-box;
-
-}
-
-@media only screen and (max-aspect-ratio: 1/1) {
-    .pretty-timer {
-
-    }
+    bottom: 0;
+    overflow-x: hidden;
 }
 
 .plain-button {
@@ -295,36 +182,19 @@ body {
     z-index: 100;
 }
 
-.language-selector-absolute {
-    position: absolute !important;
-    bottom: 75px !important;
-    right: 2vw;
-    width: 125px;
-    font-family: bungee;
-    background-color: #4430a0ba;
+.plain-button-with-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    appearance: none;
+    outline: none;
     border: none;
-    border-radius: 15px;
-    color: white;
-    -webkit-appearance: none;
-    -moz-text-align-last: center;
-    text-align-last: center;
     cursor: pointer;
-    padding: 10px;
-    line-height: 16px;
-    font-size: 16px;
-    z-index: 10000;
+
 }
 
-
-.centered {
-    align-self: center;
-}
-
-#app {
-    position: fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    overflow-x: hidden;
+.plain-button-with-image img {
+    width: 25px;
+    height: auto;
 }

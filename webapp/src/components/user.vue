@@ -9,7 +9,8 @@
                 <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
                 </div>
             </div>
-            <div v-if="!noUserRoleIcon" class="online-status" :class="[isOnline(user?.id) ? 'is-online' : 'is-offline' ]"></div>
+            <div v-if="!noUserRoleIcon" class="online-status"
+                 :class="[isOnline(user?.id) ? 'is-online' : 'is-offline' ]"></div>
             <img v-if="isModerator(user) && !noUserRoleIcon" :src="require('../assets/crown2.svg')"
                  class="is-moderator">
             <img v-if="isSpectator(user) && !noUserRoleIcon" :src="require('../assets/eye.svg')" class="is-spectator">
@@ -93,16 +94,17 @@ export default {
 <style lang="scss">
 
 .user-wrapper {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    border-bottom: 1px solid #f2f3f4;
-    box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  box-sizing: border-box;
+  color: black;
+  width: 100%;
 }
 
 .readyonly-player-container {
   display: flex;
-  margin:  0.5vh;
+  margin: 0.5vh;
   position: relative;
   height: 4vh;
   width: 4vh;
@@ -120,7 +122,7 @@ export default {
   width: 100%;
   min-width: inherit;
   min-height: inherit;
-  background-color: #ab9ee9;
+  background-color: #daf3ff;
   box-shadow: rgb(0 0 0 / 50%) 1.95px 3.95px 3.6px;
   border-radius: 50%;
   overflow: hidden;
@@ -173,15 +175,16 @@ export default {
 }
 
 .online-status {
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    background-color: #49ff49;
-    width: 1vh;
-    height: 1vh;
-    border-radius: 15px;
-    z-index: 9999;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  background-color: #49ff49;
+  width: 1vh;
+  height: 1vh;
+  border-radius: 15px;
+  z-index: 9999;
 }
+
 .is-online {
   background-color: #49ff49;
 }

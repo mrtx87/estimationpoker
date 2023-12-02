@@ -1,11 +1,14 @@
 <template>
     <div class="header-wrapper">
         <div class="header">
-            <user v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noPlayerRoleIcon="true" v-on:click="toggleUserMenu"></user>
-            <div v-if="displayUserMenu" class="user-menu">
-                <div class="user-menu-header"> {{ localUser.name }}</div>
-                <span v-on:click="openAvatarEditor">Edit User</span>
-                <span>delete user</span>
+            <div class="user-icon-and-menu">
+                <user v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
+                      v-on:click="toggleUserMenu"></user>
+                <div v-if="displayUserMenu" class="user-menu">
+                    <div class="user-menu-header"> {{ localUser.name }}</div>
+                    <span v-on:click="openAvatarEditor">Edit User</span>
+                    <span>delete user</span>
+                </div>
             </div>
         </div>
     </div>
@@ -54,36 +57,43 @@ export default {
 
 .header-wrapper {
   width: 100%;
-  #position: fixed;
-  top: 0;
+  display: flex;
+  justify-content: center;
+  height: 5.5vh;
+  box-sizing: border-box;
+  background-color: #ebebeb;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
 }
 
 .header {
   position: relative;
   display: flex;
   flex-direction: row-reverse;
-  width: 100%;
-  height: 60px;
-  background-color: white;
-  border-bottom: 1px #d5d9de solid;
+  width: 1280px;
+  height: 5.5vh;
   align-items: center;
   gap: 10px;
+  background-color: transparent;
 }
 
-.user-menu {
-  background-color: #9f92e4;
+.user-icon-and-menu {
+  padding: 0 10px;
 
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  top: 45px;
-  right: 25px;
-  z-index: 5;
+  .user-menu {
+    background-color: #9f92e4;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 45px;
+    right: 25px;
+    z-index: 5;
 
-  .user-menu-header {
-    min-width: 150px;
-    min-height: 30px;
+    .user-menu-header {
+      min-width: 150px;
+      min-height: 30px;
+    }
   }
 }
+
 
 </style>

@@ -22,7 +22,7 @@ export default {
     },
     methods: {
         triggerVote(value) {
-            if(!this.isLocalUserParticipant) {
+            if (!this.isLocalUserParticipant) {
                 // TODO toastr
                 return
             }
@@ -64,19 +64,31 @@ export default {
 
 .vote-card-wrapper {
   display: flex;
-  width: 10%;
+  max-width: 110px;
+  max-height: 160px;
+  height: 10vw;
+  width: 7vw;
+  min-width: 65px;
+  min-height: 100px;
   text-align: center;
   align-items: center;
   justify-content: center;
-  height: 150px;
-  border: 1px solid black;
   border-radius: 4px;
-  background-color: #9f92e4;
-  transition: all .2s ease-in-out;
+  background-color: white;
+  transition: all .25s ease-in-out;
   cursor: pointer;
+  color: #7d8694;
+  font-weight: bold;
+  font-size: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 
   &.selected {
-    background-color: #5E4FA3;
+    background-color: var(--primary-color-darkend);
+    color: white;
+  }
+
+  &:hover {
+    transform: translateY(3px);
   }
 }
 

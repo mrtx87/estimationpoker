@@ -4,12 +4,14 @@
         <HeaderVue></HeaderVue>
         <div class="app-content">
             <div class="left-content">
-                <button v-on:click="openRoomSettings()">RS</button>
-                <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title"
-                       v-on:change="changeRoomTitle($event.target.value)" class="room-title-container">
-                <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title"
-                       v-on:change="updateEstimationName($event.target.value)" class="estimation-title-container">
-                <voting-information></voting-information>
+                <input class="general-input heading1" :disabled="!isLocalUserModerator()" placeholder="Name des Raums"
+                       :value="room?.roomSettings.title"
+                       v-on:change="changeRoomTitle($event.target.value)">
+                <input class="general-input heading2" :disabled="!isLocalUserModerator()"
+                       placeholder="Name der Schätzung"
+                       :value="room?.currentEstimation.title"
+                       v-on:change="updateEstimationName($event.target.value)">
+
                 <div class="action-area">
                     <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
                         <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
@@ -20,17 +22,26 @@
 
                     <Evaluation v-bind:estimation="room?.currentEstimation"
                                 v-if="room?.currentEstimation.state !== 1"></Evaluation>
+                    <div class="moderator-actions" v-if="isLocalUserModerator()">
+                        <button class="button-activate" v-on:click="triggerRevealVotes()"><img
+                                src="../src/assets/reveal.svg"><span>Aufdecken</span></button>
+                        <button class="button-activate" v-on:click="triggerResetVotes()"><img
+                                src="../src/assets/repeat.svg"><span>Zurücksetzen</span></button>
+                        <button class="button-activate" v-on:click="triggerNextEstimation()"><img
+                                src="../src/assets/estimationicon.svg"><span>Neue Schätzung</span></button>
+                        <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
+                            src="../src/assets/gear.svg"></button>
+                    </div>
                 </div>
-                <estimation-history></estimation-history>
+                <estimation-history class="large-screen"></estimation-history>
             </div>
             <div class="right-content">
-                <div class="moderator-actions" v-if="isLocalUserModerator()">
-                    <button v-on:click="triggerRevealVotes()">Aufdecken</button>
-                    <button v-on:click="triggerResetVotes()">Zurücksetzen</button>
-                    <button v-on:click="triggerNextEstimation()">Neue Schätzung</button>
+                <div class="room-status-container">
+                    <voting-information></voting-information>
                 </div>
                 <user-list></user-list>
             </div>
+            <estimation-history class="small-screen"></estimation-history>
         </div>
         <Footer></Footer>
     </div>
@@ -87,8 +98,8 @@ export default {
         }
     },
     methods: {
-        openRoomSettings(){
-          this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.ROOM_SETTINGS);
+        openRoomSettings() {
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.ROOM_SETTINGS);
         },
         onRouteChange(routeTo) {
             Logger.log(`routechange: ${routeTo.path}`);
@@ -152,68 +163,140 @@ export default {
   align-items: center;
   justify-content: center;
   overflow-x: hidden;
+  background-color: #f5f5f5;
 }
 
 .app-content {
+  padding-top: 20px;
   max-width: 1280px;
-  background-color: grey;
   box-sizing: border-box;
   height: calc(100vh - 60px - 40px);
   width: 1280px;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: 80% 20%;
-  grid-gap: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
 
   .left-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
     box-sizing: border-box;
-
-
-    .room-title-container, .estimation-title-container {
-      height: fit-content;
-      background-color: #9f92e4;
-    }
+    width: 100%;
+    max-width: 800px;
 
     .action-area {
-      height: 100%;
-      background-color: #9f9254;
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
 
       .vote-cards {
         width: 100%;
         display: flex;
         flex-wrap: wrap;
         gap: 20px 20px;
-        padding: 15px;
         box-sizing: border-box;
         height: min-content;
       }
+
+      .moderator-actions {
+        display: flex;
+        justify-content: flex-start;
+        gap: 1.25vw;
+        box-sizing: border-box;
+        width: 100%;
+      }
     }
 
+    .large-screen {
+      margin-top: 25px;
+    }
   }
 
   .right-content {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     box-sizing: border-box;
+    box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+    color: black;
+    border-radius: 4px;
+    height: min-content;
+    background-color: white;
+    width: 100%;
+    max-width: 300px;
 
-    .moderator-actions {
-      display: grid;
-      box-sizing: border-box;
-      gap: 10px;
-      grid-template-columns: calc(50% - 5px) calc(50% - 5px);
-      height: 20%;
-      padding: 10px;
-      background-color: #9f9284;
-      box-sizing: border-box;
-
+    .room-status-container {
+      background-color: var(--primary-color);
+      width: 100%;
+      height: 90px;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
     }
+  }
+
+  .small-screen {
+    display: none;
+  }
+}
+
+.heading1 {
+  font-size: 2rem;
+  margin-bottom: 0.25vh;
+}
+
+.heading2 {
+  font-size: 1.333rem;
+  margin-bottom: 0.25vh;
+  text-align: center;
+}
+
+.general-input {
+  color: rgb(36, 35, 42);
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  padding: 4px 8px;
+  transition: all 0.1s ease 0s;
+
+  &:focus {
+    #border: 1px solid transparent;
+    #box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px;
+    background: rgb(251, 251, 251);
+    border-radius: 4px;
+    border: none;
+    appearance: none;
+    outline: 1px solid #d7d7d7;
+    text-align: left !important;
 
   }
 }
+
+@media only screen and (max-width: 1280px) {
+  .app-content {
+    width: unset !important;
+  }
+
+  .right-content, .left-content {
+    width: 90% !important;
+    max-width: unset !important;
+  }
+
+  .large-screen {
+    display: none !important;
+  }
+
+  .small-screen {
+    display: flex !important;
+  }
+}
+
 
 </style>
