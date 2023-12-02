@@ -44,15 +44,15 @@ export class EstimationService {
         return cachedRoom;
     }
 
-    createEstimation(roomId: string, roomSettings: RoomSettings, initialEstimationId?: string) {
+    createEstimation(room: EstimationPokerRoom | CachedEstimationPokerRoom, initialEstimationId?: string) {
         const estimationId = initialEstimationId ? initialEstimationId : UUID();
         const estimation = new Estimation({
             id: estimationId,
             createdAt: Date.now(),
-            roomId: roomId,
-            title: 'Schätzung' + UUID(),
+            roomId: room.id,
+            title: 'Schätzung' + room.estimationCount,
             state: VOTING_STATE.VOTING,
-            valueOptions: roomSettings.valueOptions,
+            valueOptions: room.roomSettings.valueOptions,
             evaluation: new Evaluation({
                 estimationId: estimationId,
                 avg: 0,
@@ -78,17 +78,31 @@ export class EstimationService {
         EstimationModel.find({roomId: roomId}).then(estimationModels => estimationModels.forEach(em => em.delete()));
     }
 
-    saveEstimation(estimation: Estimation){
+    saveEstimation(estimation: Estimation) {
         EstimationModel.findOne({id: estimation.id}).then(foundEstimation => {
             this.updateEstimationSafe(foundEstimation, estimation);
+            foundEstimation.save().then(e => e ? logger.info(`stored estimation: ${e.id} from room: ${e.roomId}`) : logger.error(`stored estimation missing`));
         });
+    }
+
+    getClosedEstimations(roomId: string, beforeDate: number = null) {
+        const queryParams = {
+            roomId: roomId,
+            state: VOTING_STATE.CLOSED,
+        }
+
+        return EstimationModel.find(beforeDate ? {
+            ...queryParams,
+            createdAt: {$lt: 25}
+        } : queryParams).limit(15).then(estimations => estimations.map(Estimation.of))
     }
 
     private updateEstimationSafe(storedEstimation: any, cachedEstimation: Estimation) {
         storedEstimation.title = cachedEstimation.title;
-        storedEstimation.state = cachedEstimation.state;
-        storedEstimation.time = cachedEstimation.timer;
+        storedEstimation.timer = cachedEstimation.timer;
         storedEstimation.votes = cachedEstimation.votes;
+        storedEstimation.state = cachedEstimation.state;
         storedEstimation.evaluation = cachedEstimation.evaluation;
     }
+
 }

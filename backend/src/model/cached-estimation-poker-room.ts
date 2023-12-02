@@ -12,12 +12,14 @@ export class CachedPublicEstimationPokerRoom {
     createdAt: number;
     users: User[];
     roomSettings: RoomSettings;
+    estimationCount: number;
     currentEstimation: Estimation
 
     constructor(init: Partial<CachedEstimationPokerRoom>) {
         this.id = init.id;
         this.createdAt = init.createdAt;
         this.users = init.users;
+        this.estimationCount = init.estimationCount;
         this.roomSettings = RoomSettings.of(init.roomSettings);
         this.currentEstimation = Estimation.of(init.currentEstimation);
     }
@@ -102,7 +104,8 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
             createdAt: dbRoom.createdAt,
             users: users,
             roomSettings: dbRoom.roomSettings,
-            currentEstimation: currentEstimation
+            currentEstimation: currentEstimation,
+            estimationCount: dbRoom.estimationCount
         })
     }
 

@@ -109,4 +109,15 @@ export const t42 = {
 
 export const VALUE_TYPE_OPTIONS = [
     scrum, fibonacci, sequential, tshirt, t42
-]
+];
+
+export const VOTING_STATE = {
+    VOTING: 1,
+    REVEALED: 2,
+    CLOSED: 3
+}
+
+export const ESTIMATION_TIMER_STATE = {
+    RUNNING: 1,
+    STOPPED: 0,
+}

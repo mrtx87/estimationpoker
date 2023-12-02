@@ -1,5 +1,6 @@
 import {UserModel} from "../db/mongodb/db-schemas";
 import {User} from "../model/user";
+import {logger} from "../services/s9logger";
 
 export class UserRepository {
     private static INSTANCE: UserRepository = new UserRepository();
@@ -51,7 +52,10 @@ export class UserRepository {
         return this.getUser(userUpdate.id)
             .then(userModel => {
                 this.updateUserSafe(userModel, userUpdate);
-                return userModel.save();
+                return userModel.save().then( u => {
+                    u ? logger.info(`stored user: ${u.id} from room: ${u.roomId}`) : logger.error(`stored user missing`);
+                    return u;
+                });
             });
     }
 

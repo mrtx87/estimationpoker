@@ -7,7 +7,7 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {RequestMessageType} from "@/constants/vue-constants";
+import {RequestMessageType, Roles} from "@/constants/vue-constants";
 
 export default {
     name: "Vote-Card",
@@ -22,6 +22,11 @@ export default {
     },
     methods: {
         triggerVote(value) {
+            if(!this.isLocalUserParticipant) {
+                // TODO toastr
+                console.log('sdgsdfgdhdf')
+                return
+            }
             if (this.isSelected) {
                 this.appStore.setLocalVoteValue('');
                 this.$websocketService.sendAuthenticatedRequest(RequestMessageType.VOTE_REQUEST);
@@ -48,6 +53,9 @@ export default {
         },
         estimation() {
             return this.appStore.room.currentEstimation;
+        },
+        isLocalUserParticipant() {
+            return this.localUser?.roles.includes(Roles.PARTICIPANT);
         }
     }
 };

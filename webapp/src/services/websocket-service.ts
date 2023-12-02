@@ -3,6 +3,7 @@ import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
 import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageType} from "@/constants/vue-constants";
 import {AppService} from "@/services/app-service";
+import {headerConfig, restService} from "@/services/rest-service";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -78,6 +79,7 @@ export class WebsocketService {
     }
 
     sendFinalizeJoinRequest(roomId: string) {
+        this.store.reset();
         this.store.setState(APP_STATE.JOINING_ROOM);
         this.sendAuthenticatedRequest('finalize-join', null, roomId);
     }
@@ -100,12 +102,16 @@ export class WebsocketService {
     }
 
     onCloseConnection(): void {
+        this.wsConnection = null;
         console.error("websocket connection closed");
         this.store.setConnectionState(ConnectionState.DISCONNECTED);
         this.handleReconnect();
     }
 
     handleReconnect() {
+        if(!this.appService?.isOnRoomRoute()) {
+            return;
+        }
         if (this.reconnectRetryLeft()) {
             this.retries += 1;
             console.log("retry connecting... retries left:" + (MAX_RECONNECT_RETRIES - this.retries));
@@ -130,6 +136,8 @@ export class WebsocketService {
     }
 
     sendFinalizeJoinRoom(roomId: string) {
+        const token = getCookie(roomId);
+        restService.setHeaderConfig(token);
         const establishing = this.establishConnection();
         if (!establishing) {
             this.sendFinalizeJoinRequest(roomId);
@@ -140,18 +148,22 @@ export class WebsocketService {
 
     onRoomJoinFinalizeResponse(message: any) {
         this.store.setLocalUserId(message.sender);
-        this.store.setRoom(message.data);
+        const receivedRoom = message.data.room;
+        this.store.setRoom(receivedRoom);
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
-        const joiningUserVote = message.data.currentEstimation.votes.find((v: any) => v.userId === message.sender);
+        const joiningUserVote = message.data.vote ;
         if (joiningUserVote) {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }
+        restService.sendGetRequest('/estimation-history', ).then(request => this.store.setEstimationHistory(request.data))
         // TODO TOASTR
     }
 
     onOtherUserJoinedRoom(message: any) {
         const room = this.store.room;
-        room.connections.push(message.sender);
+        const joiningUser = message.data;
+        room.users = [...room.users.filter((u: any) => u.id !== joiningUser.id), joiningUser];
+        room.connections = [...room.connections.filter((uid: any) => uid !== joiningUser.id), joiningUser.id];
         this.store.setRoom({...room})
         // TODO TOASTR
     }
@@ -202,25 +214,12 @@ export class WebsocketService {
                     room.currentEstimation.title = message.data.estimationTitle;
                     return this.store.setRoom(room);
                 }
+                case ResponseMessageType.CHANGED_USER_ROLE:
+                case ResponseMessageType.CHANGED_USER_NAME:
                 case ResponseMessageType.AVATAR_CHANGED: {
-                    const userUpdate = message.data;
+                    const updatedUser = message.data;
                     const room = {...this.store.room};
-                    const foundUser = room.users.find((u: any) => u.id === message.data.id);
-                    foundUser.avatar = userUpdate.avatar;
-                    return this.store.setRoom(room);
-                }
-                case ResponseMessageType.CHANGED_USER_NAME: {
-                    const userUpdate = message.data;
-                    const room = {...this.store.room};
-                    const foundUser = room.users.find((u: any) => u.id === message.data.id);
-                    foundUser.name = userUpdate.name;
-                    return this.store.setRoom(room);
-                }
-                case ResponseMessageType.CHANGED_USER_ROLE: {
-                    const userUpdate = message.data;
-                    const room = {...this.store.room};
-                    const foundUser = room.users.find((u: any) => u.id === message.data.id);
-                    foundUser.roles = userUpdate.rles;
+                    room.users = [...room.users.filter((u: any) => u.id !== message.data.id), updatedUser];
                     return this.store.setRoom(room);
                 }
                 case ResponseMessageType.UPDATED_ROOM_SETTINGS: {

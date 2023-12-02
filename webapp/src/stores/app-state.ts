@@ -14,7 +14,8 @@ export const useAppStateStore = defineStore('AppStore', {
             _roomId: '',
             _state: APP_STATE.NO_ROOM_ENTERED,
             _pendingRedirect: null,
-            _localVoteValue: ''
+            _localVoteValue: '',
+            _estimationHistory: []
         }
     },
     actions: {
@@ -44,11 +45,25 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setLocalVoteValue(value: string) {
             this._localVoteValue = value;
+        },
+        setEstimationHistory(estimationHistory: any) {
+            this._estimationHistory = estimationHistory;
+        },
+        reset() {
+            this._localUserId = ''
+            this._room = null
+            this._avatar = null
+            this._overlayId = DISPLAY_OVERLAY_STATE.NO_OVERLAY
+            //this._roomId = ''
+            this._state = APP_STATE.NO_ROOM_ENTERED
+            this._pendingRedirect = null
+            this._localVoteValue = ''
+            this._estimationHistory = []
         }
     },
     getters: {
         localUserId: (state: any) => state._localUserId,
-        localUser: (state: any) => state._room && state._localUserId? state._room.users.find((u: any) => u.id === state._localUserId) : null,
+        localUser: (state: any) => state._room && state._localUserId ? state._room.users.find((u: any) => u.id === state._localUserId) : null,
         room: (state: any) => state._room,
         users: (state: any) => state._room ? state._room.users : [],
         avatar: (state: any) => state._avatar,
@@ -58,5 +73,19 @@ export const useAppStateStore = defineStore('AppStore', {
         pendingRedirect: (state: any) => state._pendingRedirect,
         state: (state: any) => state._state,
         localVoteValue: (state: any) => state._localVoteValue,
+        estimationHistory: (state: any) => state._estimationHistory,
+        sortedEstimationHistory: (state: any) => {
+            const history = state._estimationHistory;
+            history.sort((a: any, b: any) => {
+                if (a.createdAt > b.createdAt) {
+                    return -1;
+                }
+                if (a.createdAt < b.createdAt) {
+                    return 1;
+                }
+                return 0;
+            })
+            return history;
+        },
     }
 });

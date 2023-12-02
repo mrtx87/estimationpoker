@@ -36,4 +36,8 @@ export class EstimationRoomCache {
         return [...this.roomCache.values()];
     }
 
+    count() {
+        return this.roomCache.size;
+    }
+
 }

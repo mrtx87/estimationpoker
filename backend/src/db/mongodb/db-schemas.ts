@@ -43,6 +43,7 @@ EstimationSchema.index({roomId: -1}, {unique: false});
 export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom>({
     id: String,
     createdAt: Number,
+    estimationCount: Number,
     roomSettings: {
         title: String,
         valueOptions: {

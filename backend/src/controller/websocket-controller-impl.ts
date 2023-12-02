@@ -133,13 +133,20 @@ export class WebsocketControllerImpl {
     }
 
     async finalizeJoin(cachedRoom: CachedEstimationPokerRoom, joiningUserId: string, request: AuthenticatedRequest, connection: any) {
+        if (connection.userId && connection.roomId) {
+            estimationRoomService.processDisconnectClient(connection);
+        }
+
         connection.userId = joiningUserId;
         connection.roomId = cachedRoom.id;
         logger.info(`user ${joiningUserId} joined room: ${cachedRoom.id}`);
         cachedRoom.addConnection(connection);
 
-        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, cachedRoom.toPublicDTO(joiningUserId)), connection);
-        websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
+        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, {
+            room: cachedRoom.toPublicDTO(joiningUserId),
+            vote: cachedRoom.getVotes().find(v => v.userId === joiningUserId)
+        }), connection);
+        websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId, cachedRoom.getUser(joiningUserId)), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
     }
 
     ping(cachedRoom: CachedEstimationPokerRoom, userId: string, request: AuthenticatedRequest, connection: any) {
@@ -155,13 +162,15 @@ export class WebsocketControllerImpl {
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         cachedRoom.currentEstimation.state = VOTING_STATE.VOTING;
         cachedRoom.currentEstimation.votes = [];
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.RESETED_VOTES, VOTING_STATE.VOTING, cachedRoom.connections ,userId);
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.RESETED_VOTES, VOTING_STATE.VOTING, cachedRoom.connections, userId);
     }
 
     async nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         const previousEstimation = cachedRoom.currentEstimation;
+        previousEstimation.state = VOTING_STATE.CLOSED;
+        cachedRoom.estimationCount += 1;
         estimationService.saveEstimation(previousEstimation);
-        const nextEstimation = await estimationService.createEstimation(cachedRoom.id, cachedRoom.roomSettings);
+        const nextEstimation = await estimationService.createEstimation(cachedRoom);
         cachedRoom.setEstimation(nextEstimation);
         this.notifyAllUsersAboutUpdate(ResponseMessageType.NEXT_ESTIMATION, nextEstimation, cachedRoom.connections, userId);
     }
@@ -255,7 +264,6 @@ export class WebsocketControllerImpl {
             this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), otherConnections);
         }
     }
-
 
 
     async preRequestHandling(roomId: string, userId: string, connection: any) {

@@ -1,5 +1,5 @@
 import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY, ROOM_ROUTE} from "@/constants/vue-constants";
-import {isValidRoomId, randomColor, randomInt} from "@/services/util";
+import {isValidRoomId, Logger, randomColor, randomInt} from "@/services/util";
 import {router} from "@/main";
 import {getCookie, setCookie} from "@/services/cookie-service";
 import {WebsocketService} from "@/services/websocket-service";
@@ -19,10 +19,13 @@ export class AppService {
         }
 
         if (this.isOnRoomRoute()) {
+            this.store.reset();
             this.handleJoinRoom();
             return;
         }
 
+        this.store.reset();
+        this.websocketService.wsConnection?.close();
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.CREATE_ROOM);
     }
 

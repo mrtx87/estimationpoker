@@ -4,22 +4,23 @@
         <HeaderVue></HeaderVue>
         <div class="app-content">
             <div class="left-content">
-                <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title" v-on:change="changeRoomTitle($event.target.value)"  class="room-title-container">
-                <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title" v-on:change="updateEstimationName($event.target.value)" class="estimation-title-container">
+                <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title"
+                       v-on:change="changeRoomTitle($event.target.value)" class="room-title-container">
+                <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title"
+                       v-on:change="updateEstimationName($event.target.value)" class="estimation-title-container">
+                <voting-information></voting-information>
                 <div class="action-area">
-                    <div class="vote-cards" v-if="room?.currentEstimation.state === 1 && isLocalUserParticipant">
+                    <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
                         <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
                                   v-bind:value="value">
                             {{ value }}
                         </VoteCard>
                     </div>
 
-                    <Evaluation v-bind:estimation="room?.currentEstimation" v-if="room?.currentEstimation.state !== 1"></Evaluation>
+                    <Evaluation v-bind:estimation="room?.currentEstimation"
+                                v-if="room?.currentEstimation.state !== 1"></Evaluation>
                 </div>
-                <voting-information></voting-information>
-                <div class="estimation-history">
-                    SCHÄTZUNG HISTORY
-                </div>
+                <estimation-history></estimation-history>
             </div>
             <div class="right-content">
                 <div class="moderator-actions" v-if="isLocalUserModerator()">
@@ -27,9 +28,7 @@
                     <button v-on:click="triggerResetVotes()">Zurücksetzen</button>
                     <button v-on:click="triggerNextEstimation()">Neue Schätzung</button>
                 </div>
-                <div class="user-list">
-                    <user-list></user-list>
-                </div>
+                <user-list></user-list>
             </div>
         </div>
         <Footer></Footer>
@@ -49,11 +48,14 @@ import UserList from "@/components/user-list.vue";
 import Evaluation from "@/components/evaluation.vue";
 import VoteCard from "@/components/vote-card.vue";
 import VotingInformation from "@/components/voting-information.vue";
+import EstimationHistory from "@/components/estimation-history.vue";
+import {Logger} from "@/services/util";
 
 
 export default {
     name: "App",
     components: {
+        EstimationHistory,
         VotingInformation,
         VoteCard,
         UserList,
@@ -85,6 +87,7 @@ export default {
     },
     methods: {
         onRouteChange(routeTo) {
+            Logger.log(`routechange: ${routeTo.path}`);
             this.$appService.setRouteOn(routeTo);
             this.$appService.initApp();
         },
@@ -101,10 +104,16 @@ export default {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.NEXT_ESTIMATION);
         },
         updateEstimationName(value) {
-            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {estimationId: this.room.currentEstimation.id, title: value})
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {
+                estimationId: this.room.currentEstimation.id,
+                title: value
+            })
         },
         changeRoomTitle(value) {
-            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {...this.room.roomSettings, title: value})
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {
+                ...this.room.roomSettings,
+                title: value
+            })
         },
         isLocalUserModerator() {
             return this.localUser?.roles.includes(Roles.MODERATOR);
@@ -142,14 +151,12 @@ export default {
 }
 
 .app-content {
-  max-width: 1400px;
+  max-width: 1280px;
   background-color: grey;
   box-sizing: border-box;
   height: calc(100vh - 60px - 40px);
-  width: 1400px;
-
+  width: 1280px;
   padding: 10px;
-
   display: grid;
   grid-template-columns: 80% 20%;
   grid-gap: 10px;
@@ -158,6 +165,8 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    box-sizing: border-box;
+
 
     .room-title-container, .estimation-title-container {
       height: fit-content;
@@ -167,6 +176,7 @@ export default {
     .action-area {
       height: 100%;
       background-color: #9f9254;
+      box-sizing: border-box;
 
       .vote-cards {
         width: 100%;
@@ -179,17 +189,13 @@ export default {
       }
     }
 
-    .estimation-history {
-      height: 20%;
-      background-color: #9f9214;
-
-    }
   }
 
   .right-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    box-sizing: border-box;
 
     .moderator-actions {
       display: grid;
@@ -199,12 +205,10 @@ export default {
       height: 20%;
       padding: 10px;
       background-color: #9f9284;
+      box-sizing: border-box;
+
     }
 
-    .user-list {
-      height: 100%;
-      background-color: #9f9234;
-    }
   }
 }
 

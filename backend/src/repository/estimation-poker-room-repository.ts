@@ -47,14 +47,11 @@ export class EstimationPokerRoomRepository {
             );
     }
 
-    updateRoom(request: any): any {
-        // TODO wie werden room updates gemacht
-        const roomUpdate = request.body.room;
+    updateRoom(estimationPokerRoom: EstimationPokerRoom): any {
         return EstimationPokerRoomModel
-            .findOne({id: roomUpdate.id})
+            .findOne({id: estimationPokerRoom.id})
             .then((storedRoom: any) =>
-                this.executeRoomUpdate(EstimationPokerRoom.of(roomUpdate), storedRoom)
-            );
+                this.executeRoomUpdate(storedRoom, estimationPokerRoom));
     }
 
     findAllRooms() {
@@ -69,12 +66,12 @@ export class EstimationPokerRoomRepository {
     deleteRoom(roomId: string) {
         return this.getRoomById(roomId)
             .then(foundRoomInDB => {
-                    if (foundRoomInDB) {
-                        foundRoomInDB.delete();
-                        return true;
-                    }
-                    return false;
-                });
+                if (foundRoomInDB) {
+                    foundRoomInDB.delete();
+                    return true;
+                }
+                return false;
+            });
     }
 
     /*private findDocumentsBySearchText(searchParams: DocumentSearchParams) {
@@ -111,12 +108,12 @@ export class EstimationPokerRoomRepository {
             .limit(MAX_RESULTS_DOC_SEARCH);
     }*/
 
-    private updateDocumentInDB(room: any, updatedRoom: any) {
-        this.updateCurrentRoomModelSafe(room, updatedRoom);
-        return room
+    private updateDocumentInDB(storedRoom: any, updatedRoom: any) {
+        this.updateCurrentRoomModelSafe(storedRoom, updatedRoom);
+        return storedRoom
             .save()
             .then((storedRoom: any) => {
-                logger.info('Room updated: ' + storedRoom.id);
+                logger.info('stored room: ' + storedRoom.id);
                 return EstimationPokerRoomMapper.map(storedRoom);
             }, () => new ErrorResponse({
                 code: ResponseCode.BAD_REQUEST,
@@ -126,6 +123,8 @@ export class EstimationPokerRoomRepository {
 
     private updateCurrentRoomModelSafe(savedRoomModel: any, roomUpdate: EstimationPokerRoom) {
         savedRoomModel.roomSettings = roomUpdate.roomSettings;
+        savedRoomModel.currentEstimationId = roomUpdate.currentEstimationId;
+        savedRoomModel.estimationCount = roomUpdate.estimationCount;
     }
 
     private postRoomCreationProcessing(room: EstimationPokerRoom) {
@@ -151,12 +150,11 @@ export class EstimationPokerRoomRepository {
         }
     }
 
-    private async executeRoomUpdate(room: EstimationPokerRoom, storedRoom: any) {
+    private async executeRoomUpdate(storedRoom: any, room: EstimationPokerRoom) {
         try {
             if (!storedRoom) {
                 return getNotFoundErrorResponseHandling(ROOM_TO_BE_STORED_NOT_EXIST);
             }
-            //check if request user is author or editor of this document
             return this.updateDocumentInDB(storedRoom, room);
         } catch (e) {
             return getInternalErrorErrorResponseHandling(e, 'Fehler beim ändern des Raumes.');

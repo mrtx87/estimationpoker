@@ -70,7 +70,10 @@ function startWebServer(port: number) {
 
 /* app exit handling */
 function exitHandler(event: any) {
+    console.log('shutting down')
 
+    estimationRoomCache.getAllRoomsFromCache()
+        .forEach(estimationRoomService.storeCachedRoom);
 }
 
 function registerExitHandlers(init: InitAppProcess) {

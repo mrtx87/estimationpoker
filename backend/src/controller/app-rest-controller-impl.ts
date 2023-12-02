@@ -1,6 +1,6 @@
 import {Express} from "express";
 
-import {estimationRoomService, userService} from "../server";
+import {estimationRoomService, estimationService, userService} from "../server";
 
 import {
     APP_REST_PREFIX,
@@ -20,17 +20,21 @@ export function applyAppRestControllerConfig(app: Express) {
         .addPrefix(APP_REST_PREFIX)
         .addPostEndPoint('/create-room', handleCreateRoomRequest)
         .addPostEndPoint('/join-room', handleNewJoinRoomRequest)
+        .addGetEndPoint('/estimation-history', handleEstimationHistoryRequest)
 }
 
 function handleCreateRoomRequest(req: any, res: any) {
-    logger.log("created room")
     return estimationRoomService.createRoom(req.body).catch((error: any) => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
 }
 
 function handleNewJoinRoomRequest(req: any, res: any) {
-    logger.log("join room")
     const joinRoomRequest: any = req.body;
     return estimationRoomService.joinRoomAsNewUser(joinRoomRequest)
+        .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
+}
+
+function handleEstimationHistoryRequest(req: any, res: any) {
+    return estimationService.getClosedEstimations(req.user.roomId)
         .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
 }
 
