@@ -37,8 +37,8 @@ export const ResponseMessageType = {
 }
 
 export const MenuItemKey = {
-    CREATE_NEW_GAME : 'create-new-game',
-    BACK_TO_HOME : 'back-to-home'
+    CREATE_NEW_GAME: 'create-new-game',
+    BACK_TO_HOME: 'back-to-home'
 }
 
 export const Roles = {
@@ -59,7 +59,8 @@ export const DISPLAY_OVERLAY_STATE = {
     DSGVO: 3,
     ROOM_SETTING: 4,
     JOIN_ROOM: 7,
-    CREATE_ROOM: 8
+    CREATE_ROOM: 8,
+    ROOM_SETTINGS: 9
 }
 
 export const APP_STATE = {
@@ -104,7 +105,7 @@ export const tshirt = {
 export const t42 = {
     id: 5,
     name: 'Team 42',
-    values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
+    values: ['0', '0.25', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
 }
 
 export const VALUE_TYPE_OPTIONS = [

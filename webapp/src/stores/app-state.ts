@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia';
 import {ConnectionState} from "@/services/websocket-service";
-import {APP_STATE, DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
+import {APP_STATE, DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
 
 export const useAppStateStore = defineStore('AppStore', {
     state: () => {
@@ -59,7 +59,7 @@ export const useAppStateStore = defineStore('AppStore', {
             this._pendingRedirect = null
             this._localVoteValue = ''
             this._estimationHistory = []
-        }
+        },
     },
     getters: {
         localUserId: (state: any) => state._localUserId,
@@ -87,5 +87,9 @@ export const useAppStateStore = defineStore('AppStore', {
             })
             return history;
         },
+        isLocalUserModerator: (state: any) => {
+            return state.localUser?.roles.includes(Roles.MODERATOR)
+        }
+
     }
 });

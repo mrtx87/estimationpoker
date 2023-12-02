@@ -24,7 +24,6 @@ export default {
         triggerVote(value) {
             if(!this.isLocalUserParticipant) {
                 // TODO toastr
-                console.log('sdgsdfgdhdf')
                 return
             }
             if (this.isSelected) {

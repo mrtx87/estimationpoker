@@ -10,6 +10,7 @@
             <dsgvo v-if="overlayId === DISPLAY_OVERLAY_STATE.DSGVO"></dsgvo>
             <JoiningRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.JOIN_ROOM"></JoiningRoom>
             <CreateRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.CREATE_ROOM"></CreateRoom>
+            <room-settings v-bind:roomSettings="roomSettings" v-if="overlayId === DISPLAY_OVERLAY_STATE.ROOM_SETTINGS"></room-settings>
         </div>
     </div>
 </template>
@@ -23,10 +24,12 @@ import Impressum from "@/components/impressum.vue";
 import Dsgvo from "@/components/dsgvo.vue";
 import JoiningRoom from "@/components/joining-room.vue";
 import CreateRoom from "@/components/create-room.vue";
+import RoomSettings from "@/components/room-settings.vue";
 
 export default {
     name: "Overlay",
     components: {
+        RoomSettings,
         CreateRoom,
         JoiningRoom,
         AvatarConfigurator,
@@ -53,6 +56,9 @@ export default {
         },
         overlayId() {
             return this.appStore.overlayId;
+        },
+        roomSettings() {
+            return this.appStore.room ? this.appStore.room.roomSettings : null;
         }
     }
 };

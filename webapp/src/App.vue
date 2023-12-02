@@ -4,6 +4,7 @@
         <HeaderVue></HeaderVue>
         <div class="app-content">
             <div class="left-content">
+                <button v-on:click="openRoomSettings()">RS</button>
                 <input :disabled="!isLocalUserModerator()" :value="room?.roomSettings.title"
                        v-on:change="changeRoomTitle($event.target.value)" class="room-title-container">
                 <input :disabled="!isLocalUserModerator()" :value="room?.currentEstimation.title"
@@ -86,6 +87,9 @@ export default {
         }
     },
     methods: {
+        openRoomSettings(){
+          this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.ROOM_SETTINGS);
+        },
         onRouteChange(routeTo) {
             Logger.log(`routechange: ${routeTo.path}`);
             this.$appService.setRouteOn(routeTo);
