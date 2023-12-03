@@ -8,7 +8,7 @@ export function getCookie(cookieKey: string): any {
 
 export function setCookie(cookieKey: string, cookieValue: string): void {
     const privacyConfirmed = VueCookieNext.getCookie(PRIVACY_POLICY_COOKIE_KEY);
-    if(privacyConfirmed || 1 == 1) {
+    if (privacyConfirmed || 1 == 1) {
         VueCookieNext.setCookie(cookieKey, cookieValue, {
             path: '/',
             domain: 'localhost',
@@ -29,5 +29,12 @@ export function removeCookie(cookieKey: string): void {
 export function removeAllCookies(): void {
     const keys = [...VueCookieNext.keys()];
     keys.forEach(cookieKey => VueCookieNext.removeCookie(cookieKey));
+}
+
+export function getRoomAuthenticationsFromCookies(): any[] {
+    return VueCookieNext.keys().filter(key => key !== PRIVACY_POLICY_COOKIE_KEY).map(roomId => {
+        const jwt = getCookie(roomId);
+        return {roomId, token: jwt};
+    });
 }
 

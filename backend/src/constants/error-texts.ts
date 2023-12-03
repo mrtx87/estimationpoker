@@ -10,6 +10,7 @@ export const INVALID_TOKEN = 'Deine Sitzung ist abgelaufen, bitte melde dich ern
 export const TOKEN_REQUIRED = 'Du musst dich zuerst einloggen.';
 export const ERROR_WHILE_CREATING_ROOM = 'Interner Fehler beim Anlegen des Raums.';
 export const ERROR_WHILE_JOINING_ROOM = 'Interner Fehler beim Betreten des Raums.';
+export const ERROR_REQUESTING_ROOM_PREVIEWS = 'Interner Fehler beim Betreten Abfrage der Raum Previews.';
 export const ROOM_NOT_EXISTING = 'Dieser Raum existiert nicht mehr';
 export const USER_NAME_OR_PW_NOT_EXISTS = 'Diese Kombination aus Benutzer & Passwort existiert nicht.';
 export const LOCKING_DOCUMENT_CHANGED = 'Speichern nicht möglich. Das Dokument wurde zwischenzeitlich geändert.';

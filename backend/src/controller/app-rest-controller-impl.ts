@@ -8,6 +8,7 @@ import {
     RestControllerConfigurator
 } from "../controller-config/rest-controller-configurator";
 import {
+    ERROR_REQUESTING_ROOM_PREVIEWS,
     ERROR_WHILE_CREATING_ROOM,
     ERROR_WHILE_JOINING_ROOM,
 } from "../constants/error-texts";
@@ -21,10 +22,11 @@ export function applyAppRestControllerConfig(app: Express) {
         .addPostEndPoint('/create-room', handleCreateRoomRequest)
         .addPostEndPoint('/join-room', handleNewJoinRoomRequest)
         .addGetEndPoint('/estimation-history', handleEstimationHistoryRequest)
+        .addPostEndPoint('/room-history', handleRoomHistoryRequest)
 }
 
 function handleCreateRoomRequest(req: any, res: any) {
-    return estimationRoomService.createRoom(req.body).catch((error: any) => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_CREATING_ROOM));
+    return estimationRoomService.createRoom(req.body).catch((error: any) => error);
 }
 
 function handleNewJoinRoomRequest(req: any, res: any) {
@@ -38,4 +40,9 @@ function handleEstimationHistoryRequest(req: any, res: any) {
         .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
 }
 
+function handleRoomHistoryRequest(req: any, res: any) {
+    const receivedRoomTokens = req.body;
+    const givenRoomUserAuthentications = receivedRoomTokens.map(userService.authenticateToken).filter((ra: any) => ra);
+    return estimationRoomService.getRoomPreviewsInfo(givenRoomUserAuthentications).catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_REQUESTING_ROOM_PREVIEWS));;
+}
 

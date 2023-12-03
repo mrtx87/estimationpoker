@@ -86,7 +86,7 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: #f0f8ffb3;
+  background-color: #f5f5f5;
   padding: 15px;
   border-radius: 5px;
   box-shadow: 0 5px 15px #00000080;

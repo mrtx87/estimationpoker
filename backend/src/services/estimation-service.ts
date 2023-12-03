@@ -86,15 +86,19 @@ export class EstimationService {
     }
 
     getClosedEstimations(roomId: string, beforeDate: number = null) {
-        const queryParams = {
-            roomId: roomId,
-            state: VOTING_STATE.CLOSED,
-        }
+        try {
+            const queryParams = {
+                roomId: roomId,
+                state: VOTING_STATE.CLOSED,
+            }
 
-        return EstimationModel.find(beforeDate ? {
-            ...queryParams,
-            createdAt: {$lt: 25}
-        } : queryParams).limit(15).then(estimations => estimations.map(Estimation.of))
+            return EstimationModel.find(beforeDate ? {
+                ...queryParams,
+                createdAt: {$lt: 25}
+            } : queryParams).limit(15).then(estimations => estimations.map(Estimation.of))
+        }catch (e) {
+            return Promise.reject(e);
+        }
     }
 
     private updateEstimationSafe(storedEstimation: any, cachedEstimation: Estimation) {

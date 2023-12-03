@@ -123,7 +123,6 @@ body {
     cursor: pointer;
     font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
     font-size: 15px;
-    font-weight: 500;
     height: 50px;
     letter-spacing: normal;
     line-height: 1.5;
@@ -143,11 +142,28 @@ body {
     font-weight: bold;
 }
 
+.button-activate.invers {
+    background-color: white;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+
 .button-activate:hover {
     background-color: var(--primary-color-darkend);
     opacity: 1;
     transform: translateY(0);
     transition-duration: .35s;
+}
+
+.button-activate.invers:hover {
+    background-color: white;
+    opacity: 1;
+    transform: translateY(0);
+    transition-duration: .35s;
+    color: var(--primary-color-darkend);
+    border: 1px solid var(--primary-color-darkend);
+
 }
 
 .button-activate:active {

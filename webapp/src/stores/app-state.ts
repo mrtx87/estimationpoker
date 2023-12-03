@@ -5,14 +5,15 @@ import {APP_STATE, DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants
 export const useAppStateStore = defineStore('AppStore', {
     state: () => {
         return {
-            // states to reset after login
+            _isOnRoomRoute: false,
             _toast: null,
+            _roomId: '',
+            _overlayId: DISPLAY_OVERLAY_STATE.NO_OVERLAY,
+            _connectionState: ConnectionState.DISCONNECTED,
+            //need to be reset
             _localUserId: '',
             _room: null,
             _avatar: null,
-            _overlayId: DISPLAY_OVERLAY_STATE.NO_OVERLAY,
-            _connectionState: ConnectionState.DISCONNECTED,
-            _roomId: '',
             _state: APP_STATE.NO_ROOM_ENTERED,
             _pendingRedirect: null,
             _localVoteValue: '',
@@ -56,12 +57,13 @@ export const useAppStateStore = defineStore('AppStore', {
         getUser(userId: string) {
           this._room ? this.users.find((u: any) => u.id === userId) : null;
         },
+        setIsOnRoomRoute(value: boolean) {
+            this._isOnRoomRoute = value;
+        },
         reset() {
             this._localUserId = ''
             this._room = null
             this._avatar = null
-            this._overlayId = DISPLAY_OVERLAY_STATE.NO_OVERLAY
-            //this._roomId = ''
             this._state = APP_STATE.NO_ROOM_ENTERED
             this._pendingRedirect = null
             this._localVoteValue = ''
@@ -69,6 +71,7 @@ export const useAppStateStore = defineStore('AppStore', {
         },
     },
     getters: {
+        isOnRoomRoute: (state: any) => state._isOnRoomRoute,
         localUserId: (state: any) => state._localUserId,
         localUser: (state: any) => state._room && state._localUserId ? state._room.users.find((u: any) => u.id === state._localUserId) : null,
         room: (state: any) => state._room,

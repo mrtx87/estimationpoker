@@ -267,16 +267,11 @@ export class WebsocketControllerImpl {
 
 
     async preRequestHandling(roomId: string, userId: string, connection: any) {
-        let cachedRoom = estimationRoomCache.getCachedRoom(roomId);
-        if (cachedRoom) {
-            return cachedRoom;
-        }
-        const dbRoom = await estimationPokerRoomRepository.getRoomById(roomId);
-        if (!dbRoom) {
+        const restoredRoom = await estimationRoomService.getCachedRoom(roomId, true);
+        if(!restoredRoom) {
             websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, userId, null), connection);
-            return Promise.reject('room does not exists');
         }
-        return estimationRoomService.restoreRoomToCache(dbRoom);
+        return restoredRoom;
     }
 
     private getRolePredicament(roles: string[]) {

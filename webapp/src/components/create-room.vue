@@ -1,9 +1,6 @@
 <template>
     <div class="create-room-wrapper">
-        <div v-if="!creatingRoomClicked">
-            <button class="button-activate" v-on:click="triggerCreateRoom()">Raum erstellen</button>
-        </div>
-        <div v-if="creatingRoomClicked" class="room-settings-create">
+        <div class="room-settings-create">
             <div class="create-room-heading">Erstelle einen Raum</div>
             <div class="input-elem-container">
                 <input type=text v-model="userNameInput" placeholder="Dein Benutzername">
@@ -27,20 +24,20 @@
             <div class="secondary-options">
                 <div class="secondary-option">
                     <input v-model="roomSettings.realtimeVoting" type="checkbox">
-                    <span>Do you want observers to see other players voting in real time?</span>
+                    <span>Do you want moderators to see other players voting in real time?</span>
                 </div>
                 <div class="secondary-option">
                     <input v-model="roomSettings.voteAfterReveal" type="checkbox">
-                    <span>Allow Players to vote after reveal</span>
+                    <span>Allow players to change vote after scores shown</span>
                 </div>
                 <div class="secondary-option">
                     <input v-model="roomSettings.autoReveal" type="checkbox">
-                    <span>Do you want to auto reveal votes when voting completed?</span>
+                    <span>Do you want to auto reveal votes when voting is completed?</span>
                 </div>
             </div>
             <div class="create-room-buttons-panel">
                 <button class="button-activate" v-on:click="createRoom()">Raum erstellen</button>
-                <button class="button-deactivate" v-on:click="cancel()">abbrechen</button>
+                <button class="button-activate invers" v-on:click="cancel()">abbrechen</button>
             </div>
 
         </div>
@@ -51,20 +48,19 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {restService} from "@/services/rest-service";
-import {VALUE_TYPE_OPTIONS} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, VALUE_TYPE_OPTIONS} from "@/constants/vue-constants";
 
 
 export default {
     name: "Create-Room",
     components: {},
     created() {
-        this.appState = useAppStateStore();
+        this.appStore = useAppStateStore();
     },
     data: function () {
         return {
-            appState: null,
+            appStore: null,
             userNameInput: '',
-            creatingRoomClicked: false,
             selectedValueTypeIndex: 0,
             roomSettings: {
                 title: '',
@@ -76,9 +72,6 @@ export default {
         }
     },
     methods: {
-        triggerCreateRoom() {
-            this.creatingRoomClicked = true;
-        },
         createRoom() {
             restService.sendPostRequest(
                 '/create-room',
@@ -95,12 +88,12 @@ export default {
                 .then(this.$appService.onJoinRoomResponse.bind(this.$appService));
         },
         cancel() {
-            this.creatingRoomClicked = false;
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         }
     },
     computed: {
         roomId() {
-            return this.appState.roomId;
+            return this.appStore.roomId;
         },
         selectedValueType() {
             return VALUE_TYPE_OPTIONS[this.selectedValueTypeIndex];
@@ -117,11 +110,12 @@ export default {
 .create-room-wrapper {
 
   .room-settings-create {
-    width: 600px;
+    width: 500px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
     border-radius: 5px;
+    padding: 15px;
 
     .create-room-heading {
       color: black;
@@ -131,20 +125,23 @@ export default {
     }
 
     .card-values {
-      box-sizing: border-box;
       display: flex;
-      justify-content: space-between;
       flex-wrap: wrap;
       width: 100%;
-      padding: 5px;
-      border: 1px solid black;
+      outline: 1px solid #d7d7d7;
       border-radius: 3px;
+      background-color: white;
 
       .value-item {
-        width: 20%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         color: black;
-        font-weight: bolder;
+        width: 100px;
+        height: 40px;
+        font-size: 1.25rem;
       }
 
     }
@@ -152,6 +149,7 @@ export default {
     .secondary-options {
       display: flex;
       flex-direction: column;
+      gap: 15px;
 
       .secondary-option {
         display: flex;
@@ -174,7 +172,8 @@ export default {
 
 input[type=text] {
   padding: 15px;
-  border: 1px solid #ccc;
+  outline: 1px solid #d7d7d7;
+  border: none;
   border-radius: 3px;
   margin-bottom: 10px;
   width: 100%;
@@ -187,71 +186,6 @@ input[type=text] {
 .input-elem-container {
   display: flex;
   gap: 20px;
-}
-
-/* CSS */
-.button-deactivate {
-  appearance: none;
-  backface-visibility: hidden;
-  background-color: white;
-  border-width: 1px;
-  border-radius: 5px;
-  border-style: solid;
-  border-color: #2f80ed;
-  box-shadow: none;
-  box-sizing: border-box;
-  color: #fff;
-  cursor: pointer;
-  display: inline-block;
-  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  font-weight: 500;
-  height: 50px;
-  letter-spacing: normal;
-  line-height: 1.5;
-  outline: none;
-  overflow: hidden;
-  padding: 14px 30px;
-  position: relative;
-  text-align: center;
-  text-decoration: none;
-  transform: translate3d(0, 0, 0);
-  transition: all .3s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  vertical-align: top;
-  white-space: nowrap;
-  color: #2f80ed;
-}
-
-.button-deactivate:hover {
-  background-color: #ececec;
-  box-shadow: rgba(0, 0, 0, .05) 0 5px 30px, rgba(0, 0, 0, .05) 0 1px 4px;
-  opacity: 1;
-  transform: translateY(0);
-  transition-duration: .35s;
-}
-
-.button-deactivate:hover:after {
-  opacity: .5;
-}
-
-.button-deactivate:active {
-  box-shadow: rgba(0, 0, 0, .1) 0 3px 6px 0, rgba(0, 0, 0, .1) 0 0 10px 0, rgba(0, 0, 0, .1) 0 1px 4px -1px;
-  transform: translateY(2px);
-  transition-duration: .35s;
-}
-
-.button-deactivate:active:after {
-  opacity: 1;
-}
-
-@media (min-width: 768px) {
-  .button-deactivate {
-    padding: 14px 22px;
-    width: 176px;
-  }
 }
 
 

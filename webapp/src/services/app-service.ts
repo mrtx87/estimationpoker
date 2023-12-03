@@ -26,7 +26,6 @@ export class AppService {
 
         this.store.reset();
         this.websocketService.wsConnection?.close();
-        this.store.setOverlayId(DISPLAY_OVERLAY_STATE.CREATE_ROOM);
     }
 
 
@@ -39,7 +38,7 @@ export class AppService {
             return;
         }
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.JOIN_ROOM)
-        return;    // JOIN
+        return;
     }
 
     getRouteParam(name: string) {
@@ -64,7 +63,9 @@ export class AppService {
 
     isOnRoomRoute() {
         const roomId = this.getRouteParam('roomId')
-        return this.routeOn.path.startsWith(ROOM_ROUTE) && roomId && isValidRoomId(roomId);
+        const isOnRoomRoute = this.routeOn.path.startsWith(ROOM_ROUTE) && roomId && isValidRoomId(roomId);
+        this.store.setIsOnRoomRoute(isOnRoomRoute);
+        return isOnRoomRoute;
     }
 
     onJoinRoomResponse(response: any) {

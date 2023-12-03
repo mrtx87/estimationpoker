@@ -15,8 +15,8 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
-import {getCookie, removeAllCookies, setCookie, setPrivacyCookie} from "@/services/cookie-service";
+import { HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
+import {removeAllCookies, setCookie} from "@/services/cookie-service";
 import {router} from "@/main";
 
 export default {
