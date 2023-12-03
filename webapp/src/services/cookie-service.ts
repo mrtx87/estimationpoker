@@ -13,9 +13,15 @@ export function setCookie(cookieKey: string, cookieValue: string): void {
             path: '/',
             domain: 'localhost',
             secure: 'true',
-            sameSite: 'true'
+            sameSite: 'true',
+            expire: '365d'
         })
     }
+}
+
+export function refreshRoomCookie(roomId: string) {
+    const token = getCookie(roomId);
+    setCookie(roomId, token);
 }
 
 export function setPrivacyCookie(cookieKey: string, cookieValue: string): void {
