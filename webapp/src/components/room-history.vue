@@ -1,13 +1,15 @@
 <template>
     <div class="room-history-wrapper">
         <div style="width:100%; display: flex; justify-content: flex-end;">
-            <button class="button-activate" v-on:click="openCreateRoomOverlay()"><img style="width: 30px;" src="../assets/cross.svg"> Raum erstellen
+            <button class="button-activate" v-on:click="openCreateRoomOverlay()"><img style="width: 30px;"
+                                                                                      src="../assets/cross.svg"> Raum
+                erstellen
             </button>
         </div>
         <div class="room-history-header">Zuletzt besuchte Räume</div>
         <div class="room-history-list">
             <div class="room-history-list-row">
-                <div class="room-history-list-column">Titel</div>
+                <div class="room-history-list-column title-column">Titel</div>
                 <div class="room-history-list-column">Teilnehmer</div>
                 <div class="room-history-list-column">Schätzungen</div>
                 <div class="room-history-list-column">Dein User</div>
@@ -15,12 +17,17 @@
                 <div class="room-history-list-column">Aktionen</div>
             </div>
             <div v-for="roomPreviewItem in roomPreviews" :key="roomPreviewItem.id" class="room-history-list-row">
-                <div class="room-history-list-column">{{roomPreviewItem.title}}</div>
-                <div class="room-history-list-column">{{roomPreviewItem.userCount}}</div>
-                <div class="room-history-list-column">{{roomPreviewItem.estimationCount}}</div>
-                <div class="room-history-list-column">{{roomPreviewItem.localUser.name}}</div>
-                <div class="room-history-list-column">{{roomPreviewItem.createdAt}}</div>
-                <div class="room-history-list-column"> <button>remove</button> </div>            </div>
+                <div class="room-history-list-column title-column">{{ roomPreviewItem.title }}</div>
+                <div class="room-history-list-column">{{ roomPreviewItem.userCount }}</div>
+                <div class="room-history-list-column">{{ roomPreviewItem.estimationCount }}</div>
+                <div class="room-history-list-column">
+                    <user v-bind:user="roomPreviewItem.localUser" v-bind:noUserName="true"></user>
+                </div>
+                <div class="room-history-list-column">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
+                <div class="room-history-list-column">
+                    <button>remove</button>
+                </div>
+            </div>
         </div>
         <div class="no-rooms-used-message" v-if="!roomPreviews.length"> Du hast bisher noch keine Räume genutzt.</div>
 
@@ -33,10 +40,12 @@ import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
 import {getRoomAuthenticationsFromCookies, removeCookie} from "@/services/cookie-service";
 import {restService} from "@/services/rest-service";
+import User from "@/components/user.vue";
+import moment from 'moment';
 
 export default {
     name: "Room-History",
-    components: {},
+    components: {User},
     created() {
         this.appStore = useAppStateStore();
         const roomAuthentications = getRoomAuthenticationsFromCookies();
@@ -59,6 +68,9 @@ export default {
         cleanUpAuthenticationsFromCookies(roomAuthentications) {
             const notFoundRoomIds = roomAuthentications.filter(ra => !this.roomPreviews.some(rp => rp.id === ra.roomId)).map(ra => ra.roomId);
             notFoundRoomIds.forEach(removeCookie);
+        },
+        formattedDate(date) {
+            return moment(date).format("DD.MM.YYYY");
         }
     }
 };
@@ -92,16 +104,22 @@ export default {
 
     .room-history-list-row {
       display: grid;
-      grid-template-columns: 40% 10% 10% 15% 15% 10%;
+      grid-template-columns: 40% 10% 10% 10% 15% 15%;
       border-bottom: 1px solid #f2f3f4;
-      height: 40px;
       align-items: center;
       box-sizing: border-box;
 
       .room-history-list-column {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         padding: 10px;
         height: inherit;
         box-sizing: border-box;
+
+          &.title-column {
+              justify-content: flex-start;
+          }
       }
     }
   }

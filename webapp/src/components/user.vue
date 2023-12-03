@@ -99,7 +99,6 @@ export default {
   align-items: center;
   box-sizing: border-box;
   color: black;
-  width: 100%;
 }
 
 .readyonly-player-container {
