@@ -155,8 +155,22 @@ export class WebsocketControllerImpl {
 
     revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
-        // TODO evaluation
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, VOTING_STATE.REVEALED, cachedRoom.connections, userId);
+        cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
+        let sumOfVotes = 0;
+        let legitVotes : number = 0;
+        for (let vote of cachedRoom.currentEstimation.votes) {
+            const convertedValue = Number(vote.value);
+            if (!isNaN(convertedValue)) {
+                legitVotes++;
+                sumOfVotes += convertedValue;
+            }
+        }
+        cachedRoom.currentEstimation.evaluation.avg =  sumOfVotes / legitVotes;
+        let valuesByAmount = [];
+        for (let vote of cachedRoom.currentEstimation.votes){
+            valuesByAmount.find(element => element.value === vote.value)
+        }
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, VOTING_STATE.REVEALED, cachedRoom.connections, userId);
     }
 
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
@@ -268,7 +282,7 @@ export class WebsocketControllerImpl {
 
     async preRequestHandling(roomId: string, userId: string, connection: any) {
         const restoredRoom = await estimationRoomService.getCachedRoom(roomId, true);
-        if(!restoredRoom) {
+        if (!restoredRoom) {
             websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, userId, null), connection);
         }
         return restoredRoom;
