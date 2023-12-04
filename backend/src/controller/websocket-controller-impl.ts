@@ -15,6 +15,7 @@ import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
 import {RoomSettings} from "../model/room-settings";
 import {Vote} from "../model/vote";
 import {maskVoteValues} from "../util/util";
+import {ValueByAmount} from "../model/value-by-number";
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -157,7 +158,7 @@ export class WebsocketControllerImpl {
         cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
         cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
         let sumOfVotes = 0;
-        let legitVotes : number = 0;
+        let legitVotes: number = 0;
         for (let vote of cachedRoom.currentEstimation.votes) {
             const convertedValue = Number(vote.value);
             if (!isNaN(convertedValue)) {
@@ -165,12 +166,27 @@ export class WebsocketControllerImpl {
                 sumOfVotes += convertedValue;
             }
         }
-        cachedRoom.currentEstimation.evaluation.avg =  sumOfVotes / legitVotes;
-        let valuesByAmount = [];
-        for (let vote of cachedRoom.currentEstimation.votes){
-            valuesByAmount.find(element => element.value === vote.value)
+        cachedRoom.currentEstimation.evaluation.avg = sumOfVotes / legitVotes;
+        cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);
+
+        // TODO DEVIATION
+
+        cachedRoom.currentEstimation.evaluation.deviation = null;
+
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, VOTING_STATE.REVEALED, cachedRoom.connections, userId);
+    }
+
+    generateValuesByAmount(votes: any[]) {
+        let valuesByAmount: ValueByAmount[] = [];
+        for (let vote of votes) {
+            const valueByAmount = valuesByAmount.find(element => element.value === vote.value);
+            if (!valueByAmount) {
+                valuesByAmount.push(new ValueByAmount({value: vote.value, amount: 1}));
+            } else {
+                valueByAmount.amount += 1;
+            }
         }
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, VOTING_STATE.REVEALED, cachedRoom.connections, userId);
+        return valuesByAmount;
     }
 
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
