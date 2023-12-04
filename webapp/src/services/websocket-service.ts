@@ -1,4 +1,4 @@
-import {getCookie} from "@/services/cookie-service";
+import {getCookie, refreshRoomCookie, setCookie} from "@/services/cookie-service";
 import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
 import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageType} from "@/constants/vue-constants";
@@ -147,8 +147,9 @@ export class WebsocketService {
     /** handle responses **/
 
     onRoomJoinFinalizeResponse(message: any) {
-        this.store.setLocalUserId(message.sender);
         const receivedRoom = message.data.room;
+        refreshRoomCookie(receivedRoom.id);
+        this.store.setLocalUserId(message.sender);
         this.store.setRoom(receivedRoom);
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         const joiningUserVote = message.data.vote ;
