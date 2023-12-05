@@ -25,7 +25,8 @@
                 </div>
                 <div class="room-history-list-column">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
                 <div class="room-history-list-column">
-                    <button>remove</button>
+                    <button title="delete">delete</button><!-- TODO icon -->
+                    <button title="join" v-on:click="joinRoom(roomPreviewItem.id)">join</button> <!-- TODO icon -->
                 </div>
             </div>
         </div>
@@ -37,11 +38,12 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, ROOM_ROUTE} from "@/constants/vue-constants";
 import {getRoomAuthenticationsFromCookies, removeCookie} from "@/services/cookie-service";
 import {restService} from "@/services/rest-service";
 import User from "@/components/user.vue";
 import moment from 'moment';
+import {router} from "@/main";
 
 export default {
     name: "Room-History",
@@ -62,6 +64,9 @@ export default {
         }
     },
     methods: {
+        joinRoom(roomId) {
+            router.push(ROOM_ROUTE + roomId);
+        },
         openCreateRoomOverlay() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.CREATE_ROOM);
         },
