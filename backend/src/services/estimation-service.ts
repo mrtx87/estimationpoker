@@ -95,7 +95,8 @@ export class EstimationService {
             return EstimationModel.find(beforeDate ? {
                 ...queryParams,
                 createdAt: {$lt: 25}
-            } : queryParams).limit(15).then(estimations => estimations.map(Estimation.of))
+            } : queryParams).sort( { "createdAt": -1 } )
+                .limit(15).then(estimations => estimations.map(Estimation.of))
         }catch (e) {
             return Promise.reject(e);
         }

@@ -1,5 +1,5 @@
 <template>
-    <div class="user-wrapper">
+    <div class="user-wrapper" :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
         <div class="readyonly-player-container">
             <div class="readonly-avatar-container">
                 <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">

@@ -105,6 +105,11 @@ body {
     margin: 5px;
 }
 
+.button-activate:disabled,
+.button-activate[disabled] {
+    cursor: default;
+    opacity: 0.6;
+}
 
 /* CSS */
 .button-activate {
@@ -149,14 +154,14 @@ body {
 }
 
 
-.button-activate:hover {
+.button-activate:not(.button-activate:disabled):hover {
     background-color: var(--primary-color-darkend);
     opacity: 1;
     transform: translateY(0);
     transition-duration: .35s;
 }
 
-.button-activate.invers:hover {
+.button-activate:not(.button-activate:disabled).invers:hover {
     background-color: white;
     opacity: 1;
     transform: translateY(0);
@@ -213,4 +218,23 @@ body {
 .plain-button-with-image img {
     width: 25px;
     height: auto;
+}
+
+.input-elem-container {
+    display: flex;
+    gap: 20px;
+}
+
+.input-elem-container input[type=text] {
+    padding: 15px;
+    outline: 1px solid #d7d7d7;
+    border: none;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #2C3E50;
+    font-size: 13px;
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+
 }

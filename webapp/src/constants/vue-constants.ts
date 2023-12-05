@@ -108,6 +108,32 @@ export const t42 = {
     values: ['0', '0.25', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
 }
 
+export const t42_1 = {
+    id: 5,
+    name: 'Team 42',
+    values: [{value: '0', color: '#3CA8F6'},
+        {value: '0.25', color: '#29A0F5'},
+        {value: '0.5', color: '#1597F4'},
+        {value: '1', color: '#0B8DEA'},
+        {value: '2', color: '#0A81D6'},
+        {value: '3', color: '#0975C3'},
+        {value: '5', color: '#086AAF'},
+        {value: '8', color: '#075E9D'},
+        {value: '13', color: '#065289'},
+        {value: '21', color: '#054776'},
+        {value: '34', color: '#04395E'},
+        {value: '?', color: '#DAB785'}]
+}
+
+export const chart_colors = [
+    '#3CA8F6',
+    '#1597F4',
+    '#0A81D6',
+    '#086AAF',
+    '#065289',
+    '#04395E',
+    '#DAB785']
+
 export const VALUE_TYPE_OPTIONS = [
     scrum, fibonacci, sequential, tshirt, t42
 ];

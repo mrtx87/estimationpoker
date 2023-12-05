@@ -155,9 +155,6 @@ export default {
         display: flex;
         gap: 10px;
 
-        input {
-
-        }
       }
     }
 
@@ -169,24 +166,5 @@ export default {
     }
   }
 }
-
-input[type=text] {
-  padding: 15px;
-  outline: 1px solid #d7d7d7;
-  border: none;
-  border-radius: 3px;
-  margin-bottom: 10px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #2C3E50;
-  font-size: 13px;
-  font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
-}
-
-.input-elem-container {
-  display: flex;
-  gap: 20px;
-}
-
 
 </style>
