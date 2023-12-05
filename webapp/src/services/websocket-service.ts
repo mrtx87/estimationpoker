@@ -201,9 +201,8 @@ export class WebsocketService {
                 }
                 case ResponseMessageType.RESETED_VOTES: {
                     const room = {...this.store.room};
-                    room.currentEstimation.state = message.data;
-                    room.currentEstimation.votes = [];
-                    this.store.setLocalVoteValue('')
+                    room.currentEstimation = message.data;
+                    this.store.setLocalVoteValue('');
                     return this.store.setRoom(room);
                 }
                 case ResponseMessageType.NEXT_ESTIMATION: {

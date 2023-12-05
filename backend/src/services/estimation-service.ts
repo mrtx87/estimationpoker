@@ -63,7 +63,8 @@ export class EstimationService {
             votes: [],
             timer: new EstimationTimer({
                 startTime: Date.now(),
-                state: ESTIMATION_TIMER_STATE.RUNNING
+                state: ESTIMATION_TIMER_STATE.RUNNING,
+                passedTime: 0
             }),
         });
         const estimationModel = new EstimationModel(estimation);

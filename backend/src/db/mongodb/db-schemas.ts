@@ -13,7 +13,8 @@ export const EstimationSchema = new mongoose.Schema<Estimation>({
     state: Number,
     timer: {
         startTime: Number,
-        state: Number
+        state: Number,
+        passedTime: Number
     },
     votes: [{
         estimationId: String,
