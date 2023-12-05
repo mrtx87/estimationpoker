@@ -1,3 +1,5 @@
+import moment from "moment/moment";
+
 export function isDev(): boolean {
     return isLocalHost();
 }
@@ -65,15 +67,17 @@ export function getPieChartObj(title: { text: string, subtext: string },
             formatter: function (name: string) {
                 return `${name} ${series.data
                     .filter((a) => a.name === name)
-                    .map((a) => `{count| ${a.value} votes }`)}`;
+                    .map((a) => `{count| - ${a.value} votes}`)}`;
             },
+
         },
         textStyle: {
             rich: {
                 'count': {
                     align: 'right',
                     color: 'black',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    fontSize: '18',
                 }
             }
         },
@@ -120,5 +124,20 @@ export function mapValuesByAmount(valuesByAmount: { value: string, amount: numbe
             name: vba.value
         }
     });
+}
+
+export function formatDate(date: Date) {
+    return moment(date).format("DD.MM.YYYY");
+
+}
+
+export function sortUser(a: any, b: any) {
+    if (a.name < b.name) {
+        return -1;
+    }
+    if (a.name > b.name) {
+        return 1;
+    }
+    return 0;
 }
 

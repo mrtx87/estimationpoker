@@ -119,9 +119,9 @@
     .avatar-element-selector-wrapper {
         box-sizing: border-box;
         position: relative;
-        background-color: rgba(89, 74, 158, 0.55);
+        background-color: #e0f2ff;
         border-radius: 23px;
-        border: 4px rgba(190, 180, 233, 0.55) solid;
+        border: 2px var(--primary-color) solid;
         display: grid;
         grid-template-columns: 15% 70% 15%;
         width: 100%;
@@ -129,12 +129,14 @@
         min-width: 250px;
         padding: 5px;
         align-items: center;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
     }
 
     .avatar-element-selector-wrapper button {
         appearance: none;
         background-color: transparent;
         border: none;
+        cursor: pointer;
     }
 
     .avatar-element-selector-wrapper button svg {

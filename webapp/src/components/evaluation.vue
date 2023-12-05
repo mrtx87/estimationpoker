@@ -18,7 +18,8 @@ import {chart_colors, t42_1} from "@/constants/vue-constants";
 ECharts.registerTheme("custom", {
     ...theme, backgroundColor: 'transparent', legend: {
         textStyle: {
-            color: 'black'
+            color: 'black',
+            fontSize:'18'
         }
     },
     textStyle: {

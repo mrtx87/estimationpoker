@@ -349,7 +349,7 @@ export default {
   width: min(20vw, 30vh);
   max-width: 400px;
   max-height: 400px;
-  background-color: #ab9ee9;
+  background-color: #e0f2ff;
   border-radius: 50%;
   box-shadow: rgb(0 0 0 / 50%) 1.95px 3.95px 3.6px;
   margin-top: 25px;
@@ -481,7 +481,7 @@ export default {
 }
 
 .random-avatar-button {
-  background: #9f92e4;
+  background: var(--primary-color);
   outline: transparent;
   border: transparent;
   position: absolute;
