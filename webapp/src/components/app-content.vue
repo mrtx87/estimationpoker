@@ -155,7 +155,7 @@ export default {
     gap: 10px;
     box-sizing: border-box;
     width: 100%;
-    max-width: 800px;
+    max-width: 750px;
 
     .action-area {
       box-sizing: border-box;
@@ -196,7 +196,7 @@ export default {
     height: min-content;
     background-color: white;
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
 
     .room-status-container {
       background-color: var(--primary-color);
@@ -219,12 +219,12 @@ export default {
 }
 
 .heading1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
   margin-bottom: 0.25vh;
 }
 
 .heading2 {
-  font-size: 1.333rem;
+  font-size: 1.3rem;
   margin-bottom: 0.25vh;
   text-align: center;
 }

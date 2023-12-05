@@ -1,13 +1,13 @@
 <template>
     <div class="user-list-wrapper">
-        <div class="users-heading">Users</div>
+        <div class="users-heading">Online - {{ onlineUsers.length }}</div>
         <div class="user-and-submenu" v-for="user in sortedOnlineUsers" :key="user.id">
             <User v-bind:user="user"></User>
             <button class="plain-button-with-image show-on-hover"><img src="../assets/three_dots.svg"></button>
         </div>
-        <div class="offline-users-heading" v-on:click="offlineUsers = !offlineUsers">
-            <span>Offline</span>
-            <svg class="triangle" :class="{'updown':offlineUsers}" xmlns="http://www.w3.org/2000/svg" width="24"
+        <div class="offline-users-heading" v-on:click="displayOfflineUsers = !displayOfflineUsers">
+            <span>Offline - {{ offlineUsers.length }}</span>
+            <svg class="triangle" :class="{'updown':displayOfflineUsers}" xmlns="http://www.w3.org/2000/svg" width="24"
                  height="24"
                  viewBox="0 0 24 24">
                 <path d="M24 22h-24l12-20z"/>
@@ -39,7 +39,7 @@ export default {
         return {
             appStore: null,
             userNameInput: '',
-            offlineUsers: false
+            displayOfflineUsers: false
         }
     },
     methods: {},
@@ -50,16 +50,22 @@ export default {
         users() {
             return this.appStore.room ? this.appStore.room.users : [];
         },
+        onlineUsers() {
+            return [...this.users.filter(u => this.room.connections.includes(u.id))];
+        },
+        offlineUsers() {
+            return [...this.users.filter(u => !this.room.connections.includes(u.id))];
+        },
         sortedOnlineUsers() {
-            const users = [...this.users.filter(u => this.room.connections.includes(u.id))];
+            const users = [...this.onlineUsers];
             users.sort(sortUser);
             return users;
         },
         sortedOfflineUsers() {
-            if (!this.offlineUsers) {
+            if (!this.displayOfflineUsers) {
                 return [];
             }
-            const users = [...this.users.filter(u => !this.room.connections.includes(u.id))];
+            const users = [...this.offlineUsers];
             users.sort(sortUser);
             return users;
         }
@@ -80,16 +86,17 @@ export default {
     border-bottom: 1px solid #f2f3f4;
     padding: 5px;
     font-weight: bold;
-    font-size: 1.333rem;
+    font-size: 1.1rem;
   }
 
   .offline-users-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-weight: bold;
     background-color: #ebebeb;
-    padding: 8px;
+    padding: 5px;
+    font-weight: bold;
+    font-size: 1.1rem;
     cursor: pointer;
 
     .triangle {
@@ -114,7 +121,7 @@ export default {
         display: flex;
       }
     }
-
+      
     .show-on-hover {
       display: none;
     }
