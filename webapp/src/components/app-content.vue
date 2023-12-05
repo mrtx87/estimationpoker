@@ -26,7 +26,8 @@
                     <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
                             class="button-activate" v-on:click="triggerResetVotes()"><img
                             src="../assets/repeat.svg"><span>Zurücksetzen</span></button>
-                    <button class="button-activate" v-on:click="triggerNextEstimation()"><img
+                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
+                            class="button-activate" v-on:click="triggerNextEstimation()"><img
                             src="../assets/estimationicon.svg"><span>Neue Schätzung</span></button>
                     <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
                                                                                          src="../assets/gear.svg">

@@ -6,6 +6,7 @@
             <div class="estimation-history-list-column bold">AVG</div>
             <div class="estimation-history-list-column bold">Abweichung</div>
             <div class="estimation-history-list-column bold">Stimmen</div>
+            <div class="estimation-history-list-column bold">Zeit</div>
             <div class="estimation-history-list-column bold">Erstellt am</div>
         </div>
         <div class="estimation-history-row" v-for="eHistoryItem in estimationHistory" :key="eHistoryItem.id">
@@ -13,6 +14,7 @@
             <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.avg }}</div>
             <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.deviation }}</div>
             <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.amountOfVotes }}</div>
+            <div class="estimation-history-list-column">{{ eHistoryItem.timer.passedTime}}</div>
             <div class="estimation-history-list-column">{{ formattedDate(eHistoryItem.createdAt) }}</div>
         </div>
     </div>
@@ -69,7 +71,7 @@ export default {
 
   .estimation-history-row {
     display: grid;
-    grid-template-columns: 35% 15% 15% 15% 20%
+    grid-template-columns: 35% 10% 15% 10% 15% 15%
   }
 
   .estimation-history-row:nth-child(even) {
