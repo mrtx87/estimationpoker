@@ -33,7 +33,7 @@ export default {
             return this.appStore.room ? this.appStore.room.currentEstimation.votes : [];
         },
         participants() {
-            return this.appStore.users ? this.appStore.users.filter(u => this.appStore.room.connections.includes(u.id) && u.roles.includes(Roles.PARTICIPANT)) : [];
+            return this.appStore.users ? this.appStore.users.filter(u => u.roles.includes(Roles.PARTICIPANT)) : [];
         },
         votingState() {
             return this.appStore.room ? this.appStore.room.currentEstimation.state : 0;
