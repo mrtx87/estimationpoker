@@ -31,7 +31,7 @@
                         </button>
                     </div>
                 </div>
-                <estimation-history class="large-screen"></estimation-history>
+                <estimation-history v-if="estimationHistory.length" class="large-screen"></estimation-history>
             </div>
             <div class="right-content">
                 <div class="room-status-container">
@@ -39,7 +39,7 @@
                 </div>
                 <user-list></user-list>
             </div>
-            <estimation-history class="small-screen"></estimation-history>
+            <estimation-history v-if="estimationHistory.length" class="small-screen"></estimation-history>
         </div>
 </template>
 
@@ -122,6 +122,9 @@ export default {
         },
         isLocalUserParticipant() {
             return this.localUser?.roles.includes(Roles.PARTICIPANT);
+        },
+        estimationHistory() {
+            return this.appStore.sortedEstimationHistory;
         }
     }
 };
