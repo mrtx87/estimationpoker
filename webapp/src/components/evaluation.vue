@@ -13,8 +13,23 @@ import ECharts from "vue-echarts/components/ECharts.vue";
 import "echarts/lib/chart/pie";
 import "echarts/theme/dark";
 import {getPieChartObj} from "@/services/util";
+import {chart_colors, t42_1} from "@/constants/vue-constants";
 
-ECharts.registerTheme("custom", {...theme, backgroundColor: 'transparent'});
+ECharts.registerTheme("custom", {
+    ...theme, backgroundColor: 'transparent', legend: {
+        textStyle: {
+            color: 'black'
+        }
+    },
+    textStyle: {
+        color: 'black'
+    },
+    title: {
+        textStyle: {
+            color: 'black'
+        }
+    }
+});
 export default {
     name: "Evaluation",
     components: {
@@ -28,8 +43,8 @@ export default {
         return {
             appStore: null,
             donut: getPieChartObj({
-                    text: '',
-                    subtext: ''
+                    text: 'avg: 3.5 \n\n deviation: 5',
+                    subtext: 'Abgegebene Votes: 10'
                 }, {
                     title: '',
                     data: [
@@ -37,7 +52,8 @@ export default {
                         {value: 25, name: 'cdu'},
                         {value: 13, name: 'grüne'},
                         {value: 7, name: 'spd'}
-                    ]
+                    ],
+                    color: chart_colors
                 }
             )
         }

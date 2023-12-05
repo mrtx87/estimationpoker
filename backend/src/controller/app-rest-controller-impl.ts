@@ -21,7 +21,7 @@ export function applyAppRestControllerConfig(app: Express) {
         .addPrefix(APP_REST_PREFIX)
         .addPostEndPoint('/create-room', handleCreateRoomRequest)
         .addPostEndPoint('/join-room', handleNewJoinRoomRequest)
-        .addGetEndPoint('/estimation-history', handleEstimationHistoryRequest)
+        .addPostEndPoint('/estimation-history', handleEstimationHistoryRequest)
         .addPostEndPoint('/room-history', handleRoomHistoryRequest)
 }
 
@@ -36,13 +36,15 @@ function handleNewJoinRoomRequest(req: any, res: any) {
 }
 
 function handleEstimationHistoryRequest(req: any, res: any) {
-    return estimationService.getClosedEstimations(req.user.roomId)
+    const date = req.body.date;
+    return estimationService.getClosedEstimations(req.user.roomId, date)
         .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
 }
 
 function handleRoomHistoryRequest(req: any, res: any) {
     const receivedRoomTokens = req.body;
     const givenRoomUserAuthentications = receivedRoomTokens.map(userService.authenticateToken).filter((ra: any) => ra);
-    return estimationRoomService.getRoomPreviewsInfo(givenRoomUserAuthentications).catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_REQUESTING_ROOM_PREVIEWS));;
+    return estimationRoomService.getRoomPreviewsInfo(givenRoomUserAuthentications).catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_REQUESTING_ROOM_PREVIEWS));
+    ;
 }
 

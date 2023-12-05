@@ -46,13 +46,15 @@ export function getPieChartObj(title: { text: string, subtext: string },
                                series: {
                                    title: string,
                                    data: [{ value: number, name: string }],
-                                   radius?: string | string[]
+                                   radius?: string | string[],
+                                   color?: string[]
                                }) {
     return {
         title: {
             text: title.text,
             subtext: title.subtext,
-            left: 'center'
+            right: 'right',
+            top: 'left'
         },
         tooltip: {
             trigger: 'item'
@@ -66,7 +68,7 @@ export function getPieChartObj(title: { text: string, subtext: string },
                 name: series.title,
                 type: 'pie',
                 radius: series.radius ? series.radius : ['40%', '85%'],
-                color: [
+                color: series.color ? series.color : [
                     '#37A2DA',
                     '#32C5E9',
                     '#67E0E3',
@@ -93,3 +95,13 @@ export function getPieChartObj(title: { text: string, subtext: string },
         ]
     }
 }
+
+function mapValueByAmount(valuesByAmount: { value: string, amount: number }[]) {
+    return valuesByAmount.map(vba => {
+        return {
+            value: vba.amount,
+            name: vba.value
+        }
+    });
+}
+

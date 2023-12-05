@@ -156,7 +156,7 @@ export class WebsocketService {
         if (joiningUserVote) {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }
-        restService.sendGetRequest('/estimation-history', ).then(request => this.store.setEstimationHistory(request.data));
+        restService.sendPostRequest('/estimation-history', null).then(request => this.store.setEstimationHistory(request.data));
         this.store.toast.info(`${this.store.localUser.name} has joined the room.`)
     }
 
@@ -196,7 +196,7 @@ export class WebsocketService {
                     return this.onOtherUserJoinedRoom(message);
                 case ResponseMessageType.REVEALED_VOTES: {
                     const room = {...this.store.room};
-                    room.currentEstimation.state = message.data;
+                    room.currentEstimation = message.data;
                     return this.store.setRoom(room);
                 }
                 case ResponseMessageType.RESETED_VOTES: {
@@ -209,6 +209,8 @@ export class WebsocketService {
                 case ResponseMessageType.NEXT_ESTIMATION: {
                     const room = {...this.store.room};
                     room.currentEstimation = message.data;
+                    restService.sendPostRequest('/estimation-history', null)
+                        .then(request => this.store.setEstimationHistory(request.data))
                     return this.store.setRoom(room);
                 }
                 case ResponseMessageType.ESTIMATION_TITLE_UPDATED: {
