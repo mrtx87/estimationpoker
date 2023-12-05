@@ -17,10 +17,6 @@ import {Vote} from "../model/vote";
 import {maskVoteValues} from "../util/util";
 import {ValueByAmount} from "../model/value-by-number";
 
-
-const MongoClient = require("mongodb").MongoClient;
-
-
 export class WebsocketControllerImpl {
     private static INSTANCE: WebsocketControllerImpl = new WebsocketControllerImpl();
 
@@ -157,23 +153,36 @@ export class WebsocketControllerImpl {
     revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
         cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
-        let sumOfVotes = 0;
-        let legitVotes: number = 0;
-        for (let vote of cachedRoom.currentEstimation.votes) {
-            const convertedValue = Number(vote.value);
-            if (!isNaN(convertedValue)) {
-                legitVotes++;
-                sumOfVotes += convertedValue;
-            }
-        }
-        cachedRoom.currentEstimation.evaluation.avg = sumOfVotes / legitVotes;
+        cachedRoom.currentEstimation.evaluation.avg = this.calculateAverage(cachedRoom.currentEstimation.votes);
         cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);
+        cachedRoom.currentEstimation.evaluation.deviation = this.calculateDeviation(cachedRoom.currentEstimation.evaluation.valuesByAmount, cachedRoom.currentEstimation.evaluation.avg)
 
-        // TODO DEVIATION
+        this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
+    }
 
-        cachedRoom.currentEstimation.evaluation.deviation = null;
+    calculateAverage(votes: Vote[]) {
+        const legitValues = votes
+            .map(vote => Number(vote.value))
+            .filter(convertedValue => !isNaN(convertedValue));
 
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, VOTING_STATE.REVEALED, cachedRoom.connections, userId);
+        const sumOfVotes = legitValues.reduce((sum: number, convertedValue: number) =>
+            sum + convertedValue
+        , 0);
+
+        return sumOfVotes / legitValues.length;
+    }
+
+    calculateDeviation(votes: any[], avg: number) {
+        const legitVotes = votes
+            .filter(vote => !isNaN(Number(vote.value)));
+        const sum = legitVotes
+            .map(vote => Math.pow(Number(vote.value) - avg, 2))
+            .reduce((sum: number, currValue: number) => {
+                sum += currValue;
+                return sum;
+            }, 0);
+
+        return sum / legitVotes.length;
     }
 
     generateValuesByAmount(votes: any[]) {
