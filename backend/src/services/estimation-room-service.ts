@@ -128,10 +128,15 @@ export class EstimationRoomService {
         try {
             for (let roomAuth of roomAuthentications) {
                 const room = await this.getCachedRoom(roomAuth.roomId);
-                const user = room.users.find((u: User) => u.id === roomAuth.userId);
-                if (user) {
-                    roomPreviewInfos.push(EstimationPokerRoomPreview.from(room, user))
+                if(!room) {
+                    continue;
                 }
+                const user = room.users.find((u: User) => u.id === roomAuth.userId);
+                if (!user) {
+                    continue;
+                }
+
+                roomPreviewInfos.push(EstimationPokerRoomPreview.from(room, user))
             }
         }catch(e) {
             return Promise.reject(e);
