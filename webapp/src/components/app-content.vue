@@ -20,7 +20,7 @@
                 <Evaluation v-bind:estimation="room?.currentEstimation"
                             v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
                 <div class="moderator-actions" v-if="isLocalUserModerator()">
-                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING"
+                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING || room?.currentEstimation.votes.length === 0"
                             class="button-activate" v-on:click="triggerRevealVotes()"><img
                             src="../assets/reveal.svg"><span>Aufdecken</span></button>
                     <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"

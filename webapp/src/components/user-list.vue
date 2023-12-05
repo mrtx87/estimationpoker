@@ -121,7 +121,7 @@ export default {
         display: flex;
       }
     }
-      
+
     .show-on-hover {
       display: none;
     }
