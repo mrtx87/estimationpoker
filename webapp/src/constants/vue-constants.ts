@@ -33,7 +33,8 @@ export const ResponseMessageType = {
     CHANGED_USER_NAME: 'user.updated',
     CHANGED_USER_ROLE: 'user.role.updated',
     USER_VOTED: 'user.voted',
-    NOT_PERMITTED: 'user.not.permitted'
+    NOT_PERMITTED: 'user.not.permitted',
+    ERROR_REVEALING_VOTES: 'error.revealing.votes'
 }
 
 export const MenuItemKey = {

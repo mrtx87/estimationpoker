@@ -171,13 +171,13 @@ body {
 
 }
 
-.button-activate:active {
+.button-activate:not(.button-activate:disabled):active {
     box-shadow: rgba(0, 0, 0, .1) 0 3px 6px 0, rgba(0, 0, 0, .1) 0 0 10px 0, rgba(0, 0, 0, .1) 0 1px 4px -1px;
     transform: translateY(2px);
     transition-duration: .3s;
 }
 
-.button-activate:active:after {
+.button-activate:not(.button-activate:disabled):active:after {
     opacity: 1;
 }
 

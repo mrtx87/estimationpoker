@@ -1,51 +1,53 @@
 <template>
-        <div class="app-content">
-            <div class="left-content">
-                <input class="general-input heading1" :disabled="!isLocalUserModerator()" placeholder="Name des Raums"
-                       :value="room?.roomSettings.title"
-                       v-on:change="changeRoomTitle($event.target.value)">
-                <input class="general-input heading2" :disabled="!isLocalUserModerator()"
-                       placeholder="Name der Schätzung"
-                       :value="room?.currentEstimation.title"
-                       v-on:change="updateEstimationName($event.target.value)">
+    <div class="app-content">
+        <div class="left-content">
+            <input class="general-input heading1" :disabled="!isLocalUserModerator()" placeholder="Name des Raums"
+                   :value="room?.roomSettings.title"
+                   v-on:change="changeRoomTitle($event.target.value)">
+            <input class="general-input heading2" :disabled="!isLocalUserModerator()"
+                   placeholder="Name der Schätzung"
+                   :value="room?.currentEstimation.title"
+                   v-on:change="updateEstimationName($event.target.value)">
 
-                <div class="action-area">
-                    <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
-                        <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
-                                  v-bind:value="value">
-                            {{ value }}
-                        </VoteCard>
-                    </div>
+            <div class="action-area">
+                <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
+                    <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
+                              v-bind:value="value">
+                        {{ value }}
+                    </VoteCard>
+                </div>
 
-                    <Evaluation v-bind:estimation="room?.currentEstimation"
-                                v-if="room?.currentEstimation.state !== 1"></Evaluation>
-                    <div class="moderator-actions" v-if="isLocalUserModerator()">
-                        <button class="button-activate" v-on:click="triggerRevealVotes()"><img
-                                src="../assets/reveal.svg"><span>Aufdecken</span></button>
-                        <button class="button-activate" v-on:click="triggerResetVotes()"><img
-                                src="../assets/repeat.svg"><span>Zurücksetzen</span></button>
-                        <button class="button-activate" v-on:click="triggerNextEstimation()"><img
-                                src="../assets/estimationicon.svg"><span>Neue Schätzung</span></button>
-                        <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
-                                                                                             src="../assets/gear.svg">
-                        </button>
-                    </div>
+                <Evaluation v-bind:estimation="room?.currentEstimation"
+                            v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
+                <div class="moderator-actions" v-if="isLocalUserModerator()">
+                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING"
+                            class="button-activate" v-on:click="triggerRevealVotes()"><img
+                            src="../assets/reveal.svg"><span>Aufdecken</span></button>
+                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
+                            class="button-activate" v-on:click="triggerResetVotes()"><img
+                            src="../assets/repeat.svg"><span>Zurücksetzen</span></button>
+                    <button class="button-activate" v-on:click="triggerNextEstimation()"><img
+                            src="../assets/estimationicon.svg"><span>Neue Schätzung</span></button>
+                    <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
+                                                                                         src="../assets/gear.svg">
+                    </button>
                 </div>
-                <estimation-history v-if="estimationHistory.length" class="large-screen"></estimation-history>
             </div>
-            <div class="right-content">
-                <div class="room-status-container">
-                    <voting-information></voting-information>
-                </div>
-                <user-list></user-list>
-            </div>
-            <estimation-history v-if="estimationHistory.length" class="small-screen"></estimation-history>
+            <estimation-history v-if="estimationHistory.length" class="large-screen"></estimation-history>
         </div>
+        <div class="right-content">
+            <div class="room-status-container">
+                <voting-information></voting-information>
+            </div>
+            <user-list></user-list>
+        </div>
+        <estimation-history v-if="estimationHistory.length" class="small-screen"></estimation-history>
+    </div>
 </template>
 
 <script>
 import {
-    DISPLAY_OVERLAY_STATE, RequestMessageType, Roles, VALUE_TYPE_OPTIONS,
+    DISPLAY_OVERLAY_STATE, RequestMessageType, Roles, VALUE_TYPE_OPTIONS, VOTING_STATE,
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
 import {restService} from "@/services/rest-service";
@@ -108,6 +110,9 @@ export default {
         }
     },
     computed: {
+        VOTING_STATE() {
+            return VOTING_STATE
+        },
         DISPLAY_OVERLAY_STATE() {
             return DISPLAY_OVERLAY_STATE
         },

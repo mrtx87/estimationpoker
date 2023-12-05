@@ -114,6 +114,10 @@ export class WebsocketControllerImpl {
 
             this.preRequestHandling(authenticated.roomId, authenticated.userId, connection)
                 .then(cachedRoom => {
+                    if (!cachedRoom) {
+                        websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING), connection);
+                        return;
+                    }
                     const authenticatedUser = this.getAuthenticatedUser(authenticated.userId, cachedRoom);
                     if (!authenticatedUser) {
                         websocketService.notifyUser(new BasicResponse(ResponseMessageType.REMOVED_FROM_ROOM), connection);
@@ -158,13 +162,17 @@ export class WebsocketControllerImpl {
     }
 
     revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
-        cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
-        cachedRoom.currentEstimation.evaluation.avg = this.calculateAverage(cachedRoom.currentEstimation.votes);
-        cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);
-        cachedRoom.currentEstimation.evaluation.deviation = this.calculateDeviation(cachedRoom.currentEstimation.evaluation.valuesByAmount, cachedRoom.currentEstimation.evaluation.avg)
-        cachedRoom.currentEstimation.timer.stopTimer();
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
+        try {
+            cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
+            cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
+            cachedRoom.currentEstimation.evaluation.avg = this.calculateAverage(cachedRoom.currentEstimation.votes);
+            cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);
+            cachedRoom.currentEstimation.evaluation.deviation = this.calculateDeviation(cachedRoom.currentEstimation.evaluation.valuesByAmount, cachedRoom.currentEstimation.evaluation.avg)
+            cachedRoom.currentEstimation.timer.stopTimer();
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
+        }catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_REVEALING_VOTES), connection);
+        }
     }
 
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
@@ -305,6 +313,10 @@ export class WebsocketControllerImpl {
             .map(vote => Number(vote.value))
             .filter(convertedValue => !isNaN(convertedValue));
 
+        if (legitValues.length === 0) {
+            return 0;
+        }
+
         const sumOfVotes = legitValues.reduce((sum: number, convertedValue: number) =>
                 sum + convertedValue
             , 0);
@@ -315,6 +327,10 @@ export class WebsocketControllerImpl {
     private calculateDeviation(votes: any[], avg: number) {
         const legitVotes = votes
             .filter(vote => !isNaN(Number(vote.value)));
+
+        if (legitVotes.length === 0) {
+            return 0;
+        }
         const sum = legitVotes
             .map(vote => Math.pow(Number(vote.value) - avg, 2))
             .reduce((sum: number, currValue: number) => {
