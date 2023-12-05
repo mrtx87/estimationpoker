@@ -170,7 +170,7 @@ export class WebsocketControllerImpl {
             cachedRoom.currentEstimation.evaluation.deviation = this.calculateDeviation(cachedRoom.currentEstimation.evaluation.valuesByAmount, cachedRoom.currentEstimation.evaluation.avg)
             cachedRoom.currentEstimation.timer.stopTimer();
             this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
-        }catch (e) {
+        } catch (e) {
             websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_REVEALING_VOTES), connection);
         }
     }
@@ -321,7 +321,7 @@ export class WebsocketControllerImpl {
                 sum + convertedValue
             , 0);
 
-        return sumOfVotes / legitValues.length;
+        return this.roundBy2Digits(sumOfVotes / legitValues.length);
     }
 
     private calculateDeviation(votes: any[], avg: number) {
@@ -338,7 +338,7 @@ export class WebsocketControllerImpl {
                 return sum;
             }, 0);
 
-        return sum / legitVotes.length;
+        return this.roundBy2Digits(Math.sqrt(sum / legitVotes.length));
     }
 
     private generateValuesByAmount(votes: any[]) {
@@ -352,6 +352,12 @@ export class WebsocketControllerImpl {
             }
         }
         return valuesByAmount;
+    }
+
+    private roundBy2Digits(value: number) {
+        const hundredTimes = value * 100;
+        const rounded = Math.round(hundredTimes);
+        return rounded / 100;
     }
 
 }

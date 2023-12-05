@@ -1,6 +1,6 @@
 <template>
     <div class="eval-wrapper">
-        <chart theme="custom" :options="donut" ref="chart1" auto-resize></chart>
+        <chart v-if="donut" theme="custom" :options="donut" ref="chart1" auto-resize></chart>
     </div>
 </template>
 
@@ -12,7 +12,7 @@ import ECharts from "vue-echarts/components/ECharts.vue";
 
 import "echarts/lib/chart/pie";
 import "echarts/theme/dark";
-import {getPieChartObj} from "@/services/util";
+import {getPieChartObj, mapValuesByAmount} from "@/services/util";
 import {chart_colors, t42_1} from "@/constants/vue-constants";
 
 ECharts.registerTheme("custom", {
@@ -38,27 +38,34 @@ export default {
     props: ['estimation'],
     created() {
         this.appStore = useAppStateStore();
+        this.refreshEvaluationChart(this.estimation);
+    },
+    watch: {
+        estimation(nextEstimation, previousEstimation) {
+            this.refreshEvaluationChart(nextEstimation);
+        }
     },
     data: function () {
         return {
             appStore: null,
-            donut: getPieChartObj({
-                    text: 'avg: 3.5 \n\n deviation: 5',
-                    subtext: 'Abgegebene Votes: 10'
-                }, {
-                    title: '',
-                    data: [
-                        {value: 55, name: 'afd'},
-                        {value: 25, name: 'cdu'},
-                        {value: 13, name: 'grüne'},
-                        {value: 7, name: 'spd'}
-                    ],
-                    color: chart_colors
-                }
-            )
+            donut: null
         }
     },
-    methods: {},
+    methods: {
+        refreshEvaluationChart(nextEstimation) {
+            if(nextEstimation){
+                this.donut = getPieChartObj({
+                        text: `avg: ${nextEstimation.evaluation.avg} \n\n deviation: ${nextEstimation.evaluation.deviation}`,
+                        subtext: `Abgegebene Votes: ${nextEstimation.evaluation.amountOfVotes}`
+                    }, {
+                        title: '',
+                        data: mapValuesByAmount(nextEstimation.evaluation.valuesByAmount),
+                        color: chart_colors
+                    }
+                )
+            }
+        }
+    },
     computed: {}
 };
 </script>
@@ -66,7 +73,9 @@ export default {
 <style lang="scss">
 
 .eval-wrapper {
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 </style>

@@ -61,13 +61,27 @@ export function getPieChartObj(title: { text: string, subtext: string },
         },
         legend: {
             orient: 'vertical',
-            left: 'left'
+            left: 'left',
+            formatter: function (name: string) {
+                return `${name} ${series.data
+                    .filter((a) => a.name === name)
+                    .map((a) => `{count| ${a.value} votes }`)}`;
+            },
+        },
+        textStyle: {
+            rich: {
+                'count': {
+                    align: 'right',
+                    color: 'black',
+                    fontWeight: 'bold'
+                }
+            }
         },
         series: [
             {
                 name: series.title,
                 type: 'pie',
-                radius: series.radius ? series.radius : ['40%', '85%'],
+                radius: series.radius ? series.radius : '80%',
                 color: series.color ? series.color : [
                     '#37A2DA',
                     '#32C5E9',
@@ -96,7 +110,10 @@ export function getPieChartObj(title: { text: string, subtext: string },
     }
 }
 
-function mapValueByAmount(valuesByAmount: { value: string, amount: number }[]) {
+export function mapValuesByAmount(valuesByAmount: { value: string, amount: number }[]): {
+    value: number,
+    name: string
+}[] {
     return valuesByAmount.map(vba => {
         return {
             value: vba.amount,
