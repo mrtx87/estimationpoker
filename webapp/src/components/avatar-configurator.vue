@@ -119,10 +119,11 @@
                                             v-bind:options="colorOptions"
                                             v-bind:selection="selectedColor"
                                             v-on:colorElementChange="onAvatarColorSelectionChange($event)"></avatar-color-carousel-selector>
-            <button class="main-button"
+            <button class="button-activate"
                     title="save avatar changes"
                     v-if="!!editingAvatarElementType"
-                    v-on:click="onDone()">I'M DONE
+                    :disabled="!isInputValid"
+                    v-on:click="onDone()">Speichern
             </button>
         </div>
     </div>
@@ -163,7 +164,8 @@ export default {
             headsOptions: [...avatars.avatarHeadsOptions],
             shirtOptions: [...avatars.avatarShirtsOptions],
             colorOptions: [...avatars.colorOptions],
-            editedAvatar: null
+            editedAvatar: null,
+            updatedAvatar: null
         }
     },
     methods: {
@@ -171,6 +173,7 @@ export default {
             const randomAvatar = this.$appService.getRandomAvatar();
             this.editedAvatar = randomAvatar;
             this.externalUpdate(this.editedAvatar);
+            this.updatedAvatar = this.onAvatarChange();
         },
         findElementByCode: function (options, code) {
             return options.find(o => +o.code === +code);
@@ -180,7 +183,7 @@ export default {
             this.$emit('onToggleSelectorsHidden', value);
         },
         onAvatarChange: function () {
-            const avatar = new WTFAIAvatar({
+            return new WTFAIAvatar({
                 hair: new AvatarElement({
                     type: this.selectedHair.type,
                     code: this.selectedHair.code,
@@ -197,23 +200,25 @@ export default {
                     color: this.selectedShirtColor
                 })
             });
-            this.sendAvatarUpdateToServer(avatar);
         },
         sendAvatarUpdateToServer: function (newAvatar) {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_AVATAR, newAvatar);
-            //this.$emit('onAvatarChange', newAvatar);
         },
         onDone: function () {
-            this.onAvatarChange();
+            const updatedAvatar = this.onAvatarChange();
+            this.sendAvatarUpdateToServer(updatedAvatar);
         },
         updateAvatarHair(value) {
             this.selectedHair = value;
+            this.updatedAvatar = this.onAvatarChange();
         },
         updateAvatarHead(value) {
             this.selectedHead = value;
+            this.updatedAvatar = this.onAvatarChange();
         },
         updateAvatarShirt(value) {
             this.selectedShirt = value;
+            this.updatedAvatar = this.onAvatarChange();
         },
         onAvatarColorSelectionChange: function (value) {
             if (this.editingAvatarElementType === 'hair') {
@@ -227,6 +232,7 @@ export default {
             if (this.editingAvatarElementType === 'shirt') {
                 this.selectedShirtColor = value;
             }
+            this.updatedAvatar = this.onAvatarChange();
         },
         externalUpdate(avatar) {
             this.selectedHairColor = avatar.hair.color;
@@ -277,6 +283,14 @@ export default {
                 return this.selectedShirtColor;
             }
             return '';
+        },
+        isInputValid() {
+            return this.updatedAvatar && (this.avatar.hair.code !== this.updatedAvatar.hair.code
+                || this.avatar.head.code !== this.updatedAvatar.head.code
+                || this.avatar.shirt.code !== this.updatedAvatar.shirt.code
+                || this.avatar.hair.color !== this.updatedAvatar.hair.color
+                || this.avatar.head.color !== this.updatedAvatar.head.color
+                || this.avatar.shirt.color !== this.updatedAvatar.shirt.color);
         }
     }
 
