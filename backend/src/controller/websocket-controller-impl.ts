@@ -185,11 +185,11 @@ export class WebsocketControllerImpl {
     async nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         const previousEstimation = cachedRoom.currentEstimation;
         previousEstimation.state = VOTING_STATE.CLOSED;
+        previousEstimation.timer.stopTimer();
         cachedRoom.estimationCount += 1;
         estimationService.saveEstimation(previousEstimation);
         const nextEstimation = await estimationService.createEstimation(cachedRoom);
         cachedRoom.setEstimation(nextEstimation);
-        cachedRoom.currentEstimation.timer.stopTimer();
         this.notifyAllUsersAboutUpdate(ResponseMessageType.NEXT_ESTIMATION, nextEstimation, cachedRoom.connections, userId);
     }
 

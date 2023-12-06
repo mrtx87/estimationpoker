@@ -121,4 +121,13 @@ export function mapValuesByAmount(valuesByAmount: { value: string, amount: numbe
         }
     });
 }
+export function formatTime(time: number) {
+    const hours = Math.floor(time / 3600000);
+    const minutes = Math.floor((time % 3600000) / 60000);
+    const seconds = Math.floor((time % 60000) / 1000);
+    return formatNumberUnder10(hours) + ':' + formatNumberUnder10(minutes) + ':' + formatNumberUnder10(seconds)
+}
 
+function formatNumberUnder10(num: number) {
+    return num < 10 ? '0' + num : num;
+}
