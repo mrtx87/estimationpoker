@@ -9,12 +9,12 @@
         <div class="room-history-header">Zuletzt besuchte Räume</div>
         <div class="room-history-list">
             <div class="room-history-list-row">
-                <div class="room-history-list-column title-column">Titel</div>
-                <div class="room-history-list-column">Teilnehmer</div>
-                <div class="room-history-list-column">Schätzungen</div>
-                <div class="room-history-list-column">Dein User</div>
-                <div class="room-history-list-column">Erstelldatum</div>
-                <div class="room-history-list-column">Aktionen</div>
+                <div class="room-history-list-column title-column bold">Titel</div>
+                <div class="room-history-list-column bold">Teilnehmer</div>
+                <div class="room-history-list-column bold">Schätzungen</div>
+                <div class="room-history-list-column bold">Dein User</div>
+                <div class="room-history-list-column bold">Erstelldatum</div>
+                <div class="room-history-list-column bold">Aktionen</div>
             </div>
             <div v-for="roomPreviewItem in roomPreviews" :key="roomPreviewItem.id" class="room-history-list-row">
                 <div class="room-history-list-column title-column">{{ roomPreviewItem.title }}</div>
@@ -30,7 +30,7 @@
                 </div>
             </div>
         </div>
-        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> Du hast bisher noch keine Räume genutzt.</div>
+        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> Du hast bisher noch keine Räume erstellt oder betreten.</div>
 
     </div>
 </template>
@@ -44,6 +44,7 @@ import {restService} from "@/services/rest-service";
 import User from "@/components/user.vue";
 import moment from 'moment';
 import {router} from "@/main";
+import {formatDate} from "@/services/util";
 
 export default {
     name: "Room-History",
@@ -75,7 +76,7 @@ export default {
             notFoundRoomIds.forEach(removeCookie);
         },
         formattedDate(date) {
-            return moment(date).format("DD.MM.YYYY");
+            return formatDate(date);
         }
     }
 };
@@ -121,6 +122,10 @@ export default {
         padding: 10px;
         height: inherit;
         box-sizing: border-box;
+
+          &.bold {
+              font-weight: bold;
+          }
 
           &.title-column {
               justify-content: flex-start;

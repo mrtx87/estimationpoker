@@ -74,12 +74,12 @@ export default {
 .header {
   position: relative;
   display: flex;
-  flex-direction: row-reverse;
-  width: 1280px;
+  width: 1150px;
   height: 5.5vh;
   align-items: center;
   gap: 10px;
   background-color: transparent;
+  justify-content: flex-end;
 }
 
 .user-icon-and-menu {

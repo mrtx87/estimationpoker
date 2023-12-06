@@ -208,6 +208,7 @@ export class WebsocketService {
                 case ResponseMessageType.NEXT_ESTIMATION: {
                     const room = {...this.store.room};
                     room.currentEstimation = message.data;
+                    this.store.setLocalVoteValue('');
                     restService.sendPostRequest('/estimation-history', null)
                         .then(request => this.store.setEstimationHistory(request.data))
                     return this.store.setRoom(room);
