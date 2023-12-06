@@ -15,7 +15,7 @@
                 <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.avg }}</div>
                 <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.deviation }}</div>
                 <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.amountOfVotes }}</div>
-                <div class="estimation-history-list-column">{{ eHistoryItem.timer.passedTime }}</div>
+                <div class="estimation-history-list-column">{{ formatTime(eHistoryItem.timer.passedTime) }}</div>
                 <div class="estimation-history-list-column">{{ formattedDate(eHistoryItem.createdAt) }}</div>
             </div>
         </div>
@@ -25,7 +25,7 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {formatDate} from "@/services/util";
+import {formatDate, formatTime} from "@/services/util";
 
 export default {
     name: "Estimation-History",
@@ -40,6 +40,7 @@ export default {
         }
     },
     methods: {
+      formatTime,
         formattedDate(date) {
             return formatDate(date);
         }

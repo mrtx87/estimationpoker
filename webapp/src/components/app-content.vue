@@ -19,21 +19,18 @@
 
                 <Evaluation v-bind:estimation="room?.currentEstimation"
                             v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
-                <div class="moderator-actions" v-if="isLocalUserModerator()">
-                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING || room?.currentEstimation.votes.length === 0"
+                <div class="moderator-actions">
+                    <button v-if="isLocalUserModerator()" :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING || room?.currentEstimation.votes.length === 0"
                             class="button-activate" v-on:click="triggerRevealVotes()"><img
                             src="../assets/reveal.svg"><span>Aufdecken</span></button>
-                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
+                    <button v-if="isLocalUserModerator()" :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
                             class="button-activate" v-on:click="triggerResetVotes()"><img
                             src="../assets/repeat.svg"><span>Zurücksetzen</span></button>
-                    <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED" class="button-activate"
+                    <button v-if="isLocalUserModerator()" :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED" class="button-activate"
                             v-on:click="triggerNextEstimation()"><img
                             src="../assets/estimationicon.svg"><span>Neue Schätzung</span></button>
                     <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
-                                                                                         src="../assets/gear.svg">
-                    </button>
-                    <button class="button-activate" v-on:click="shareLink()"><img style="width:30px;"
-                                                                                  src="../assets/sharelink.svg">
+                                                                                         src="../assets/gear.svg"> Settings
                     </button>
                 </div>
             </div>
@@ -81,9 +78,6 @@ export default {
         }
     },
     methods: {
-        shareLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
-        },
         openRoomSettings() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.ROOM_SETTINGS);
         },
@@ -181,7 +175,7 @@ export default {
 
       .moderator-actions {
         display: flex;
-        justify-content: flex-start;
+        justify-content: flex-end;
         gap: 1.25vw;
         box-sizing: border-box;
         width: 100%;

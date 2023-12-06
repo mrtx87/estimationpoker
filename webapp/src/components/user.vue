@@ -90,7 +90,7 @@ export default {
             return this.appStore.room;
         },
         isLocalUserInstance() {
-            return this.appStore.localUser.id === this.user.id;
+            return this.appStore.localUser && this.user && this.appStore.localUser.id === this.user.id;
         }
     },
     beforeMount: function () {

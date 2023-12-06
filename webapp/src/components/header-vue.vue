@@ -1,7 +1,9 @@
 <template>
   <div class="header-wrapper">
     <div class="header">
-
+      <button class="button-activate" v-on:click="shareLink()"><img style="width:30px;"
+                                                                    src="../assets/sharelink.svg"> invite link
+      </button>
       <timer v-bind:timer="estimationTimer"></timer>
       <div class="user-icon-and-menu">
         <user v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
@@ -37,6 +39,9 @@ export default {
     }
   },
   methods: {
+    shareLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
+    },
     toggleUserMenu: function () {
       this.displayUserMenu = !this.displayUserMenu;
     },

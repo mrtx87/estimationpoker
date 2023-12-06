@@ -18,11 +18,14 @@ export default {
   },
   watch: {
     timer(nextTimer, previousTimer) {
+      if (!nextTimer) {
+        return;
+      }
       if (nextTimer.state === ESTIMATION_TIMER_STATE.RUNNING) {
         this.startTimer();
-      } else {
-        this.stopTimer();
+        return;
       }
+      this.stopTimer();
     }
   },
   data: function () {
@@ -48,7 +51,7 @@ export default {
     updateTimer() {
       let elapsedTime = Date.now() - this.timer.startTime;
       elapsedTime += this.timer.passedTime;
-      this.formattedTime =  formatTime(elapsedTime);
+      this.formattedTime = formatTime(elapsedTime);
     }
   },
   computed: {}

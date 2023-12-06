@@ -67,11 +67,10 @@ export default {
 .vote-card-wrapper {
   display: flex;
   max-width: 110px;
-  max-height: 160px;
-  height: 10vw;
   width: 7vw;
-  min-width: 65px;
-  min-height: 100px;
+  user-select: none;
+  min-width: 55px;
+  aspect-ratio: 2/3;
   text-align: center;
   align-items: center;
   justify-content: center;
@@ -81,7 +80,7 @@ export default {
   cursor: pointer;
   color: #7d8694;
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.5rem;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 
   &.selected {
