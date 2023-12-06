@@ -9,13 +9,15 @@
             <div class="estimation-history-list-column bold">Zeit</div>
             <div class="estimation-history-list-column bold">Erstellt am</div>
         </div>
-        <div class="estimation-history-row" v-for="eHistoryItem in estimationHistory" :key="eHistoryItem.id">
-            <div class="estimation-history-list-column title-column">{{ eHistoryItem.title }}</div>
-            <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.avg }}</div>
-            <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.deviation }}</div>
-            <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.amountOfVotes }}</div>
-            <div class="estimation-history-list-column">{{ eHistoryItem.timer.passedTime}}</div>
-            <div class="estimation-history-list-column">{{ formattedDate(eHistoryItem.createdAt) }}</div>
+        <div class="estimation-rows">
+            <div class="estimation-history-row" v-for="eHistoryItem in estimationHistory" :key="eHistoryItem.id">
+                <div class="estimation-history-list-column title-column">{{ eHistoryItem.title }}</div>
+                <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.avg }}</div>
+                <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.deviation }}</div>
+                <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.amountOfVotes }}</div>
+                <div class="estimation-history-list-column">{{ eHistoryItem.timer.passedTime }}</div>
+                <div class="estimation-history-list-column">{{ formattedDate(eHistoryItem.createdAt) }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -54,7 +56,6 @@ export default {
 <style lang="scss" scoped>
 
 .estimation-history-wrapper {
-  height: 25%;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -69,14 +70,22 @@ export default {
     font-weight: bold;
   }
 
+  .estimation-rows {
+    max-height: 200px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
   .estimation-history-row {
     display: grid;
     grid-template-columns: 35% 10% 15% 10% 15% 15%
   }
 
   .estimation-history-row:nth-child(even) {
-      background-color: #f4f7ff;
+    background-color: #f4f7ff;
   }
+
   .estimation-history-list-column {
     display: flex;
     align-items: center;
@@ -89,9 +98,9 @@ export default {
       justify-content: flex-start;
     }
 
-      &.bold {
-          font-weight: bold;
-      }
+    &.bold {
+      font-weight: bold;
+    }
   }
 }
 

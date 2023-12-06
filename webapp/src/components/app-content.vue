@@ -267,6 +267,7 @@ export default {
 
   .small-screen {
     display: flex !important;
+    width: 90%;
   }
 }
 

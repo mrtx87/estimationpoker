@@ -86,7 +86,7 @@ export default {
     border-bottom: 1px solid #f2f3f4;
     padding: 5px;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   .offline-users-heading {
@@ -96,7 +96,7 @@ export default {
     background-color: #ebebeb;
     padding: 5px;
     font-weight: bold;
-    font-size: 1.1rem;
+    font-size: 1rem;
     cursor: pointer;
 
     .triangle {
