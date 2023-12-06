@@ -23,6 +23,7 @@ import {RoomSettings} from "../model/room-settings";
 import {Vote} from "../model/vote";
 import {maskVoteValues} from "../util/util";
 import {ValueByAmount} from "../model/value-by-number";
+import {VoteValue} from "../model/vote-value";
 
 export class WebsocketControllerImpl {
     private static INSTANCE: WebsocketControllerImpl = new WebsocketControllerImpl();
@@ -164,10 +165,11 @@ export class WebsocketControllerImpl {
     revealVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         try {
             cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
+            //cachedRoom.currentEstimation.votes = cachedRoom.currentEstimation.votes.filter(vote => cachedRoom.connections.find(c => c.userId === vote.userId));
             cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
             cachedRoom.currentEstimation.evaluation.avg = this.calculateAverage(cachedRoom.currentEstimation.votes);
             cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);
-            cachedRoom.currentEstimation.evaluation.deviation = this.calculateDeviation(cachedRoom.currentEstimation.evaluation.valuesByAmount, cachedRoom.currentEstimation.evaluation.avg)
+            cachedRoom.currentEstimation.evaluation.deviation = this.calculateDeviation(cachedRoom.currentEstimation.votes, cachedRoom.currentEstimation.evaluation.avg)
             cachedRoom.currentEstimation.timer.stopTimer();
             this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
         } catch (e) {
@@ -310,29 +312,29 @@ export class WebsocketControllerImpl {
 
     private calculateAverage(votes: Vote[]) {
         const legitValues = votes
-            .map(vote => Number(vote.value))
-            .filter(convertedValue => !isNaN(convertedValue));
+            .map(vote => vote.value)
+            .filter(value => value.numericValue >= 0);
 
         if (legitValues.length === 0) {
             return 0;
         }
 
-        const sumOfVotes = legitValues.reduce((sum: number, convertedValue: number) =>
-                sum + convertedValue
+        const sumOfVotes = legitValues.reduce((sum: number, voteValue: VoteValue) =>
+                sum + voteValue.numericValue
             , 0);
 
         return this.roundBy2Digits(sumOfVotes / legitValues.length);
     }
 
-    private calculateDeviation(votes: any[], avg: number) {
+    private calculateDeviation(votes: Vote[], avg: number) {
         const legitVotes = votes
-            .filter(vote => !isNaN(Number(vote.value)));
+            .filter(vote => vote.value.numericValue >= 0);
 
         if (legitVotes.length === 0) {
             return 0;
         }
         const sum = legitVotes
-            .map(vote => Math.pow(Number(vote.value) - avg, 2))
+            .map(vote => Math.pow(vote.value.numericValue - avg, 2))
             .reduce((sum: number, currValue: number) => {
                 sum += currValue;
                 return sum;
@@ -341,12 +343,12 @@ export class WebsocketControllerImpl {
         return this.roundBy2Digits(Math.sqrt(sum / legitVotes.length));
     }
 
-    private generateValuesByAmount(votes: any[]) {
+    private generateValuesByAmount(votes: Vote[]) {
         let valuesByAmount: ValueByAmount[] = [];
         for (let vote of votes) {
-            const valueByAmount = valuesByAmount.find(element => element.value === vote.value);
+            const valueByAmount = valuesByAmount.find(element => element.voteValue.value === vote.value.value);
             if (!valueByAmount) {
-                valuesByAmount.push(new ValueByAmount({value: vote.value, amount: 1}));
+                valuesByAmount.push(new ValueByAmount({voteValue: vote.value, amount: 1}));
             } else {
                 valueByAmount.amount += 1;
             }

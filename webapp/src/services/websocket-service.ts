@@ -152,7 +152,7 @@ export class WebsocketService {
         this.store.setLocalUserId(message.sender);
         this.store.setRoom(receivedRoom);
         this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
-        const joiningUserVote = message.data.vote ;
+        const joiningUserVote = message.data.vote;
         if (joiningUserVote) {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }

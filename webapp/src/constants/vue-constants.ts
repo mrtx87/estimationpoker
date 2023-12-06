@@ -82,48 +82,91 @@ export const HOME_ROUTE = '/';
 export const fibonacci = {
     id: 1,
     name: 'Fibonacci',
-    values: ['0', '1', '2', '3', '5', '8', '13', '21', '34', '55', '89', '?']
+    values: [
+        {value: '0', color: '#3CA8F6', numericValue: 0},
+        {value: '1', color: '#29A0F5', numericValue: 1},
+        {value: '2', color: '#1597F4', numericValue: 2},
+        {value: '3', color: '#0B8DEA', numericValue: 3},
+        {value: '5', color: '#0A81D6', numericValue: 5},
+        {value: '8', color: '#0975C3', numericValue: 8},
+        {value: '13', color: '#086AAF', numericValue: 13},
+        {value: '21', color: '#075E9D', numericValue: 21},
+        {value: '34', color: '#065289', numericValue: 34},
+        {value: '55', color: '#054776', numericValue: 55},
+        {value: '89', color: '#04395E', numericValue: 89},
+        {value: '?', color: '#DAB785', numericValue: -1}
+    ]
 }
 
 export const scrum = {
     id: 2,
     name: 'Scrum',
-    values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '20', '40', '100', '?']
+    values: [
+        {value: '0', color: '#3CA8F6', numericValue: 0},
+        {value: '0.5', color: '#29A0F5', numericValue: 0.5},
+        {value: '1', color: '#1597F4', numericValue: 1},
+        {value: '2', color: '#0B8DEA', numericValue: 2},
+        {value: '3', color: '#0A81D6', numericValue: 3},
+        {value: '5', color: '#0975C3', numericValue: 5},
+        {value: '8', color: '#086AAF', numericValue: 8},
+        {value: '13', color: '#075E9D', numericValue: 13},
+        {value: '20', color: '#065289', numericValue: 20},
+        {value: '40', color: '#054776', numericValue: 40},
+        {value: '100', color: '#04395E', numericValue: 100},
+        {value: '?', color: '#DAB785', numericValue: -1}
+    ]
 }
 
 export const sequential = {
     id: 3,
     name: 'Sequentiell',
-    values: ['0', '1', '2', '3', '5', '6', '7', '8', '9', '10', '?']
+    values: [
+        {value: '0', color: '#3CA8F6', numericValue: 0},
+        {value: '1', color: '#29A0F5', numericValue: 1},
+        {value: '2', color: '#1597F4', numericValue: 2},
+        {value: '3', color: '#0B8DEA', numericValue: 3},
+        {value: '4', color: '#0A81D6', numericValue: 4},
+        {value: '5', color: '#0975C3', numericValue: 5},
+        {value: '6', color: '#086AAF', numericValue: 6},
+        {value: '7', color: '#075E9D', numericValue: 7},
+        {value: '8', color: '#065289', numericValue: 8},
+        {value: '9', color: '#054776', numericValue: 9},
+        {value: '10', color: '#04395E', numericValue: 10},
+        {value: '?', color: '#DAB785', numericValue: -1}
+    ]
 }
 
 export const tshirt = {
     id: 4,
     name: 'T-Shirt',
-    values: ['XS', 'S', 'M', 'L', 'XL', 'XXL', '?']
+    values: [
+        {value: 'XS', color: '#3CA8F6', numericValue: 1},
+        {value: 'S', color: '#1597F4', numericValue: 2},
+        {value: 'M', color: '#0A81D6', numericValue: 3},
+        {value: 'L', color: '#086AAF', numericValue: 4},
+        {value: 'XL', color: '#065289', numericValue: 5},
+        {value: 'XXL', color: '#04395E', numericValue: 6},
+        {value: '?', color: '#DAB785', numericValue: -1}
+    ]
 }
 
 export const t42 = {
     id: 5,
     name: 'Team 42',
-    values: ['0', '0.25', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
-}
-
-export const t42_1 = {
-    id: 5,
-    name: 'Team 42',
-    values: [{value: '0', color: '#3CA8F6'},
-        {value: '0.25', color: '#29A0F5'},
-        {value: '0.5', color: '#1597F4'},
-        {value: '1', color: '#0B8DEA'},
-        {value: '2', color: '#0A81D6'},
-        {value: '3', color: '#0975C3'},
-        {value: '5', color: '#086AAF'},
-        {value: '8', color: '#075E9D'},
-        {value: '13', color: '#065289'},
-        {value: '21', color: '#054776'},
-        {value: '34', color: '#04395E'},
-        {value: '?', color: '#DAB785'}]
+    values: [
+        {value: '0', color: '#3CA8F6', numericValue: 0},
+        {value: '0.25', color: '#29A0F5', numericValue: 0.25},
+        {value: '0.5', color: '#1597F4', numericValue: 0.5},
+        {value: '1', color: '#0B8DEA', numericValue: 1},
+        {value: '2', color: '#0A81D6', numericValue: 2},
+        {value: '3', color: '#0975C3', numericValue: 3},
+        {value: '5', color: '#086AAF', numericValue: 5},
+        {value: '8', color: '#075E9D', numericValue: 8},
+        {value: '13', color: '#065289', numericValue: 13},
+        {value: '21', color: '#054776', numericValue: 21},
+        {value: '34', color: '#04395E', numericValue: 34},
+        {value: '?', color: '#DAB785', numericValue: -1}
+    ]
 }
 
 export const chart_colors = [
