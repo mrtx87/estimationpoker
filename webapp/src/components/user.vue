@@ -1,6 +1,6 @@
 <template>
     <div class="user-wrapper" :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
-        <div class="readyonly-player-container">
+        <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}" v-on:dblclick="openAvatarEditor">
             <div class="readonly-avatar-container">
                 <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
                 </div>
@@ -28,18 +28,19 @@ import {
     SKIN_COLOR_PLACEHOLDER
 } from "@/assets/avatar/avatar-constants.ts";
 import {useAppStateStore} from "@/stores/app-state";
-import {Roles} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
 
 export default {
     name: 'User',
     props: ['noUserName', 'user', 'noUserRoleIcon'],
     components: {},
     created() {
-        this.appState = useAppStateStore();
+        this.appStore = useAppStateStore();
     },
     data() {
         return {
-            displayedAvatar: null
+            displayedAvatar: null,
+            appStore: null
         }
     },
     watch: {
@@ -48,6 +49,11 @@ export default {
         }
     },
     methods: {
+        openAvatarEditor() {
+            if (this.isLocalUserInstance) {
+                this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR)
+            }
+        },
         isModerator(user) {
             return user && user.roles.includes(Roles.MODERATOR)
         },
@@ -77,8 +83,14 @@ export default {
         }
     },
     computed: {
+        DISPLAY_OVERLAY_STATE() {
+            return DISPLAY_OVERLAY_STATE
+        },
         room() {
-            return this.appState.room;
+            return this.appStore.room;
+        },
+        isLocalUserInstance() {
+            return this.appStore.localUser.id === this.user.id;
         }
     },
     beforeMount: function () {
@@ -111,6 +123,10 @@ export default {
   width: 4vh;
   min-width: 2vh;
   min-height: 2vh;
+
+    &.clickable {
+        cursor: pointer;
+    }
 }
 
 .readyonly-player-container.is-local-player .readonly-avatar-container {

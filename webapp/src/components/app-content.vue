@@ -82,7 +82,7 @@ export default {
     },
     methods: {
         shareLink() {
-            navigator.clipboard.writeText(window.location.href).then(this.appStore.toast.info('In Zwischenablage kopiert'));
+            navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
         },
         openRoomSettings() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.ROOM_SETTINGS);
