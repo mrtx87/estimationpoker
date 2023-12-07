@@ -48,7 +48,18 @@ export const ResponseMessageType = {
     CHANGED_USER_ROLE: 'user.role.updated',
     USER_VOTED: 'user.voted',
     NOT_PERMITTED: 'user.not.permitted',
-    ERROR_REVEALING_VOTES: 'error.revealing.votes'
+    ERROR_REVEALING_VOTES: 'error.revealing.votes',
+    ERROR_RESETTING_VOTES: 'error.resetting.votes',
+    ERROR_GENERATING_NEXT_ESTIMATION: 'error.generating.next.estimation',
+    ERROR_DELETING_ROOM: 'error.deleting.room',
+    ERROR_DELETING_USER: 'error.deleting.user',
+    ERROR_CHANGING_ROLE: 'error.changing.role',
+    ERROR_CHANGING_AVATAR: 'error.changing.avatar',
+    ERROR_CHANGING_USER_NAME: 'error.changing.user.name',
+    ERROR_CHANGING_ROOM_SETTINGS: 'error.changing.room.settings',
+    ERROR_CHANGING_ESTIMATION_TITLE: 'error.changing.estimation.title',
+    ERROR_PROCESSING_USER_VOTE: 'error.processing.user.vote',
+    ERROR_FINALIZING_JOIN: 'error.finalizing.join',
 }
 
 export const default_avatar = new Avatar({

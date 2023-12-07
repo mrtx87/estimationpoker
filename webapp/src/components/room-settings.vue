@@ -125,6 +125,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 700px;
 
   .room-settings-item {
     display: flex;

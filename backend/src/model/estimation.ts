@@ -21,7 +21,7 @@ export class Estimation {
         this.title = init.title;
         this.timer = EstimationTimer.of(init.timer);
         this.votes = init.votes.map(Vote.of);
-        this.evaluation = Evaluation.of(init.evaluation) ;
+        this.evaluation = Evaluation.of(init.evaluation);
         this.valueOptionsId = init.valueOptionsId;
         this.state = init.state;
     }
@@ -31,5 +31,9 @@ export class Estimation {
         return new Estimation(init);
     }
 
+    reset() {
+        this.votes = [];
+        this.evaluation.reset();
+    }
 
 }
