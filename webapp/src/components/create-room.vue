@@ -17,9 +17,10 @@
 
             </div>
             <div class="card-values">
-                <span class="value-item" v-for="value in selectedValueType.values" :key="value.label">
-                   {{ value.label }}
-                </span>
+                <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
+                           v-for="value in selectedValueType.values"
+                           :key="value.label"></vote-card>
+
             </div>
             <div class="secondary-options">
                 <div class="secondary-option">
@@ -49,11 +50,12 @@
 import {useAppStateStore} from "@/stores/app-state";
 import {restService} from "@/services/rest-service";
 import {DISPLAY_OVERLAY_STATE, VALUE_TYPE_OPTIONS} from "@/constants/vue-constants";
+import VoteCard from "@/components/vote-card.vue";
 
 
 export default {
     name: "Create-Room",
-    components: {},
+    components: {VoteCard},
     created() {
         this.appStore = useAppStateStore();
     },
@@ -125,25 +127,12 @@ export default {
     }
 
     .card-values {
+      box-sizing: border-box;
       display: flex;
+      justify-content: flex-start;
       flex-wrap: wrap;
-      width: 100%;
-      outline: 1px solid #d7d7d7;
-      border-radius: 3px;
-      background-color: white;
-
-      .value-item {
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        color: black;
-        width: 100px;
-        height: 40px;
-        font-size: 1.25rem;
-      }
-
+      padding: 10px;
+      gap: 15px;
     }
 
     .secondary-options {

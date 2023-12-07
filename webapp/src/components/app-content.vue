@@ -11,7 +11,7 @@
 
             <div class="action-area">
                 <div class="vote-cards" v-if="room?.currentEstimation.state === VOTING_STATE.VOTING">
-                    <VoteCard v-for="value in displayedVoteOptions" :key="value"
+                    <VoteCard v-for="value in displayedVoteOptions" :key="value" class="vote-size"
                               v-bind:value="value">
                         {{ value }}
                     </VoteCard>
