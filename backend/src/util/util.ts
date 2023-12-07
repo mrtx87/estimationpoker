@@ -4,9 +4,7 @@ import {ErrorResponse, ResponseCode} from "../controller-config/rest-controller-
 import {EstimationPokerRoom} from "../model/estimation-poker-room";
 import {v4 as UUID} from 'uuid';
 import {RoomSettings} from "../model/room-settings";
-import {ValueOptions} from "../model/value-option";
 import {Vote} from "../model/vote";
-import {fibonacci} from "../constants/global";
 
 export const MAX_RESULTS_DOC_SEARCH = 25;
 
@@ -61,7 +59,7 @@ export function getErrorResponseHandling(error: any, code: ResponseCode, customM
     logger.internalError(error);
     return new ErrorResponse({
         code: code,
-        message: customMessage ? customMessage: (typeof error === 'string' ? error : error.message)
+        message: customMessage ? customMessage : (typeof error === 'string' ? error : error.message)
     });
 }
 
@@ -135,12 +133,12 @@ export function getTestRoom() {
         voteAfterReveal: false,
         autoReveal: false,
         realtimeVoting: false,
-        valueOptions: new ValueOptions(fibonacci)
+        valueOptionsId: 1
     }), UUID());
 }
 
 export function maskVoteValues(votes: Vote[]) {
     return votes.map(v => {
-        return Vote.of({...v, value: '_'})
+        return {...v, value: null}
     });
 }

@@ -10,8 +10,8 @@
                    v-on:change="updateEstimationName($event.target.value)">
 
             <div class="action-area">
-                <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
-                    <VoteCard v-for="value in room?.currentEstimation.valueOptions.values" :key="value"
+                <div class="vote-cards" v-if="room?.currentEstimation.state === VOTING_STATE.VOTING">
+                    <VoteCard v-for="value in displayedVoteOptions" :key="value"
                               v-bind:value="value">
                         {{ value }}
                     </VoteCard>
@@ -51,13 +51,11 @@ import {
     DISPLAY_OVERLAY_STATE, RequestMessageType, Roles, VALUE_TYPE_OPTIONS, VOTING_STATE,
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
-import {restService} from "@/services/rest-service";
 import UserList from "@/components/user-list.vue";
 import Evaluation from "@/components/evaluation.vue";
 import VoteCard from "@/components/vote-card.vue";
 import VotingInformation from "@/components/voting-information.vue";
 import EstimationHistory from "@/components/estimation-history.vue";
-import {useToast} from "vue-toastification";
 
 
 export default {
@@ -120,9 +118,6 @@ export default {
         room() {
             return this.appStore.room;
         },
-        valueTypeOptions() {
-            return VALUE_TYPE_OPTIONS;
-        },
         localUser() {
             return this.appStore.localUser;
         },
@@ -131,6 +126,9 @@ export default {
         },
         estimationHistory() {
             return this.appStore.sortedEstimationHistory;
+        },
+        displayedVoteOptions() {
+            return this.room ? VALUE_TYPE_OPTIONS.find(vto => vto.id === this.room.currentEstimation.valueOptionsId).values : [];
         }
     }
 };

@@ -3,14 +3,14 @@ import {ValueOptions} from "./value-option";
 
 export class RoomSettings {
     title: string;
-    valueOptions: ValueOptions;
+    valueOptionsId: number;
     realtimeVoting: boolean;
     voteAfterReveal: boolean;
     autoReveal: boolean;
 
     constructor(init: Partial<RoomSettings>) {
         this.title = init.title;
-        this.valueOptions = ValueOptions.of(init.valueOptions);
+        this.valueOptionsId = init.valueOptionsId;
         this.realtimeVoting = init.realtimeVoting;
         this.voteAfterReveal = init.voteAfterReveal;
         this.autoReveal = init.autoReveal;

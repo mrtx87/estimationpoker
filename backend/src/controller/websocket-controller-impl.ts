@@ -9,8 +9,6 @@ import {
     VOTING_STATE
 } from "../constants/global";
 import {
-    estimationPokerRoomRepository,
-    estimationRoomCache,
     estimationRoomService, estimationService,
     userService,
     websocketService
@@ -346,7 +344,7 @@ export class WebsocketControllerImpl {
     private generateValuesByAmount(votes: Vote[]) {
         let valuesByAmount: ValueByAmount[] = [];
         for (let vote of votes) {
-            const valueByAmount = valuesByAmount.find(element => element.voteValue.value === vote.value.value);
+            const valueByAmount = valuesByAmount.find(element => element.voteValue.label === vote.value.label);
             if (!valueByAmount) {
                 valuesByAmount.push(new ValueByAmount({voteValue: vote.value, amount: 1}));
             } else {

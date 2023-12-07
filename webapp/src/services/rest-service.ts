@@ -26,11 +26,11 @@ export function wait(ms: number, data: any) {
     return new Promise(resolve => setTimeout(resolve, ms, data));
 }
 
-export const restService = {
-    appState: null,
-    headerConfig: {},
-    logoutStatusCodes: [UNAUTHORIZED, FORBIDDEN],
-    sendPostRequest: function sendPostRequest(path: string, data: any, blocking = true, authorized = true) {
+export class RestService {
+    appState: any;
+    headerConfig= {};
+    logoutStatusCodes =  [UNAUTHORIZED, FORBIDDEN];
+    sendPostRequest(path: string, data: any, blocking = true, authorized = true) {
         if (blocking) {
             const loadingInterception = this.addLoadingInterception(path);
             return axios.post(REST_BASE_PATH + path, data, authorized ? this.headerConfig : {})
@@ -38,8 +38,9 @@ export const restService = {
         }
         return axios.post(REST_BASE_PATH + path, data, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
-    },
-    sendGetRequest: function (path: string, blocking = true, authorized = true) {
+    }
+
+    sendGetRequest (path: string, blocking = true, authorized = true) {
         if (blocking) {
             const loadingInterception = this.addLoadingInterception(path);
             return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
@@ -47,42 +48,37 @@ export const restService = {
         }
         return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
-    },
-    /*
-    sendRefreshTokenRequest: function (tempHeaderConfig: any) {
-        const loadingInterception = this.addLoadingInterception(UPDATE_TOKEN_ENDPOINT);
-        return axios.get(REST_BASE_PATH + UPDATE_TOKEN_ENDPOINT, tempHeaderConfig)
-            .then(this.responseInterception.bind(this, loadingInterception), this.errorHandlingOnBlockingResponse.bind(this, loadingInterception))
-    },*/
-    setAppState: function (appState: any) {
+    }
+    setAppState (appState: any) {
         this.appState = appState;
-    },
-    errorHandling: function (error: any) {
+    }
+
+    errorHandling (error: any) {
         const errorStatus = error?.response?.status;
         this.handleToastOnError(error);
         if (this.logoutStatusCodes.includes(errorStatus)) {
             //this.appState.onLogout();
         }
         return Promise.reject(error);
-    },
-    errorHandlingOnBlockingResponse: function (loadingInterception: any, error: any) {
+    }
+    errorHandlingOnBlockingResponse (loadingInterception: any, error: any) {
         this.clearLoadingInterception(loadingInterception);
         return this.errorHandling(error);
-    },
-    handleToastOnError: function (error: any) {
+    }
+    handleToastOnError(error: any) {
         if (!error || !error.response) {
             console.log(error)
-            //this.appState.addToast(SERVER_NOT_REACHABLE, 'error', SERVER_DOWN);
+            this.appState?.toast.error(SERVER_NOT_REACHABLE);
         } else if (error.response.data) {
             console.log(error)
-            //this.appState.addToast(error.response.data, 'error', error.response.status);
+            this.appState?.toast.error(error.response.data);
         }
-    },
-    responseInterception: function (loadingInterception: any, response: any) {
+    }
+    responseInterception (loadingInterception: any, response: any) {
         this.clearLoadingInterception(loadingInterception);
         return response;
-    },
-    addLoadingInterception: function (path: string, customMessage = null) {
+    }
+    addLoadingInterception (path: string, customMessage = null) {
         const loadingInterception = {
             timeoutId: 0,
             message: customMessage || getLoadingText(path),
@@ -93,12 +89,12 @@ export const restService = {
             // this.appState.addLoadingInterception(loadingInterception);
         }.bind(this), 25)
         return loadingInterception;
-    },
-    clearLoadingInterception: function (loadingInterception: any) {
+    }
+    clearLoadingInterception (loadingInterception: any) {
 
         // TODO this.appState.removeLoadingInterception(loadingInterception);
-    },
-    setHeaderConfig: function (token: string) {
+    }
+    setHeaderConfig (token: string) {
         if (token) {
             this.headerConfig = {
                 headers: {Authorization: `Bearer ${token}`}
@@ -108,7 +104,10 @@ export const restService = {
         }
     }
 
-};
+}
+
+export const  restService = new RestService();
+
 function isOnMultipleToastByStatusBlacklist(errorCode: number) {
     return errorCode && ERROR_CODES_ALLOW_MULTIPLE_BLACKLIST.includes(errorCode);
 }

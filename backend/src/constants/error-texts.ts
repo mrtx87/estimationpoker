@@ -23,6 +23,7 @@ export const DOCUMENT_TO_BE_RESTORED_NOT_EXIST = 'Das Dokument, dass du restoren
 export const ROOM_TO_BE_STORED_NOT_EXIST = 'Der Raum an dem Du Anpassungen speichern wolltest existiert nicht mehr.';
 export const ERROR_ON_DOCUMENT_SEARCH = 'Fehler bei der Dokumentensuche.';
 export const USER_TO_DELETE_NOT_EXISTS = 'Der zu löschende User existiert nicht.';
+export const USER_NOT_EXISTING = 'Der User existiert nicht.';
 export const ERROR_WHILE_TAGS_REQUEST = 'Fehler beim ermitteln von Tags.';
 export const ERROR_WHILE_USERS_REQUEST = 'Fehler beim ermitteln der Benutzer.';
 export const ERROR_WHILE_DOCUMENT_RELOAD = 'Fehler beim aktualisieren des Dokuments.';

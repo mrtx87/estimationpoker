@@ -188,8 +188,6 @@ export class WebsocketService {
             switch (message.type) {
                 case ResponseMessageType.JOINED_ESTIMATION_SESSION:
                     return this.onRoomJoinFinalizeResponse(message);
-                case ResponseMessageType.ROOM_NOT_EXISTING:
-                    return console.log('raum existiert nicht')
                 case ResponseMessageType.USER_DISCONNECTED:
                     return this.onUserDisconnectRoom(message);
                 case ResponseMessageType.ANOTHER_USER_JOINED_SESSION:
@@ -237,6 +235,9 @@ export class WebsocketService {
                     currentEstimation.votes = votes;
                     const room = {...this.store.room}
                     return this.store.setRoom(room);
+                }
+                case ResponseMessageType.ROOM_NOT_EXISTING : {
+                    return this.store.toast.error('Dieser Raum existiert nicht mehr.');
                 }
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);

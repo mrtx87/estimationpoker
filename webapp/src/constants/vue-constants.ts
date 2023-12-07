@@ -83,18 +83,18 @@ export const fibonacci = {
     id: 1,
     name: 'Fibonacci',
     values: [
-        {value: '0', color: '#3CA8F6', numericValue: 0},
-        {value: '1', color: '#29A0F5', numericValue: 1},
-        {value: '2', color: '#1597F4', numericValue: 2},
-        {value: '3', color: '#0B8DEA', numericValue: 3},
-        {value: '5', color: '#0A81D6', numericValue: 5},
-        {value: '8', color: '#0975C3', numericValue: 8},
-        {value: '13', color: '#086AAF', numericValue: 13},
-        {value: '21', color: '#075E9D', numericValue: 21},
-        {value: '34', color: '#065289', numericValue: 34},
-        {value: '55', color: '#054776', numericValue: 55},
-        {value: '89', color: '#04395E', numericValue: 89},
-        {value: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: '#3CA8F6', numericValue: 0},
+        {label: '1', color: '#29A0F5', numericValue: 1},
+        {label: '2', color: '#1597F4', numericValue: 2},
+        {label: '3', color: '#0B8DEA', numericValue: 3},
+        {label: '5', color: '#0A81D6', numericValue: 5},
+        {label: '8', color: '#0975C3', numericValue: 8},
+        {label: '13', color: '#086AAF', numericValue: 13},
+        {label: '21', color: '#075E9D', numericValue: 21},
+        {label: '34', color: '#065289', numericValue: 34},
+        {label: '55', color: '#054776', numericValue: 55},
+        {label: '89', color: '#04395E', numericValue: 89},
+        {label: '?', color: '#DAB785', numericValue: -1}
     ]
 }
 
@@ -102,18 +102,18 @@ export const scrum = {
     id: 2,
     name: 'Scrum',
     values: [
-        {value: '0', color: '#3CA8F6', numericValue: 0},
-        {value: '0.5', color: '#29A0F5', numericValue: 0.5},
-        {value: '1', color: '#1597F4', numericValue: 1},
-        {value: '2', color: '#0B8DEA', numericValue: 2},
-        {value: '3', color: '#0A81D6', numericValue: 3},
-        {value: '5', color: '#0975C3', numericValue: 5},
-        {value: '8', color: '#086AAF', numericValue: 8},
-        {value: '13', color: '#075E9D', numericValue: 13},
-        {value: '20', color: '#065289', numericValue: 20},
-        {value: '40', color: '#054776', numericValue: 40},
-        {value: '100', color: '#04395E', numericValue: 100},
-        {value: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: '#3CA8F6', numericValue: 0},
+        {label: '0.5', color: '#29A0F5', numericValue: 0.5},
+        {label: '1', color: '#1597F4', numericValue: 1},
+        {label: '2', color: '#0B8DEA', numericValue: 2},
+        {label: '3', color: '#0A81D6', numericValue: 3},
+        {label: '5', color: '#0975C3', numericValue: 5},
+        {label: '8', color: '#086AAF', numericValue: 8},
+        {label: '13', color: '#075E9D', numericValue: 13},
+        {label: '20', color: '#065289', numericValue: 20},
+        {label: '40', color: '#054776', numericValue: 40},
+        {label: '100', color: '#04395E', numericValue: 100},
+        {label: '?', color: '#DAB785', numericValue: -1}
     ]
 }
 
@@ -121,18 +121,18 @@ export const sequential = {
     id: 3,
     name: 'Sequentiell',
     values: [
-        {value: '0', color: '#3CA8F6', numericValue: 0},
-        {value: '1', color: '#29A0F5', numericValue: 1},
-        {value: '2', color: '#1597F4', numericValue: 2},
-        {value: '3', color: '#0B8DEA', numericValue: 3},
-        {value: '4', color: '#0A81D6', numericValue: 4},
-        {value: '5', color: '#0975C3', numericValue: 5},
-        {value: '6', color: '#086AAF', numericValue: 6},
-        {value: '7', color: '#075E9D', numericValue: 7},
-        {value: '8', color: '#065289', numericValue: 8},
-        {value: '9', color: '#054776', numericValue: 9},
-        {value: '10', color: '#04395E', numericValue: 10},
-        {value: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: '#3CA8F6', numericValue: 0},
+        {label: '1', color: '#29A0F5', numericValue: 1},
+        {label: '2', color: '#1597F4', numericValue: 2},
+        {label: '3', color: '#0B8DEA', numericValue: 3},
+        {label: '4', color: '#0A81D6', numericValue: 4},
+        {label: '5', color: '#0975C3', numericValue: 5},
+        {label: '6', color: '#086AAF', numericValue: 6},
+        {label: '7', color: '#075E9D', numericValue: 7},
+        {label: '8', color: '#065289', numericValue: 8},
+        {label: '9', color: '#054776', numericValue: 9},
+        {label: '10', color: '#04395E', numericValue: 10},
+        {label: '?', color: '#DAB785', numericValue: -1}
     ]
 }
 
@@ -140,13 +140,13 @@ export const tshirt = {
     id: 4,
     name: 'T-Shirt',
     values: [
-        {value: 'XS', color: '#3CA8F6', numericValue: 1},
-        {value: 'S', color: '#1597F4', numericValue: 2},
-        {value: 'M', color: '#0A81D6', numericValue: 3},
-        {value: 'L', color: '#086AAF', numericValue: 4},
-        {value: 'XL', color: '#065289', numericValue: 5},
-        {value: 'XXL', color: '#04395E', numericValue: 6},
-        {value: '?', color: '#DAB785', numericValue: -1}
+        {label: 'XS', color: '#3CA8F6', numericValue: 1},
+        {label: 'S', color: '#1597F4', numericValue: 2},
+        {label: 'M', color: '#0A81D6', numericValue: 3},
+        {label: 'L', color: '#086AAF', numericValue: 4},
+        {label: 'XL', color: '#065289', numericValue: 5},
+        {label: 'XXL', color: '#04395E', numericValue: 6},
+        {label: '?', color: '#DAB785', numericValue: -1}
     ]
 }
 
@@ -154,18 +154,18 @@ export const t42 = {
     id: 5,
     name: 'Team 42',
     values: [
-        {value: '0', color: '#3CA8F6', numericValue: 0},
-        {value: '0.25', color: '#29A0F5', numericValue: 0.25},
-        {value: '0.5', color: '#1597F4', numericValue: 0.5},
-        {value: '1', color: '#0B8DEA', numericValue: 1},
-        {value: '2', color: '#0A81D6', numericValue: 2},
-        {value: '3', color: '#0975C3', numericValue: 3},
-        {value: '5', color: '#086AAF', numericValue: 5},
-        {value: '8', color: '#075E9D', numericValue: 8},
-        {value: '13', color: '#065289', numericValue: 13},
-        {value: '21', color: '#054776', numericValue: 21},
-        {value: '34', color: '#04395E', numericValue: 34},
-        {value: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: '#3CA8F6', numericValue: 0},
+        {label: '0.25', color: '#29A0F5', numericValue: 0.25},
+        {label: '0.5', color: '#1597F4', numericValue: 0.5},
+        {label: '1', color: '#0B8DEA', numericValue: 1},
+        {label: '2', color: '#0A81D6', numericValue: 2},
+        {label: '3', color: '#0975C3', numericValue: 3},
+        {label: '5', color: '#086AAF', numericValue: 5},
+        {label: '8', color: '#075E9D', numericValue: 8},
+        {label: '13', color: '#065289', numericValue: 13},
+        {label: '21', color: '#054776', numericValue: 21},
+        {label: '34', color: '#04395E', numericValue: 34},
+        {label: '?', color: '#DAB785', numericValue: -1}
     ]
 }
 

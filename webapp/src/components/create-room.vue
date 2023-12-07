@@ -17,8 +17,8 @@
 
             </div>
             <div class="card-values">
-                <span class="value-item" v-for="value in selectedValueType.values" :key="value.value">
-                   {{ value.value }}
+                <span class="value-item" v-for="value in selectedValueType.values" :key="value.label">
+                   {{ value.label }}
                 </span>
             </div>
             <div class="secondary-options">
@@ -79,7 +79,7 @@ export default {
                     userName: this.userNameInput,
                     roomSettings: {
                         ...this.roomSettings,
-                        valueOptions: this.selectedValueType
+                        valueOptionsId: this.selectedValueType.id
                     },
                     avatar: this.$appService.getRandomAvatar()
                 },

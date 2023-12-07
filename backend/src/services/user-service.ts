@@ -2,10 +2,10 @@ import {User} from "../model/user";
 
 import {v4 as UUID} from 'uuid';
 import {
-    ERROR_REFESHING_TOKEN,
+    ERROR_REFESHING_TOKEN, ERROR_WHILE_JOINING_ROOM,
     ERROR_WHILE_USERS_REQUEST,
     INVALID_TOKEN,
-    TOKEN_REQUIRED,
+    TOKEN_REQUIRED, USER_NOT_EXISTING, USER_TO_DELETE_NOT_EXISTS,
 } from "../constants/error-texts";
 import {default_avatar, ROLE} from "../constants/global";
 import {
@@ -72,18 +72,23 @@ export class UserService {
     }
 
     createUser(userName: string, avatar: Avatar, roomId: string, roles = [ROLE.PARTICIPANT]) {
-        const dbUserModel = new UserModel(User.of({
-            id: UUID(),
-            roomId: roomId,
-            name: userName,
-            roles: roles,
-            avatar: avatar ? avatar : default_avatar
-        }));
+        try {
+            const dbUserModel = new UserModel(User.of({
+                id: UUID(),
+                roomId: roomId,
+                name: userName,
+                roles: roles,
+                avatar: avatar ? avatar : default_avatar
+            }));
 
-        return dbUserModel.save().then(User.of)
+            return dbUserModel.save().then(User.of)
+        } catch(e) {
+            return getInternalErrorErrorResponseHandling(e, ERROR_WHILE_JOINING_ROOM).toRejectedPromise();
+        }
     }
     updateUser(userUpdate: User) {
-       return userRepository.updateUser(userUpdate).then(User.of);
+       return userRepository.updateUser(userUpdate)
+           .then(User.of, e => getBadRequestErrorResponseHandling(USER_NOT_EXISTING));
     }
 
 

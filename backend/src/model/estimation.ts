@@ -12,7 +12,7 @@ export class Estimation {
     timer: EstimationTimer;
     votes: Vote[];
     evaluation: Evaluation;
-    valueOptions: ValueOptions;
+    valueOptionsId: number;
 
     constructor(init: Partial<Estimation>) {
         this.id = init.id;
@@ -22,7 +22,7 @@ export class Estimation {
         this.timer = EstimationTimer.of(init.timer);
         this.votes = init.votes.map(Vote.of);
         this.evaluation = Evaluation.of(init.evaluation) ;
-        this.valueOptions = ValueOptions.of(init.valueOptions);
+        this.valueOptionsId = init.valueOptionsId;
         this.state = init.state;
     }
 
