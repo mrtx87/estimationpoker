@@ -10,7 +10,7 @@ export class RoomSettings {
 
     constructor(init: Partial<RoomSettings>) {
         this.title = init.title;
-        this.valueOptions = init.valueOptions;
+        this.valueOptions = ValueOptions.of(init.valueOptions);
         this.realtimeVoting = init.realtimeVoting;
         this.voteAfterReveal = init.voteAfterReveal;
         this.autoReveal = init.autoReveal;

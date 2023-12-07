@@ -6,6 +6,7 @@ import {v4 as UUID} from 'uuid';
 import {RoomSettings} from "../model/room-settings";
 import {ValueOptions} from "../model/value-option";
 import {Vote} from "../model/vote";
+import {fibonacci} from "../constants/global";
 
 export const MAX_RESULTS_DOC_SEARCH = 25;
 
@@ -134,11 +135,7 @@ export function getTestRoom() {
         voteAfterReveal: false,
         autoReveal: false,
         realtimeVoting: false,
-        valueOptions: new ValueOptions({
-            id: 5,
-            name: 'Team 42',
-            values: ['0', '0.5', '1', '2', '3', '5', '8', '13', '21', '34', '?']
-        })
+        valueOptions: new ValueOptions(fibonacci)
     }), UUID());
 }
 

@@ -114,14 +114,17 @@ export function getPieChartObj(title: { text: string, subtext: string },
     }
 }
 
-export function mapValuesByAmount(valuesByAmount: { value: string, amount: number }[]): {
+export function mapValuesByAmount(valuesByAmount: {
+    voteValue: { value: string, color: string, numericValue: number },
+    amount: number
+}[]): {
     value: number,
     name: string
 }[] {
     return valuesByAmount.map(vba => {
         return {
             value: vba.amount,
-            name: vba.value
+            name: vba.voteValue.value
         }
     });
 }
@@ -140,6 +143,7 @@ export function sortUser(a: any, b: any) {
     }
     return 0;
 }
+
 export function formatTime(time: number) {
     const hours = Math.floor(time / 3600000);
     const minutes = Math.floor((time % 3600000) / 60000);

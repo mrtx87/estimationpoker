@@ -1,6 +1,6 @@
 <template>
     <div class="vote-card-wrapper" v-on:click="triggerVote(value)" :class="{'selected': isSelected}">
-        {{ value }}
+        {{ value.value }}
     </div>
 </template>
 
@@ -47,7 +47,7 @@ export default {
             return this.appStore.localVoteValue;
         },
         isSelected() {
-            return this.appStore.localVoteValue === this.value;
+            return this.appStore.localVoteValue.value === this.value.value;
         },
         localUser() {
             return this.appStore.localUser;

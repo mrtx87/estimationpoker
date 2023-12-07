@@ -61,7 +61,7 @@ export default {
                     }, {
                         title: '',
                         data: mapValuesByAmount(nextEstimation.evaluation.valuesByAmount),
-                        color: chart_colors
+                        color: nextEstimation.evaluation.valuesByAmount.map(v => v.voteValue.color)
                     }
                 )
             }

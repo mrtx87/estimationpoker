@@ -1,9 +1,11 @@
+import {VoteValue} from "./vote-value";
+
 export class ValueByAmount {
-    value: string;
+    voteValue: VoteValue;
     amount: number;
 
     constructor(init: Partial<ValueByAmount>) {
-        this.value = init.value;
+        this.voteValue = init.voteValue;
         this.amount = init.amount;
     }
     public static of(init: any): ValueByAmount {

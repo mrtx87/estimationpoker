@@ -17,8 +17,8 @@
 
             </div>
             <div class="card-values">
-                <span class="value-item" v-for="value in selectedValueType.values" :key="value">
-                   {{ value }}
+                <span class="value-item" v-for="value in selectedValueType.values" :key="value.value">
+                   {{ value.value }}
                 </span>
             </div>
             <div class="secondary-options">

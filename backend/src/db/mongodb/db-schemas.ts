@@ -19,13 +19,21 @@ export const EstimationSchema = new mongoose.Schema<Estimation>({
     votes: [{
         estimationId: String,
         userId: String,
-        value: String
+        value: {
+            value: String,
+            color: String,
+            numericValue: Number
+        }
     }],
     evaluation: {
         estimationId: String,
         avg: Number,
         valuesByAmount: [{
-            value: String,
+            value: {
+                value: String,
+                color: String,
+                numericValue: Number
+            },
             amount: Number
         }],
         deviation: Number,
@@ -34,7 +42,11 @@ export const EstimationSchema = new mongoose.Schema<Estimation>({
     valueOptions: {
         id: Number,
         name: String,
-        values: [String]
+        values: [{
+            value: String,
+            color: String,
+            numericValue: Number
+        }]
     }
 });
 EstimationSchema.index({id: -1}, {unique: true});
@@ -50,7 +62,11 @@ export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom
         valueOptions: {
             id: Number,
             name: String,
-            values: [String]
+            values: [{
+                value: String,
+                color: String,
+                numericValue: Number
+            }]
         },
         realtimeVoting: Boolean,
         voteAfterReveal: Boolean,
