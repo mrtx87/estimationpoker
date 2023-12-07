@@ -111,6 +111,11 @@ body {
     opacity: 0.6;
 }
 
+.button-activate.small-btn {
+    width: 7vw;
+    max-height: 4vh;
+}
+
 /* CSS */
 .button-activate {
     display: flex;
@@ -223,6 +228,19 @@ body {
 .input-elem-container {
     display: flex;
     gap: 20px;
+}
+
+.custom-select select{
+    border: none;
+}
+
+.custom-select select:focus {
+    outline: none;
+}
+
+.custom-select option {
+    border-radius: 0;
+    border: none;
 }
 
 .input-elem-container input[type=text] {

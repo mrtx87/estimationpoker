@@ -1,7 +1,7 @@
 <template>
     <div class="room-settings-wrapper">
         <div class="room-settings-item">
-            <input :disabled="localUserIsNotModerator" v-model="title">
+            <input placeholder="Room-title" class="room-name-input" :disabled="localUserIsNotModerator" v-model="title">
         </div>
 
         <div class="room-settings-item">
@@ -31,8 +31,8 @@
             <span>Do you want to auto reveal votes when voting completed?</span>
         </div>
         <div class="room-settings-buttons-panel">
-            <button v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()" v-on:click="updateRoomSettings">save</button>
-            <button v-on:click="cancel">{{ localUserIsNotModerator ? 'ok' : 'cancel' }}</button>
+            <button class="save-btn" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()" v-on:click="updateRoomSettings">save</button>
+            <button class="cancel-btn" v-on:click="cancel">{{ localUserIsNotModerator ? 'ok' : 'cancel' }}</button>
         </div>
 
     </div>
@@ -94,6 +94,7 @@ export default {
                 voteAfterReveal: this.voteAfterReveal,
                 autoReveal: this.autoReveal,
             });
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         },
         cancel() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
@@ -126,8 +127,17 @@ export default {
   .room-settings-item {
     display: flex;
     gap: 10px;
-
+    color: #777777;
   }
+
+  .room-name-input {
+    border: none;
+    padding:5px;
+    border-radius: 3px;
+  }
+  .room-name-input:focus {
+     outline: 2px solid #78B2CE;
+   }
 
   .card-values {
     box-sizing: border-box;
@@ -136,20 +146,55 @@ export default {
     flex-wrap: wrap;
     width: 100%;
     padding: 5px;
-    border: 1px solid black;
     border-radius: 3px;
 
     .value-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       width: 20%;
+      height: 10vh;
       text-align: center;
-      color: black;
+      color: #7d8694;
       font-weight: bolder;
+      background-color: white;
+      margin: 5px;
+      border-radius: 5px;
+      box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
     }
   }
 
   .room-settings-buttons-panel {
     display: flex;
     gap: 15px;
+    padding: 5px;
+  }
+
+  .cancel-btn {
+    border: none;
+    height: 25px;
+    width: 100px;
+    background-color: #d9d9d9;
+    border-radius: 3px;
+    color: #434343;
+  }
+
+  .cancel-btn:hover {
+    background-color: #cbcbcb;
+  }
+  .save-btn {
+    background: #a1c9dd;
+    border: none;
+    color: white;
+    width: 80px;
+    border-radius: 3px;
+  }
+
+  .save-btn:disabled {
+    background: #ecebeb;
+  }
+  .save-btn:hover:enabled {
+    background: var(--primary-color-darkend);
   }
 }
 

@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrapper">
     <div class="header">
-      <button class="button-activate" v-on:click="shareLink()"><img style="width:30px;"
+      <button class="button-activate small-btn" v-on:click="shareLink()"><img style="width:30px;"
                                                                     src="../assets/sharelink.svg"> invite link
       </button>
       <timer v-bind:timer="estimationTimer"></timer>
