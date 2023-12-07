@@ -114,17 +114,11 @@ export function getPieChartObj(title: { text: string, subtext: string },
     }
 }
 
-export function mapValuesByAmount(valuesByAmount: {
-    voteValue: { value: string, color: string, numericValue: number },
-    amount: number
-}[]): {
-    value: number,
-    name: string
-}[] {
+export function mapValuesByAmount(valuesByAmount: any[]): { value: number; name: string }[] {
     return valuesByAmount.map(vba => {
         return {
             value: vba.amount,
-            name: vba.voteValue.value
+            name: vba.voteValue.label
         }
     });
 }

@@ -76,21 +76,20 @@ export default {
                 || this.roomSettings.title !== this.title
                 || this.roomSettings.voteAfterReveal !== this.voteAfterReveal
                 || this.roomSettings.autoReveal !== this.autoReveal
-                || this.roomSettings.valueOptions.id !== this.selectedValueTypeId;
+                || this.roomSettings.valueOptionsId !== this.selectedValueTypeId;
         },
         initRoomSettings(roomSettings) {
             this.realtimeVoting = roomSettings.realtimeVoting;
             this.voteAfterReveal = roomSettings.voteAfterReveal;
             this.autoReveal = roomSettings.autoReveal;
             this.title = roomSettings.title;
-            this.valueOptions = {...roomSettings.valueOptions, values: [...roomSettings.valueOptions.values]};
-            this.selectedValueTypeId = roomSettings.valueOptions.id;
+            this.selectedValueTypeId = roomSettings.valueOptionsId;
         },
         updateRoomSettings() {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {
                 realtimeVoting: this.realtimeVoting,
                 title: this.title,
-                valueOptions: this.selectedValueType,
+                valueOptionsId: this.selectedValueTypeId,
                 voteAfterReveal: this.voteAfterReveal,
                 autoReveal: this.autoReveal,
             });
