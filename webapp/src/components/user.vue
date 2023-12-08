@@ -1,6 +1,7 @@
 <template>
-    <div class="user-wrapper" :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
-        <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}" v-on:dblclick="openAvatarEditor">
+    <div class="user-wrapper" :class="{'no-user-name':noUserName}" :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
+        <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}"
+             v-on:dblclick="openAvatarEditor">
             <div class="readonly-avatar-container">
                 <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
                 </div>
@@ -113,6 +114,10 @@ export default {
   color: black;
   width: 100%;
   user-select: none;
+
+    &.no-user-name {
+        width: min-content;
+    }
 }
 
 .readyonly-player-container {
@@ -124,9 +129,9 @@ export default {
   min-width: 2vh;
   min-height: 2vh;
 
-    &.clickable {
-        cursor: pointer;
-    }
+  &.clickable {
+    cursor: pointer;
+  }
 }
 
 .readyonly-player-container.is-local-player .readonly-avatar-container {

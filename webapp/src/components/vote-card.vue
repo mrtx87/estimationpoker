@@ -87,9 +87,9 @@ export default {
   }
 
   &.vote-size {
-    max-width: 75px;
+    max-width: 80px;
     width: 3.5vw;
-    min-width: 40px;
+    min-width: 45px;
     font-size: 1.4rem;
   }
 
