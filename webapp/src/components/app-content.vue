@@ -1,25 +1,16 @@
 <template>
   <div class="app-content">
     <div class="left-content">
-      <div class="general-input-header">
-        <input class="general-input heading1" :disabled="!isLocalUserModerator()" placeholder="Name des Raums"
-               :value="room?.roomSettings.title"
-               v-on:change="changeRoomTitle($event.target.value)">
-        <div class="change-title-btn">
-          <button class="save-change">
-            <img style="width:30px;border-radius: 3px;"
-                 src="../assets/accept.svg">
-          </button>
-          <button class="decline-change">
-            <img style="width:30px;border-radius: 3px;"
-                 src="../assets/decline.svg">
-          </button>
-        </div>
-      </div>
-      <input class="general-input heading2" :disabled="!isLocalUserModerator()"
-             placeholder="Name der Schätzung"
-             :value="room?.currentEstimation.title"
-             v-on:change="updateEstimationName($event.target.value)">
+      <general-input class="heading1"
+          v-bind:text="room?.roomSettings.title"
+          v-bind:isDisabled="!isLocalUserModerator()"
+          v-bind:placeholder="'Name des Raums'"
+          v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
+      <general-input class="heading2"
+          v-bind:text="room?.currentEstimation.title"
+          v-bind:isDisabled="!isLocalUserModerator()"
+          v-bind:placeholder="'Name der Schätzung'"
+          v-on:onTextInputChange="updateEstimationName($event)"></general-input>
 
       <div class="action-area">
         <div class="vote-cards" v-if="room?.currentEstimation.state === 1">
@@ -65,23 +56,23 @@ import {
   DISPLAY_OVERLAY_STATE, RequestMessageType, Roles, VALUE_TYPE_OPTIONS, VOTING_STATE,
 } from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
-import {restService} from "@/services/rest-service";
 import UserList from "@/components/user-list.vue";
 import Evaluation from "@/components/evaluation.vue";
 import VoteCard from "@/components/vote-card.vue";
 import VotingInformation from "@/components/voting-information.vue";
 import EstimationHistory from "@/components/estimation-history.vue";
-import {useToast} from "vue-toastification";
+import GeneralInput from "@/components/general-input.vue";
 
 
 export default {
   name: "App-Content",
   components: {
+    GeneralInput,
     EstimationHistory,
     VotingInformation,
     VoteCard,
     UserList,
-    Evaluation
+    Evaluation,
   },
   created() {
     this.appStore = useAppStateStore();
@@ -172,11 +163,6 @@ export default {
     width: 100%;
     max-width: 750px;
 
-    .general-input-header {
-      display: flex;
-      align-items: center;
-    }
-
     .action-area {
       box-sizing: border-box;
       display: flex;
@@ -236,71 +222,6 @@ export default {
   .small-screen {
     display: none;
   }
-}
-
-.heading1 {
-  font-size: 1.8rem;
-  margin-bottom: 0.25vh;
-}
-
-.heading2 {
-  font-size: 1.3rem;
-  margin-bottom: 0.25vh;
-  text-align: center;
-}
-
-.general-input {
-  color: rgb(36, 35, 42);
-  appearance: none;
-  border: none;
-  background-color: transparent;
-  padding: 4px 8px;
-  transition: all 0.1s ease 0s;
-
-  &:focus {
-    #border: 1px solid transparent;
-    #box-shadow: rgb(0 0 0 / 12%) 0px 1px 3px, rgb(0 0 0 / 24%) 0px 1px 2px;
-    background: rgb(251, 251, 251);
-    border-radius: 4px;
-    border: none;
-    appearance: none;
-    outline: 1px solid #d7d7d7;
-    text-align: left !important;
-
-  }
-}
-.change-title-btn{
-  margin-left: -85px;
-}
-.save-change{
-  border: none;
-  background: white;
-}
-.save-change img{
-  background: var(--primary-color);
-}
-
-.save-change img:hover{
-  background: var(--primary-color-darkend)
-}
-
-.save-change img:active{
-  transform: translateY(2px);
-  transition-duration: .1s;
-}
-
-.decline-change {
-  border: none;
-  background: white;
-}
-
-.decline-change img:hover{
-  background-color: #cbcbcb;
-}
-
-.decline-change img:active{
-  transform: translateY(2px);
-  transition-duration: .1s;
 }
 
 @media only screen and (max-width: 1280px) {

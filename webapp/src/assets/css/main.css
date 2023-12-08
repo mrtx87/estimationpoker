@@ -18,6 +18,9 @@
     --thumbBG: #ab9ee9;
 
     --default-grey-font-color: #24232AFF;
+
+    --default-cancel-color: #d9d9d9;
+    --default-cancel-color-hover: #cbcbcb;
 }
 
 html, body, div {
