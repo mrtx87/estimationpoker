@@ -1,7 +1,8 @@
 <template>
-    <div class="vote-card-wrapper" v-on:click="triggerVote(value)" :class="{'selected': isSelected}">
-        {{ value.value }}
-    </div>
+    <button class="vote-card-wrapper" :disabled="disabled" v-on:click="triggerVote(value)"
+            :class="{'selected': isSelected}">
+        {{ value.label }}
+    </button>
 </template>
 
 <script>
@@ -11,7 +12,7 @@ import {RequestMessageType, Roles} from "@/constants/vue-constants";
 
 export default {
     name: "Vote-Card",
-    props: ['value',],
+    props: ['value', 'disabled'],
     created() {
         this.appStore = useAppStateStore();
     },
@@ -47,7 +48,7 @@ export default {
             return this.appStore.localVoteValue;
         },
         isSelected() {
-            return this.appStore.localVoteValue.value === this.value.value;
+            return this.appStore.localVoteValue.label === this.value.label;
         },
         localUser() {
             return this.appStore.localUser;
@@ -65,11 +66,10 @@ export default {
 <style lang="scss">
 
 .vote-card-wrapper {
+  appearance: none;
+  border: none;
+  box-sizing: border-box;
   display: flex;
-  max-width: 110px;
-  width: 7vw;
-  user-select: none;
-  min-width: 55px;
   aspect-ratio: 2/3;
   text-align: center;
   align-items: center;
@@ -80,15 +80,32 @@ export default {
   cursor: pointer;
   color: #7d8694;
   font-weight: bold;
-  font-size: 1.5rem;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+
+  &:disabled {
+    cursor: default;
+  }
+
+  &.vote-size {
+    max-width: 75px;
+    width: 3.5vw;
+    min-width: 40px;
+    font-size: 1.4rem;
+  }
+
+  &.settings-size {
+    max-width: 70px;
+    width: 3.5vw;
+    min-width: 35px;
+    font-size: 1.3rem;
+  }
 
   &.selected {
     background-color: var(--primary-color-darkend);
     color: white;
   }
 
-  &:hover {
+  &:not(:disabled):hover {
     transform: translateY(3px);
   }
 }

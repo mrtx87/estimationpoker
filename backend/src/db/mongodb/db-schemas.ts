@@ -5,49 +5,43 @@ import {Avatar} from "../../model/avatar";
 import {AvatarElement} from "../../model/avatar-element.model";
 import {Estimation} from "../../model/estimation";
 
+
+const VoteValueObject = {
+    label: String,
+    color: String,
+    numericValue: Number
+};
+
+const TimerObject = {
+    startTime: Number,
+    state: Number,
+    passedTime: Number
+};
+
+const VoteObject = {
+    estimationId: String,
+    userId: String,
+    value: VoteValueObject
+};
 export const EstimationSchema = new mongoose.Schema<Estimation>({
     id: String,
     roomId: String,
     createdAt: Number,
     title: String,
     state: Number,
-    timer: {
-        startTime: Number,
-        state: Number,
-        passedTime: Number
-    },
-    votes: [{
-        estimationId: String,
-        userId: String,
-        value: {
-            value: String,
-            color: String,
-            numericValue: Number
-        }
-    }],
+    timer: TimerObject,
+    votes: [VoteObject],
     evaluation: {
         estimationId: String,
         avg: Number,
         valuesByAmount: [{
-            value: {
-                value: String,
-                color: String,
-                numericValue: Number
-            },
+            voteValue: VoteValueObject,
             amount: Number
         }],
         deviation: Number,
         amountOfVotes: Number
     },
-    valueOptions: {
-        id: Number,
-        name: String,
-        values: [{
-            value: String,
-            color: String,
-            numericValue: Number
-        }]
-    }
+    valueOptionsId: Number
 });
 EstimationSchema.index({id: -1}, {unique: true});
 EstimationSchema.index({roomId: -1}, {unique: false});
@@ -59,15 +53,7 @@ export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom
     estimationCount: Number,
     roomSettings: {
         title: String,
-        valueOptions: {
-            id: Number,
-            name: String,
-            values: [{
-                value: String,
-                color: String,
-                numericValue: Number
-            }]
-        },
+        valueOptionsId: Number,
         realtimeVoting: Boolean,
         voteAfterReveal: Boolean,
         autoReveal: Boolean,
@@ -102,6 +88,6 @@ UserSchema.index({roomId: -1}, {unique: false});
 UserSchema.index({name: -1}, {unique: false});
 
 
-export const EstimationPokerRoomModel = mongoose.model('EstmationPokerRoom', EstimationPokerRoomSchema);
+export const EstimationPokerRoomModel = mongoose.model('EstimationPokerRoom', EstimationPokerRoomSchema);
 export const UserModel = mongoose.model('User', UserSchema);
 export const EstimationModel = mongoose.model('Estimation', EstimationSchema);

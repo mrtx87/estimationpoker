@@ -2,13 +2,13 @@ import {v4 as UUID} from 'uuid';
 
 
 export class VoteValue {
-    value: string;
+    label: string;
     color: string;
     numericValue: number;
 
 
     constructor(init: Partial<VoteValue>) {
-        this.value = init.value;
+        this.label = init.label;
         this.color = init.color;
         this.numericValue = init.numericValue;
     }

@@ -32,7 +32,7 @@ function handleCreateRoomRequest(req: any, res: any) {
 function handleNewJoinRoomRequest(req: any, res: any) {
     const joinRoomRequest: any = req.body;
     return estimationRoomService.joinRoomAsNewUser(joinRoomRequest)
-        .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR, ERROR_WHILE_JOINING_ROOM));
+        .catch(error => getErrorResponseHandling(error, ResponseCode.INTERNAL_ERROR));
 }
 
 function handleEstimationHistoryRequest(req: any, res: any) {

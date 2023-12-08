@@ -17,9 +17,9 @@
             </div>
         </div>
         <div class="card-values">
-                <span class="value-item" v-for="value in selectedValueType.values" :key="value.value">
-                   {{ value.value }}
-                </span>
+            <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
+                       v-for="value in selectedValueType.values"
+                       :key="value.label"></vote-card>
         </div>
         <div class="room-settings-item">
             <input :disabled="localUserIsNotModerator" v-model="realtimeVoting" type="checkbox">
@@ -34,8 +34,9 @@
             <span>Do you want to auto reveal votes when voting completed?</span>
         </div>
         <div class="room-settings-buttons-panel">
-            <button class="button-save" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()" v-on:click="updateRoomSettings">save</button>
-            <button class="button-cancel" v-on:click="cancel">{{ localUserIsNotModerator ? 'ok' : 'cancel' }}</button>
+            <button class="save-btn" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()"
+                    v-on:click="updateRoomSettings">save
+            </button>
         </div>
 
     </div>
@@ -46,12 +47,13 @@
 import {useAppStateStore} from "@/stores/app-state";
 import {restService} from "@/services/rest-service";
 import {DISPLAY_OVERLAY_STATE, RequestMessageType, VALUE_TYPE_OPTIONS} from "@/constants/vue-constants";
+import VoteCard from "@/components/vote-card.vue";
 
 
 export default {
     name: "Room-Settings",
     props: ['roomSettings'],
-    components: {},
+    components: {VoteCard},
     created() {
         this.appStore = useAppStateStore();
     },
@@ -79,21 +81,20 @@ export default {
                 || this.roomSettings.title !== this.title
                 || this.roomSettings.voteAfterReveal !== this.voteAfterReveal
                 || this.roomSettings.autoReveal !== this.autoReveal
-                || this.roomSettings.valueOptions.id !== this.selectedValueTypeId;
+                || this.roomSettings.valueOptionsId !== this.selectedValueTypeId;
         },
         initRoomSettings(roomSettings) {
             this.realtimeVoting = roomSettings.realtimeVoting;
             this.voteAfterReveal = roomSettings.voteAfterReveal;
             this.autoReveal = roomSettings.autoReveal;
             this.title = roomSettings.title;
-            this.valueOptions = {...roomSettings.valueOptions, values: [...roomSettings.valueOptions.values]};
-            this.selectedValueTypeId = roomSettings.valueOptions.id;
+            this.selectedValueTypeId = roomSettings.valueOptionsId;
         },
         updateRoomSettings() {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {
                 realtimeVoting: this.realtimeVoting,
                 title: this.title,
-                valueOptions: this.selectedValueType,
+                valueOptionsId: this.selectedValueTypeId,
                 voteAfterReveal: this.voteAfterReveal,
                 autoReveal: this.autoReveal,
             });
@@ -108,7 +109,7 @@ export default {
             return this.appState.roomId;
         },
         selectedValueType() {
-            return VALUE_TYPE_OPTIONS.find(vo => vo.id === this.selectedValueTypeId);
+            return this.selectedValueTypeId ? VALUE_TYPE_OPTIONS.find(vo => vo.id === this.selectedValueTypeId) : VALUE_TYPE_OPTIONS[0];
         },
         valueTypeOptions() {
             return VALUE_TYPE_OPTIONS;
@@ -126,6 +127,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 700px;
 
   .room-title-header{
     font-weight: bold;
@@ -139,36 +141,24 @@ export default {
 
   .room-name-input {
     border: none;
-    padding:5px;
+    padding: 5px;
     border-radius: 3px;
   }
+
   .room-name-input:focus {
-     outline: 2px solid #78B2CE;
-   }
+    outline: 2px solid #78B2CE;
+  }
 
   .card-values {
     box-sizing: border-box;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     border-radius: 3px;
-
-    .value-item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 20%;
-      text-align: center;
-      color: #7d8694;
-      font-weight: bolder;
-      background-color: white;
-      margin: 5px;
-      border-radius: 5px;
-      box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+    gap: 15px;
       aspect-ratio: 2/3;
-    }
   }
 
   .room-settings-buttons-panel {
@@ -176,6 +166,8 @@ export default {
     gap: 15px;
     padding: 5px;
   }
+
+
 
 }
 

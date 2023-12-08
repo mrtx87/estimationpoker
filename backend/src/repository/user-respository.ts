@@ -1,6 +1,7 @@
 import {UserModel} from "../db/mongodb/db-schemas";
 import {User} from "../model/user";
 import {logger} from "../services/s9logger";
+import {USER_NOT_EXISTING} from "../constants/error-texts";
 
 export class UserRepository {
     private static INSTANCE: UserRepository = new UserRepository();
@@ -49,14 +50,21 @@ export class UserRepository {
     }
 
     updateUser(userUpdate: User) {
-        return this.getUser(userUpdate.id)
-            .then(userModel => {
-                this.updateUserSafe(userModel, userUpdate);
-                return userModel.save().then( u => {
-                    u ? logger.info(`stored user: ${u.id} from room: ${u.roomId}`) : logger.error(`stored user missing`);
-                    return u;
+        try {
+            return this.getUser(userUpdate.id)
+                .then(userModel => {
+                    if (!userModel) {
+                        return Promise.reject(USER_NOT_EXISTING)
+                    }
+                    this.updateUserSafe(userModel, userUpdate);
+                    return userModel.save().then(u => {
+                        u ? logger.info(`stored user: ${u.id} from room: ${u.roomId}`) : logger.error(`stored user missing`);
+                        return u;
+                    });
                 });
-            });
+        }catch (e) {
+            return Promise.reject(e);
+        }
     }
 
     deleteUsers(roomId: string) {

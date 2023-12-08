@@ -18,14 +18,17 @@ export class AppService {
             return
         }
 
+        if (!this.isOnRoomRoute()) {
+            this.store.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
+            this.store.reset();
+            this.websocketService.wsConnection?.close();
+        }
+
         if (this.isOnRoomRoute()) {
             this.store.reset();
             this.handleJoinRoom();
             return;
         }
-
-        this.store.reset();
-        this.websocketService.wsConnection?.close();
     }
 
 
@@ -71,6 +74,10 @@ export class AppService {
     onJoinRoomResponse(response: any) {
         this.processInitialJoinResponse(response.data);
         this.initApp();
+    }
+
+    onJoinRoomErrorResponse(error: any) {
+        router.push(HOME_ROUTE);
     }
 
     processInitialJoinResponse(response: any) {

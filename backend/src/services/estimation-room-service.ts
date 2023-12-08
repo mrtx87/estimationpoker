@@ -1,16 +1,19 @@
 import {
     estimationPokerRoomRepository,
-    estimationRoomCache, estimationRoomService, estimationService,
-    userService, websocketService
+    estimationRoomCache,
+    estimationRoomService,
+    estimationService,
+    userService,
+    websocketService
 } from "../server";
 
 import {v4 as UUID} from 'uuid';
 
-import {ErrorResponse} from "../controller-config/rest-controller-configurator";
-import {CREATE_ROOM_ERROR} from "../constants/error-texts";
-import {getInternalErrorErrorResponseHandling} from "../util/util";
+import {ErrorResponse, ResponseCode} from "../controller-config/rest-controller-configurator";
+import {CREATE_ROOM_ERROR, ROOM_NOT_EXISTING} from "../constants/error-texts";
+import {getErrorResponseHandling, getInternalErrorErrorResponseHandling} from "../util/util";
 import {InitValues} from "../model/init-values";
-import {ESTIMATION_TIMER_STATE, ResponseMessageType, ROLE, VOTING_STATE} from "../constants/global";
+import {ResponseMessageType, ROLE} from "../constants/global";
 import {User} from "../model/user";
 import {Avatar} from "../model/avatar";
 import {CachedEstimationPokerRoom} from "../model/cached-estimation-poker-room";
@@ -56,12 +59,14 @@ export class EstimationRoomService {
             const userName = joinRoomRequest.userName;
             const avatar = joinRoomRequest.avatar
             return this.getJoiningRoom(roomId)
-                .then(joiningRoom => userService.createUser(userName, avatar, roomId)
-                    .then(joiningUser => {
-                        estimationRoomCache.addUserToRoomIfCached(roomId, joiningUser);
-                        return this.getJoinedUserResponse(joiningRoom.id, joiningUser);
-                    }));
-        }catch (e) {
+                .then(joiningRoom => {
+                    return userService.createUser(userName, avatar, roomId)
+                        .then(joiningUser => {
+                            estimationRoomCache.addUserToRoomIfCached(roomId, joiningUser);
+                            return this.getJoinedUserResponse(joiningRoom.id, joiningUser);
+                        }, e => e);
+                }, e => e);
+        } catch (e) {
             return Promise.reject(e);
         }
     }
@@ -117,7 +122,7 @@ export class EstimationRoomService {
             return null;
         }
         const restoredRoom = await this.restoreRoom(dbRoom);
-        if(addToCacheIfRestored) {
+        if (addToCacheIfRestored) {
             estimationRoomCache.addRoomToCache(restoredRoom);
         }
         return restoredRoom;
@@ -128,7 +133,7 @@ export class EstimationRoomService {
         try {
             for (let roomAuth of roomAuthentications) {
                 const room = await this.getCachedRoom(roomAuth.roomId);
-                if(!room) {
+                if (!room) {
                     continue;
                 }
                 const user = room.users.find((u: User) => u.id === roomAuth.userId);
@@ -138,7 +143,7 @@ export class EstimationRoomService {
 
                 roomPreviewInfos.push(EstimationPokerRoomPreview.from(room, user))
             }
-        }catch(e) {
+        } catch (e) {
             return Promise.reject(e);
         }
         return roomPreviewInfos;
@@ -162,7 +167,7 @@ export class EstimationRoomService {
         if (dbRoom) {
             return dbRoom;
         }
-        return Promise.reject();
+        return getErrorResponseHandling(ROOM_NOT_EXISTING, ResponseCode.CONFLICTING).toRejectedPromise();
 
     }
 }

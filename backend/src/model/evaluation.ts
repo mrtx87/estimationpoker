@@ -17,4 +17,10 @@ export class Evaluation {
         return new Evaluation(init);
     }
 
+    reset() {
+        this.avg = 0;
+        this.valuesByAmount = [];
+        this.deviation = 0;
+        this.amountOfVotes = 0;
+    }
 }

@@ -1,7 +1,6 @@
 import {AuthenticatedRequest} from "../model/authenticated-request.model";
 import {BasicRequest} from "../model/basic-request.model";
 import {
-    ESTIMATION_TIMER_STATE,
     RequestMessageType,
     ResponseMessageType,
     ROLE,
@@ -9,8 +8,6 @@ import {
     VOTING_STATE
 } from "../constants/global";
 import {
-    estimationPokerRoomRepository,
-    estimationRoomCache,
     estimationRoomService, estimationService,
     userService,
     websocketService
@@ -133,7 +130,7 @@ export class WebsocketControllerImpl {
                 }, (error) => null)
                 .then(cachedRoom => cachedRoom ? endPoint.action(cachedRoom, authenticated.userId, new BasicRequest(request), connection) : {});
         } catch (e) {
-            console.log(e);
+            logger.error(e);
         }
     }
 
@@ -142,20 +139,25 @@ export class WebsocketControllerImpl {
     }
 
     async finalizeJoin(cachedRoom: CachedEstimationPokerRoom, joiningUserId: string, request: AuthenticatedRequest, connection: any) {
-        if (connection.userId && connection.roomId) {
-            estimationRoomService.processDisconnectClient(connection);
+        try {
+            if (connection.userId && connection.roomId) {
+                estimationRoomService.processDisconnectClient(connection);
+            }
+            connection.userId = joiningUserId;
+            connection.roomId = cachedRoom.id;
+
+            logger.info(`user ${joiningUserId} joined room: ${cachedRoom.id}`);
+            cachedRoom.addConnection(connection);
+
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, {
+                room: cachedRoom.toPublicDTO(joiningUserId),
+                vote: cachedRoom.getVotes().find(v => v.userId === joiningUserId)
+            }), connection);
+            websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId, cachedRoom.getUser(joiningUserId)), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_FINALIZING_JOIN), connection);
+            logger.error(e);
         }
-
-        connection.userId = joiningUserId;
-        connection.roomId = cachedRoom.id;
-        logger.info(`user ${joiningUserId} joined room: ${cachedRoom.id}`);
-        cachedRoom.addConnection(connection);
-
-        websocketService.notifyUser(new BasicResponse(ResponseMessageType.JOINED_ESTIMATION_SESSION, joiningUserId, {
-            room: cachedRoom.toPublicDTO(joiningUserId),
-            vote: cachedRoom.getVotes().find(v => v.userId === joiningUserId)
-        }), connection);
-        websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ANOTHER_USER_JOINED_SESSION, joiningUserId, cachedRoom.getUser(joiningUserId)), cachedRoom.connections.filter(c => c.userId !== joiningUserId));
     }
 
     ping(cachedRoom: CachedEstimationPokerRoom, userId: string, request: AuthenticatedRequest, connection: any) {
@@ -174,114 +176,165 @@ export class WebsocketControllerImpl {
             this.notifyAllUsersAboutUpdate(ResponseMessageType.REVEALED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
         } catch (e) {
             websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_REVEALING_VOTES), connection);
+            logger.error(e);
         }
     }
 
     resetVotes(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        cachedRoom.currentEstimation.state = VOTING_STATE.VOTING;
-        cachedRoom.currentEstimation.votes = [];
-        cachedRoom.currentEstimation.timer.startTimer();
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.RESETED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
+        try {
+            cachedRoom.currentEstimation.state = VOTING_STATE.VOTING;
+            cachedRoom.currentEstimation.reset();
+            cachedRoom.currentEstimation.timer.startTimer();
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.RESETED_VOTES, cachedRoom.currentEstimation, cachedRoom.connections, userId);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_REVEALING_VOTES), connection);
+            logger.error(e);
+        }
     }
 
     async nextEstimation(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        const previousEstimation = cachedRoom.currentEstimation;
-        previousEstimation.state = VOTING_STATE.CLOSED;
-        previousEstimation.timer.stopTimer();
-        cachedRoom.estimationCount += 1;
-        estimationService.saveEstimation(previousEstimation);
-        const nextEstimation = await estimationService.createEstimation(cachedRoom);
-        cachedRoom.setEstimation(nextEstimation);
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.NEXT_ESTIMATION, nextEstimation, cachedRoom.connections, userId);
+        try {
+            const previousEstimation = cachedRoom.currentEstimation;
+            previousEstimation.state = VOTING_STATE.CLOSED;
+            previousEstimation.timer.stopTimer();
+            cachedRoom.estimationCount += 1;
+            estimationService.saveEstimation(previousEstimation);
+            const nextEstimation = await estimationService.createEstimation(cachedRoom);
+            cachedRoom.setEstimation(nextEstimation);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.NEXT_ESTIMATION, nextEstimation, cachedRoom.connections, userId);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION), connection);
+            logger.error(e);
+        }
     }
 
     deleteRoom(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        estimationRoomService.deleteRoom(cachedRoom).then(removeSuccess => {
-            if (removeSuccess) {
-                websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, SYSTEM_USER_ID, {
+        try {
+            estimationRoomService.deleteRoom(cachedRoom).then(removeSuccess => {
+                if (removeSuccess) {
+                    websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, SYSTEM_USER_ID, {
+                        roomId: cachedRoom.id,
+                        title: cachedRoom.roomSettings.title
+                    }), cachedRoom.connections);
+                    return;
+                }
+                websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, SYSTEM_USER_ID, {
                     roomId: cachedRoom.id,
                     title: cachedRoom.roomSettings.title
-                }), cachedRoom.connections);
-                return;
-            }
-            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ROOM_NOT_EXISTING, SYSTEM_USER_ID, {
-                roomId: cachedRoom.id,
-                title: cachedRoom.roomSettings.title
-            }), connection);
-        });
+                }), connection);
+            });
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_DELETING_ROOM), connection);
+            logger.error(e);
+        }
     }
 
     deleteUser(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        return userService.deleteUser(request.data.userId).then(deleteSuccess => {
-            if (deleteSuccess) {
-                cachedRoom.removeUser(request.data.userId);
-                websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DELETED, SYSTEM_USER_ID, request.data), cachedRoom.connections);
-                return;
-            }
-            websocketService.notifyUser(new BasicResponse(ResponseMessageType.USER_NOT_EXISTING, SYSTEM_USER_ID, request.data), connection);
-        })
+        try {
+            return userService.deleteUser(request.data.userId).then(deleteSuccess => {
+                if (deleteSuccess) {
+                    cachedRoom.removeUser(request.data.userId);
+                    websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DELETED, SYSTEM_USER_ID, request.data), cachedRoom.connections);
+                    return;
+                }
+                websocketService.notifyUser(new BasicResponse(ResponseMessageType.USER_NOT_EXISTING, SYSTEM_USER_ID, request.data), connection);
+            });
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_DELETING_USER), connection);
+            logger.error(e);
+        }
     }
 
     changeRole(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        const user = cachedRoom.getUser(userId);
-        const roles = request.data;
-        user.roles = roles;
-        userService.updateUser(user);
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_ROLE, user, cachedRoom.connections, userId);
+        try {
+            const user = cachedRoom.getUser(userId);
+            const roles = request.data;
+            user.roles = roles;
+            userService.updateUser(user);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_ROLE, user, cachedRoom.connections, userId);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_ROLE), connection);
+            logger.error(e);
+        }
     }
 
     changeAvatar(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        const newAvatar = request.data;
-        const user = cachedRoom.users.find(u => u.id === userId);
-        user.avatar = newAvatar;
-        userService.updateUser(user);
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.AVATAR_CHANGED, user, cachedRoom.connections, userId);
+        try {
+            const newAvatar = request.data;
+            const user = cachedRoom.users.find(u => u.id === userId);
+            user.avatar = newAvatar;
+            userService.updateUser(user);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.AVATAR_CHANGED, user, cachedRoom.connections, userId);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_AVATAR), connection);
+            logger.error(e);
+        }
     }
 
     changeUsername(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        const userName = request.data;
-        const user = cachedRoom.getUser(userId);
-        user.name = userName;
-        userService.updateUser(user);
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_NAME, user, cachedRoom.connections, userId);
+        try {
+            const userName = request.data;
+            const user = cachedRoom.getUser(userId);
+            user.name = userName;
+            userService.updateUser(user);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_NAME, user, cachedRoom.connections, userId);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_USER_NAME), connection);
+            logger.error(e);
+        }
     }
 
     changeRoomSettings(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        cachedRoom.roomSettings = RoomSettings.of(request.data);
-        this.notifyAllUsersAboutUpdate(ResponseMessageType.UPDATED_ROOM_SETTINGS, cachedRoom.roomSettings, cachedRoom.connections, userId);
+        try {
+            cachedRoom.roomSettings = RoomSettings.of(request.data);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.UPDATED_ROOM_SETTINGS, cachedRoom.roomSettings, cachedRoom.connections, userId);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_ROOM_SETTINGS), connection);
+            logger.error(e);
+        }
     }
 
     changeEstimationTitle(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        if (cachedRoom.currentEstimation.id === request.data.estimationId) {
-            cachedRoom.currentEstimation.title = request.data.title;
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
+        try {
+            if (cachedRoom.currentEstimation.id === request.data.estimationId) {
+                cachedRoom.currentEstimation.title = request.data.title;
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.ESTIMATION_TITLE_UPDATED, {estimationTitle: cachedRoom.currentEstimation.title}, cachedRoom.connections, userId);
+            }
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE), connection);
+            logger.error(e);
         }
     }
 
     userVote(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && (cachedRoom.currentEstimation.state === VOTING_STATE.VOTING || cachedRoom.roomSettings.voteAfterReveal)) {
-            if (request.data) {
-                const vote = Vote.of(request.data)
-                cachedRoom.setVotes([...cachedRoom.getVotes().filter(v => v.userId !== userId), vote]);
-            } else {
-                cachedRoom.setVotes(cachedRoom.getVotes().filter(v => v.userId !== userId));
+        try {
+            if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && (cachedRoom.currentEstimation.state === VOTING_STATE.VOTING || cachedRoom.roomSettings.voteAfterReveal)) {
+                if (request.data) {
+                    const vote = Vote.of(request.data)
+                    cachedRoom.setVotes([...cachedRoom.getVotes().filter(v => v.userId !== userId), vote]);
+                } else {
+                    cachedRoom.setVotes(cachedRoom.getVotes().filter(v => v.userId !== userId));
+                }
+
+                if (cachedRoom.currentEstimation.state === VOTING_STATE.REVEALED) {
+                    this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), cachedRoom.connections);
+                    return;
+                }
+
+                if (!cachedRoom.roomSettings.realtimeVoting) {
+                    this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), cachedRoom.connections);
+                    return;
+                }
+
+                const moderatorConnections = cachedRoom.getAllConnectionsByRole(ROLE.MODERATOR);
+                const otherConnections = cachedRoom.getAllConnectionsWithoutRole(ROLE.MODERATOR);
+
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), moderatorConnections);
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), otherConnections);
             }
-
-            if (cachedRoom.currentEstimation.state === VOTING_STATE.REVEALED) {
-                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), cachedRoom.connections);
-                return;
-            }
-
-            if (!cachedRoom.roomSettings.realtimeVoting) {
-                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), cachedRoom.connections);
-                return;
-            }
-
-            const moderatorConnections = cachedRoom.getAllConnectionsByRole(ROLE.MODERATOR);
-            const otherConnections = cachedRoom.getAllConnectionsWithoutRole(ROLE.MODERATOR);
-
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), moderatorConnections);
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), otherConnections);
+        } catch (e) {
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_PROCESSING_USER_VOTE), connection);
+            logger.error(e);
         }
     }
 
@@ -346,7 +399,7 @@ export class WebsocketControllerImpl {
     private generateValuesByAmount(votes: Vote[]) {
         let valuesByAmount: ValueByAmount[] = [];
         for (let vote of votes) {
-            const valueByAmount = valuesByAmount.find(element => element.voteValue.value === vote.value.value);
+            const valueByAmount = valuesByAmount.find(element => element.voteValue.label === vote.value.label);
             if (!valueByAmount) {
                 valuesByAmount.push(new ValueByAmount({voteValue: vote.value, amount: 1}));
             } else {

@@ -11,7 +11,7 @@ export class Vote {
     constructor(init: Partial<Vote>) {
         this.estimationId = init.estimationId;
         this.userId = init.userId;
-        this.value = VoteValue.of(init.value);
+        this.value = init.value ? VoteValue.of(init.value) : null;
     }
 
 
