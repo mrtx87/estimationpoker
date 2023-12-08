@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <g id="SVGRepo_iconCarrier" transform="translate(-6.238 -6.021)">
+        <rect id="Rechteck_2" data-name="Rechteck 2" width="20" height="20" transform="translate(6.238 6.021)" fill="#cbcbcb"/>
+        <path id="Pfad_1" data-name="Pfad 1" d="M13.5,11.521l3.36,3.36a.56.56,0,0,1,0,.791l-1.185,1.185a.559.559,0,0,1-.791,0L11.52,13.5l-3.36,3.36a.559.559,0,0,1-.79,0L6.184,15.672a.56.56,0,0,1,0-.791l3.36-3.36-3.36-3.36a.56.56,0,0,1,0-.791L7.37,6.185a.559.559,0,0,1,.79,0l3.36,3.36,3.36-3.36a.559.559,0,0,1,.791,0l1.185,1.186a.56.56,0,0,1,0,.791l-3.36,3.36Z" transform="translate(4.718 4.5)" fill="#fff"/>
+    </g>
+</svg>

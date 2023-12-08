@@ -1,5 +1,8 @@
 <template>
     <div class="room-settings-wrapper">
+        <div class="room-title-header">
+          <span>Room Settings</span>
+        </div>
         <div class="room-settings-item">
             <input placeholder="Room-title" class="room-name-input" :disabled="localUserIsNotModerator" v-model="title">
         </div>
@@ -31,8 +34,8 @@
             <span>Do you want to auto reveal votes when voting completed?</span>
         </div>
         <div class="room-settings-buttons-panel">
-            <button class="save-btn" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()" v-on:click="updateRoomSettings">save</button>
-            <button class="cancel-btn" v-on:click="cancel">{{ localUserIsNotModerator ? 'ok' : 'cancel' }}</button>
+            <button class="button-save" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()" v-on:click="updateRoomSettings">save</button>
+            <button class="button-cancel" v-on:click="cancel">{{ localUserIsNotModerator ? 'ok' : 'cancel' }}</button>
         </div>
 
     </div>
@@ -124,6 +127,10 @@ export default {
   flex-direction: column;
   gap: 10px;
 
+  .room-title-header{
+    font-weight: bold;
+    color: var(--default-grey-font-color)
+  }
   .room-settings-item {
     display: flex;
     gap: 10px;
@@ -153,7 +160,6 @@ export default {
       justify-content: center;
       align-items: center;
       width: 20%;
-      height: 10vh;
       text-align: center;
       color: #7d8694;
       font-weight: bolder;
@@ -161,6 +167,7 @@ export default {
       margin: 5px;
       border-radius: 5px;
       box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+      aspect-ratio: 2/3;
     }
   }
 
@@ -170,32 +177,6 @@ export default {
     padding: 5px;
   }
 
-  .cancel-btn {
-    border: none;
-    height: 25px;
-    width: 100px;
-    background-color: #d9d9d9;
-    border-radius: 3px;
-    color: #434343;
-  }
-
-  .cancel-btn:hover {
-    background-color: #cbcbcb;
-  }
-  .save-btn {
-    background: #a1c9dd;
-    border: none;
-    color: white;
-    width: 80px;
-    border-radius: 3px;
-  }
-
-  .save-btn:disabled {
-    background: #ecebeb;
-  }
-  .save-btn:hover:enabled {
-    background: var(--primary-color-darkend);
-  }
 }
 
 </style>
