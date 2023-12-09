@@ -102,12 +102,12 @@ export default {
   }
 
   &.user-tile-size {
-    width: 40px;
+    width: 35%;
     font-size: 0.8rem;
     position: absolute;
     z-index: 10;
-    left: 5px;
-    top: 0;
+    left: 0px;
+    top: -10%;
   }
 
   &.selected {

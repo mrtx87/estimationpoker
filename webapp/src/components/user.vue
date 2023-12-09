@@ -122,7 +122,7 @@ export default {
 
 .poker-area-user {
   .readyonly-player-container {
-    width: 125px;
+    width: 75px;
     aspect-ratio: 1/1;
   }
 }

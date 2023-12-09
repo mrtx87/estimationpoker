@@ -62,8 +62,8 @@ export default {
         refreshEvaluationChart(nextEstimation) {
             if (nextEstimation) {
                 this.donut = getPieChartObj({
-                        text: '',//`avg: ${nextEstimation.evaluation.avg} \n\n deviation: ${nextEstimation.evaluation.deviation}`,
-                        subtext: '' //`Abgegebene Votes: ${nextEstimation.evaluation.amountOfVotes}`
+                        text: `avg: ${nextEstimation.evaluation.avg} \n\n deviation: ${nextEstimation.evaluation.deviation}`,
+                        subtext:`Abgegebene Votes: ${nextEstimation.evaluation.amountOfVotes}`
                     }, {
                         title: nextEstimation.title,
                         data: mapValuesByAmount(nextEstimation.evaluation.valuesByAmount),

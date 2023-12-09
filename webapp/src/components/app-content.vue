@@ -1,17 +1,23 @@
 <template>
     <div class="app-content">
-        <general-input class="heading1"
-                       v-bind:text="room?.roomSettings.title"
-                       v-bind:isDisabled="!isLocalUserModerator()"
-                       v-bind:placeholder="'Name des Raums'"
-                       v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
-        <general-input class="heading2"
-                       v-bind:text="room?.currentEstimation.title"
-                       v-bind:isDisabled="!isLocalUserModerator()"
-                       v-bind:placeholder="'Name der Schätzung'"
-                       v-on:onTextInputChange="updateEstimationName($event)"></general-input>
-
+      <div class="room-header">
+        <div class="title-container">
+          <general-input class="heading1"
+                         v-bind:text="room?.roomSettings.title"
+                         v-bind:isDisabled="!isLocalUserModerator()"
+                         v-bind:placeholder="'Name des Raums'"
+                         v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
+          <general-input class="heading2"
+                         v-bind:text="room?.currentEstimation.title"
+                         v-bind:isDisabled="!isLocalUserModerator()"
+                         v-bind:placeholder="'Name der Schätzung'"
+                         v-on:onTextInputChange="updateEstimationName($event)"></general-input>
+        </div>
         <voting-information></voting-information>
+        <timer style="justify-self: center" v-bind:timer="estimationTimer"></timer>
+      </div>
+
+
         <user-list></user-list>
         <Evaluation v-bind:estimation="room?.currentEstimation"
                     v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
@@ -57,11 +63,13 @@ import VoteCard from "@/components/vote-card.vue";
 import VotingInformation from "@/components/voting-information.vue";
 import EstimationHistory from "@/components/estimation-history.vue";
 import GeneralInput from "@/components/general-input.vue";
+import Timer from "@/components/timer.vue";
 
 
 export default {
     name: "App-Content",
     components: {
+      Timer,
         GeneralInput,
         EstimationHistory,
         VotingInformation,
@@ -131,6 +139,9 @@ export default {
         },
         displayedVoteOptions() {
             return this.room ? VALUE_TYPE_OPTIONS.find(vto => vto.id === this.room.currentEstimation.valueOptionsId).values : [];
+        },
+        estimationTimer() {
+        return this.appStore.room ? this.appStore.room.currentEstimation.timer : null;
         }
     }
 };
@@ -149,6 +160,22 @@ export default {
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 10px;
+
+  .room-header {
+    display: grid;
+    align-items: center;
+    justify-content: space-between;
+    grid-template-columns: 30% 50% 30%;
+    padding: 10px;
+    box-sizing: border-box;
+    max-width: 1280px;
+    width: 100%;
+
+    .title-container {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 
 
   .action-area {

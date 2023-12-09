@@ -4,7 +4,6 @@
             <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
                     src="../assets/sharelink.svg"> invite link
             </button>
-            <timer v-bind:timer="estimationTimer"></timer>
             <div class="user-icon-and-menu">
                 <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
                       v-on:click="toggleUserMenu"></user>
@@ -20,13 +19,12 @@
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
 import User from "@/components/user.vue";
-import Timer from "@/components/timer.vue";
 import UserMenu from "@/components/user-menu.vue";
 import {vOnClickOutside} from "@vueuse/components/index";
 
 export default {
     name: "HeaderVue",
-    components: {UserMenu, Timer, User},
+    components: {UserMenu, User},
     directives: {
         onClickOutside: vOnClickOutside
     },
@@ -61,9 +59,6 @@ export default {
         },
         localUser() {
             return this.appStore.room && this.localUserId ? this.appStore.room.users.find(u => u.id === this.localUserId) : null;
-        },
-        estimationTimer() {
-            return this.appStore.room ? this.appStore.room.currentEstimation.timer : null;
         }
     }
 };

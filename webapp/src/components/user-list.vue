@@ -62,7 +62,7 @@ export default {
             return [...this.users.filter(u => !this.room.connections.includes(u.id))];
         },
         sortedOnlineUsers() {
-            const users = [...this.onlineUsers];
+            const users = [...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers];
             users.sort(sortUser);
             return users;
         },
@@ -83,7 +83,9 @@ export default {
 
 .user-list-wrapper {
   display: flex;
+  flex-wrap: wrap;
   box-sizing: border-box;
+  justify-content: space-around;
   gap: 10px;
 
   .users-heading {
@@ -100,12 +102,10 @@ export default {
     border-radius: 5px;
     aspect-ratio: 1/1;
     position: relative;
-    padding: 15px;
-    width: 130px;
   }
 
   .card {
-    width: 40px;
+    width: 35%;
     aspect-ratio: 2/3;
     font-size: 0.8rem;
     position: absolute;
