@@ -37,7 +37,7 @@
                 </div>
             </div>
             <div class="create-room-buttons-panel">
-                <button class="button-activate" v-on:click="createRoom()">Raum erstellen</button>
+                <button class="button-activate" :disabled="isInvalid" v-on:click="createRoom()">Raum erstellen</button>
                 <button class="button-activate invers" v-on:click="cancel()">abbrechen</button>
             </div>
 
@@ -102,6 +102,9 @@ export default {
         },
         valueTypeOptions() {
             return VALUE_TYPE_OPTIONS;
+        },
+        isInvalid() {
+            return this.userNameInput.length < 2 || this.roomSettings.title.length < 2 || this.selectedValueTypeIndex < 0;
         }
     }
 };
