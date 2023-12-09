@@ -71,7 +71,7 @@ export class UserService {
         }
     }
 
-    createUser(userName: string, avatar: Avatar, roomId: string, roles = [ROLE.PARTICIPANT]) {
+    createUser(userName: string, avatar: Avatar, roomId: string, roles = [ROLE.PLAYER]) {
         try {
             const dbUserModel = new UserModel(User.of({
                 id: UUID(),

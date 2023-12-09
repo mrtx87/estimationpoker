@@ -45,7 +45,7 @@ export class WebsocketControllerImpl {
         this.addWebsocketEndpoint({
             type: RequestMessageType.FINALIZE_JOIN,
             action: this.finalizeJoin.bind(this),
-            authorize: this.getRolePredicament([ROLE.PARTICIPANT, ROLE.MODERATOR, ROLE.SPECTATOR])
+            authorize: this.getRolePredicament([ROLE.PLAYER, ROLE.MODERATOR, ROLE.OBSERVER])
         }).addWebsocketEndpoint({
             type: RequestMessageType.PING,
             action: this.ping.bind(this),
@@ -93,7 +93,7 @@ export class WebsocketControllerImpl {
         }).addWebsocketEndpoint({
             type: RequestMessageType.VOTE_REQUEST,
             action: this.userVote.bind(this),
-            authorize: this.getRolePredicament([ROLE.PARTICIPANT])
+            authorize: this.getRolePredicament([ROLE.PLAYER])
         })
     }
 
@@ -171,7 +171,7 @@ export class WebsocketControllerImpl {
             //cachedRoom.currentEstimation.votes = cachedRoom.currentEstimation.votes.filter(vote => cachedRoom.connections.find(c => c.userId === vote.userId));
             cachedRoom.currentEstimation.votes = cachedRoom.currentEstimation.votes
                 .filter(vote => cachedRoom.connections.find(c => c.userId === vote.userId))
-                .filter(vote => cachedRoom.getUser(vote.userId)?.roles.includes(ROLE.PARTICIPANT));
+                .filter(vote => cachedRoom.getUser(vote.userId)?.roles.includes(ROLE.PLAYER));
             cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
             cachedRoom.currentEstimation.evaluation.avg = this.calculateAverage(cachedRoom.currentEstimation.votes);
             cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);

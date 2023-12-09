@@ -5,11 +5,11 @@ export const SYSTEM_USER_ID = 'system';
 
 export const ROLE = {
     MODERATOR: 'moderator',
-    PARTICIPANT: 'participant',
-    SPECTATOR: 'spectator'
+    PLAYER: 'player',
+    OBSERVER: 'observer'
 };
 
-export const EXISTING_ROLES = [ROLE.MODERATOR, ROLE.SPECTATOR, ROLE.PARTICIPANT];
+export const EXISTING_ROLES = [ROLE.MODERATOR, ROLE.OBSERVER, ROLE.PLAYER];
 
 export const RequestMessageType = {
     FINALIZE_JOIN: 'finalize-join',

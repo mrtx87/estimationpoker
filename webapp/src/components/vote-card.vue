@@ -57,7 +57,7 @@ export default {
             return this.appStore.room.currentEstimation;
         },
         isLocalUserParticipant() {
-            return this.localUser?.roles.includes(Roles.PARTICIPANT);
+            return this.localUser?.roles.includes(Roles.PLAYER);
         }
     }
 };

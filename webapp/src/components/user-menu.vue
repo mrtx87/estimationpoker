@@ -4,13 +4,13 @@
             <span>Moderator</span>
             <img v-if="user.roles.includes(Roles.MODERATOR)" src="../assets/ok.svg">
         </div>
-        <div class="user-menu-item" v-on:click="toggleSelectRole(Roles.PARTICIPANT)">
-            <span>Participant</span>
-            <img v-if="user.roles.includes(Roles.PARTICIPANT)" src="../assets/ok.svg">
+        <div class="user-menu-item" v-on:click="toggleSelectRole(Roles.PLAYER)">
+            <span>Player</span>
+            <img v-if="user.roles.includes(Roles.PLAYER)" src="../assets/ok.svg">
         </div>
-        <div class="user-menu-item" v-on:click="toggleSelectRole(Roles.SPECTATOR)">
-            <span>Spectator</span>
-            <img v-if="user.roles.includes(Roles.SPECTATOR)" src="../assets/ok.svg">
+        <div class="user-menu-item" v-on:click="toggleSelectRole(Roles.OBSERVER)">
+            <span>Observer</span>
+            <img v-if="user.roles.includes(Roles.OBSERVER)" src="../assets/ok.svg">
         </div>
     </div>
 </template>
@@ -35,8 +35,8 @@ export default {
     methods: {
         toggleSelectRole(role) {
             const currentRoles = this.user.roles;
-            if(currentRoles.includes(role)) {
-                if(currentRoles.length === 1) {
+            if (currentRoles.includes(role)) {
+                if (currentRoles.length === 1) {
                     this.appStore.toast.warning(`Du kannst nicht alle Rollen entfernen`);
                     return;
                 }
@@ -46,12 +46,12 @@ export default {
             }
 
             let updatedRoles = [...currentRoles];
-            if(role === Roles.SPECTATOR) {
-                updatedRoles = [Roles.SPECTATOR];
+            if (role === Roles.OBSERVER) {
+                updatedRoles = [Roles.OBSERVER];
             }
 
-            if(role === Roles.MODERATOR || role === Roles.PARTICIPANT) {
-                updatedRoles = updatedRoles.filter(r => r !== Roles.SPECTATOR);
+            if (role === Roles.MODERATOR || role === Roles.PLAYER) {
+                updatedRoles = updatedRoles.filter(r => r !== Roles.OBSERVER);
                 updatedRoles.push(role);
             }
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROLE, updatedRoles);
@@ -79,6 +79,8 @@ export default {
   gap: 5px;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
   padding: 5px 0;
+  top: 85%;
+  right: 50px;
 
 
   .user-menu-item {

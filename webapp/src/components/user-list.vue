@@ -2,12 +2,6 @@
     <div class="user-list-wrapper">
         <div class="user-and-submenu" v-for="user in sortedOnlineUsers" :key="user.id">
             <User v-bind:user="user"></User>
-            <button class="plain-button-with-image show-on-hover" v-if="appStore.localUserId === user.id"
-                    :disabled="appStore.localUserId !== user.id"
-                    v-on:click="openUserMenu(user.id)">
-                <img class="user-menu-icon" src="../assets/three_dots.svg">
-            </button>
-            <user-menu v-bind:user="user" v-if="showMenu === user.id" v-on-click-outside="clickedOutside"></user-menu>
         </div>
     </div>
 </template>
@@ -17,17 +11,11 @@
 import {useAppStateStore} from "@/stores/app-state";
 import User from "@/components/user.vue";
 import {sortUser} from "@/services/util";
-import UserMenu from "@/components/user-menu.vue";
-import {vOnClickOutside} from '@vueuse/components'
 
 export default {
     name: "User-List",
     components: {
-        UserMenu,
         User
-    },
-    directives: {
-        onClickOutside: vOnClickOutside
     },
     created() {
         this.appStore = useAppStateStore();
@@ -41,9 +29,6 @@ export default {
         }
     },
     methods: {
-        clickedOutside() {
-            this.showMenu = null;
-        },
         openUserMenu(userId) {
             this.showMenu = userId;
         }

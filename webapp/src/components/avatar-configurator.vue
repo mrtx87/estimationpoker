@@ -2,6 +2,12 @@
     <div class="avatar-configurator-wrapper">
         <div v-on:click="closeOverlay" class="close-btn"><img src="../assets/close.svg"></div>
 
+        <general-input class="heading2"
+                       v-bind:text="userName"
+                       v-bind:isDisabled="false"
+                       v-bind:placeholder="'Benutzername'"
+                       v-on:onTextInputChange="changeUserName($event)"
+        ></general-input>
         <div class="avatar-needles">
             <button title="random avatar" class="random-avatar-button"
                     v-if="!disabled"
@@ -145,12 +151,13 @@ import {
 } from "@/assets/avatar/avatar-constants.ts";
 import {DISPLAY_OVERLAY_STATE, RequestMessageType} from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
+import GeneralInput from "@/components/general-input.vue";
 
 
 export default {
     name: 'AvatarConfigurator',
-    components: {AvatarColorCarouselSelector, AvatarElementSlideSelector},
-    props: ['avatar', 'disabled', 'isReady'],
+    components: {GeneralInput, AvatarColorCarouselSelector, AvatarElementSlideSelector},
+    props: ['userName', 'avatar', 'disabled', 'isReady'],
     data() {
         return {
             appStore: null,
@@ -171,6 +178,9 @@ export default {
         }
     },
     methods: {
+        changeUserName(name) {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_USERNAME, name);
+        },
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
         },

@@ -3,6 +3,7 @@
         <div class="overlay-container">
             <avatar-configurator v-if="overlayId === DISPLAY_OVERLAY_STATE.AVATAR_EDITOR"
                                  v-bind:avatar="appStore.localUser.avatar"
+                                 v-bind:userName="appStore.localUser.name"
                                  v-bind:disabled="false">
             </avatar-configurator>
             <Impressum v-if="overlayId === DISPLAY_OVERLAY_STATE.IMPRESSUM"></Impressum>

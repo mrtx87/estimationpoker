@@ -126,7 +126,7 @@ export default {
             return this.appStore.localUser;
         },
         isLocalUserParticipant() {
-            return this.localUser?.roles.includes(Roles.PARTICIPANT);
+            return this.localUser?.roles.includes(Roles.PLAYER);
         },
         estimationHistory() {
             return this.appStore.sortedEstimationHistory;
@@ -141,13 +141,13 @@ export default {
 <style lang="scss" scoped>
 
 .app-content {
+  padding-top: 15px;
   max-width: 1280px;
   box-sizing: border-box;
   height: calc(100vh - 60px - 40px);
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 10px;
@@ -163,6 +163,7 @@ export default {
       width: 100%;
       display: flex;
       flex-wrap: wrap;
+      padding: 15px;
       gap: 20px 20px;
       box-sizing: border-box;
       height: min-content;
@@ -170,10 +171,12 @@ export default {
 
     .moderator-actions {
       display: flex;
-      justify-content: flex-end;
-      gap: 1.25vw;
+      justify-content: center !important;
+      gap: 20px;
       box-sizing: border-box;
       width: 100%;
+      flex-wrap: wrap;
+      padding: 15px;
     }
   }
 
@@ -202,9 +205,24 @@ export default {
 }
 
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (max-width: 775px) {
 
+  .button-activate {
+    padding: 5px 10px;
+    font-size: 13px;
+    letter-spacing: normal;
+    line-height: 1.3;
+    height: min-content;
 
+    img {
+      height: 20px;
+      width: auto;
+    }
+  }
+
+  .moderator-actions {
+    justify-content: center !important;
+  }
 }
 
 

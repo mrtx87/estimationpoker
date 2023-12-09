@@ -7,13 +7,12 @@
             </div>
             <div class="input-elem-container">
                 <input type=text placeholder="Name des Raums eingeben" v-model="roomSettings.title">
-                <div class="custom-select">
-                    <select v-model="selectedValueTypeIndex">
-                        <option :value="index" v-for="(typeOption, index) in valueTypeOptions" :key="typeOption.id">
-                            {{ typeOption.name }}
-                        </option>
-                    </select>
-                </div>
+                <select class="custom-select" v-model="selectedValueTypeIndex">
+                    <option :value="index" v-for="(typeOption, index) in valueTypeOptions" :key="typeOption.id">
+                        {{ typeOption.name }}
+                    </option>
+                </select>
+
 
             </div>
             <div class="card-values">

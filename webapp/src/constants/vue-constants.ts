@@ -44,8 +44,8 @@ export const MenuItemKey = {
 
 export const Roles = {
     MODERATOR: 'moderator',
-    PARTICIPANT: 'participant',
-    SPECTATOR: 'spectator'
+    PLAYER: 'player',
+    OBSERVER: 'observer'
 }
 
 export const MAX_PLAYER_IDENTITY_LENGTH = 30;
