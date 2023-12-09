@@ -47,13 +47,13 @@ export default {
 
             let updatedRoles = [...currentRoles];
             if (role === Roles.OBSERVER) {
-                updatedRoles = [Roles.OBSERVER];
+                updatedRoles = updatedRoles.filter(r => r !== Roles.PLAYER);
             }
 
-            if (role === Roles.MODERATOR || role === Roles.PLAYER) {
+            if (role === Roles.PLAYER) {
                 updatedRoles = updatedRoles.filter(r => r !== Roles.OBSERVER);
-                updatedRoles.push(role);
             }
+            updatedRoles.push(role);
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROLE, updatedRoles);
         }
     },

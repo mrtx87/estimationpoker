@@ -1,7 +1,7 @@
 <template>
     <button class="vote-card-wrapper" :disabled="disabled" v-on:click="triggerVote(value)"
-            :class="{'selected': isSelected}">
-        {{ value.label }}
+            :class="{'selected': isSelected && !disabled}">
+        {{ value?.label }}
     </button>
 </template>
 
@@ -99,6 +99,15 @@ export default {
     width: 3.5vw;
     min-width: 35px;
     font-size: 1.3rem;
+  }
+
+  &.user-tile-size {
+    width: 40px;
+    font-size: 0.8rem;
+    position: absolute;
+    z-index: 10;
+    left: 5px;
+    top: 0;
   }
 
   &.selected {

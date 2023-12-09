@@ -6,7 +6,7 @@
             </button>
             <timer v-bind:timer="estimationTimer"></timer>
             <div class="user-icon-and-menu">
-                <user v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
+                <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
                       v-on:click="toggleUserMenu"></user>
                 <user-menu v-bind:user="localUser" v-if="displayUserMenu"
                            v-on-click-outside="clickedOutside"></user-menu>
