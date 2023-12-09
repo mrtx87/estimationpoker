@@ -15,29 +15,35 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import { HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
-import {removeAllCookies, setCookie} from "@/services/cookie-service";
+import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
+import {getCookie, removeAllCookies, setCookie} from "@/services/cookie-service";
 import {router} from "@/main";
 
 export default {
     name: "Dsgvo",
     components: {},
     created() {
-        this.appState = useAppStateStore();
+        this.appStore = useAppStateStore();
     },
     data: function () {
         return {
-            appState: null,
+            appStore: null,
         }
     },
     methods: {
         confirmDSGVO() {
+            if(getCookie(PRIVACY_POLICY_COOKIE_KEY)){
+                this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
+                return;
+            }
             setCookie(PRIVACY_POLICY_COOKIE_KEY, 'true');
             this.$appService.initApp();
         },
         declineDGSVO() {
             removeAllCookies();
+            this.appStore.reset();
             router.push(HOME_ROUTE);
+            this.appStore.setIsOnRoomRoute(false);
         }
     },
     computed: {}

@@ -33,7 +33,6 @@ export default {
     },
     openDsgvoOnClick: function () {
       this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
-      console.log(this.appState._overlayId)
     },
   },
   computed: {}

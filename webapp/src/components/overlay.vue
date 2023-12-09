@@ -1,7 +1,6 @@
 <template>
     <div class="overlay-wrapper">
         <div class="overlay-container">
-            <div v-on:click="closeOverlay" class="close-btn">X</div>
             <avatar-configurator v-if="overlayId === DISPLAY_OVERLAY_STATE.AVATAR_EDITOR"
                                  v-bind:avatar="appStore.localUser.avatar"
                                  v-bind:disabled="false">
@@ -46,11 +45,6 @@ export default {
             appStore: null,
         }
     },
-    methods: {
-        closeOverlay: function () {
-            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
-        }
-    },
     computed: {
         DISPLAY_OVERLAY_STATE() {
             return DISPLAY_OVERLAY_STATE
@@ -92,68 +86,4 @@ export default {
   box-shadow: 0 5px 15px #00000080;
   width: fit-content;
 }
-
-.avatar-configurator {
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-}
-
-.impressum-container {
-  display: flex;
-  background: #f0f8ffb3;
-  width: 50vw;
-  height: 55vh;
-  padding: 2vh;
-  border-radius: 10px;
-  box-shadow: 4px 3px 15px -2px rgb(0 0 0 / 20%);
-  justify-content: center;
-  align-items: center;
-}
-
-.close-btn {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  cursor: pointer;
-  padding: 5px;
-
-  background: rgba(255, 255, 255, 0.61);
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 20px;
-  color: #dcdcdc;
-}
-
-.close-btn:hover {
-  background: #ffffff3d;
-  color: white;
-}
-
-.burger-menu-wrapper {
-  position: fixed;
-  top: 50px;
-  right: 40px;
-  width: fit-content;
-  height: fit-content;
-  background: white;
-  border: solid 1px #d5d9de;
-  color: black;
-  border-radius: 5px;
-}
-
-.change-avatar-Btn {
-  cursor: pointer;
-  padding: 10px;
-}
-
-.change-avatar-Btn:hover {
-  background: #f3f3f3;
-  border-radius: 10px;
-}
-
 </style>

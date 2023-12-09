@@ -1,5 +1,7 @@
 <template>
     <div class="avatar-configurator-wrapper">
+        <div v-on:click="closeOverlay" class="close-btn"><img src="../assets/close.svg"></div>
+
         <div class="avatar-needles">
             <button title="random avatar" class="random-avatar-button"
                     v-if="!disabled"
@@ -169,6 +171,9 @@ export default {
         }
     },
     methods: {
+        closeOverlay: function () {
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
+        },
         generateRandomAvatar: function () {
             const randomAvatar = this.$appService.getRandomAvatar();
             this.editedAvatar = randomAvatar;
@@ -245,7 +250,7 @@ export default {
     },
     watch: {
         avatar: function (avatar, oldAvatar) {
-            if(oldAvatar) {
+            if (oldAvatar) {
                 this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
                 return;
             }
@@ -320,25 +325,8 @@ export default {
   justify-content: center;
   margin: 0 25px;
   width: 30vw;
-}
-
-.avatar-configurator-wrapper .slide-up {
-  -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  animation-timing-function: ease-in-out;
-  -webkit-animation-name: slideUp;
-  animation-name: slideUp;
-}
 
 
-@keyframes slideUp {
-  from {
-  }
-  to {
-    transform: translate(0, 50px);
-  }
 }
 
 .avatar-container {
@@ -529,46 +517,4 @@ export default {
   align-items: center;
 }
 
-.selectors-wrapper.anim-in {
-  animation-name: animIn;
-}
-
-.selectors-wrapper.anim-out {
-  animation-name: animOut;
-}
-
-.selectors-wrapper.animation {
-  -webkit-animation-duration: 0.3s;
-  animation-duration: 0.3s;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  animation-timing-function: ease-in-out
-}
-
-@keyframes animIn {
-  0% {
-    max-height: 0;
-    opacity: 0;
-  }
-  100% {
-    max-height: 250px;
-    opacity: 1;
-  }
-}
-
-@keyframes animOut {
-  from {
-    max-height: 250px;
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-    max-height: 0;
-  }
-}
-
-.lang-selector-disabled {
-  opacity: 1;
-  cursor: unset;
-}
 </style>

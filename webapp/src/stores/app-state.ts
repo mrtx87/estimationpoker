@@ -15,9 +15,9 @@ export const useAppStateStore = defineStore('AppStore', {
             _room: null,
             _avatar: null,
             _state: APP_STATE.NO_ROOM_ENTERED,
-            _pendingRedirect: null,
             _localVoteValue: '',
-            _estimationHistory: []
+            _estimationHistory: [],
+            _roomPreviews: []
         }
     },
     actions: {
@@ -35,9 +35,6 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setState(state: number) {
             this._state = state;
-        },
-        setPendingRedirect(redirectObj: any) {
-            this._pendingRedirect = redirectObj;
         },
         setRoom(room: any) {
             this._room = room;
@@ -65,10 +62,13 @@ export const useAppStateStore = defineStore('AppStore', {
             this._room = null
             this._avatar = null
             this._state = APP_STATE.NO_ROOM_ENTERED
-            this._pendingRedirect = null
             this._localVoteValue = ''
             this._estimationHistory = []
+            this._roomPreviews = []
         },
+        setRoomPreviews(roomPreviews: any) {
+            this._roomPreviews = roomPreviews;
+        }
     },
     getters: {
         isOnRoomRoute: (state: any) => state._isOnRoomRoute,
@@ -80,7 +80,6 @@ export const useAppStateStore = defineStore('AppStore', {
         overlayId: (state: any) => state._overlayId,
         connectionState: (state: any) => state._connectionState,
         roomId: (state: any) => state._roomId,
-        pendingRedirect: (state: any) => state._pendingRedirect,
         state: (state: any) => state._state,
         localVoteValue: (state: any) => state._localVoteValue,
         estimationHistory: (state: any) => state._estimationHistory,
@@ -101,6 +100,6 @@ export const useAppStateStore = defineStore('AppStore', {
             return state.localUser?.roles.includes(Roles.MODERATOR)
         },
         toast: (state: any) => state._toast,
-
+        roomPreviews: (state: any) => state._roomPreviews,
     }
 });

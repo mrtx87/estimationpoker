@@ -54,14 +54,13 @@ export default {
         const roomAuthentications = getRoomAuthenticationsFromCookies();
         const tokens = roomAuthentications.map(ra => ra.token);
         restService.sendPostRequest('/room-history', tokens, false, false).then(res => {
-            this.roomPreviews = res.data;
+            this.appStore.setRoomPreviews(res.data);
             this.cleanUpAuthenticationsFromCookies(roomAuthentications);
         });
     },
     data: function () {
         return {
             appStore: null,
-            roomPreviews: []
         }
     },
     methods: {
@@ -77,6 +76,11 @@ export default {
         },
         formattedDate(date) {
             return formatDate(date);
+        }
+    },
+    computed: {
+        roomPreviews() {
+            return this.appStore.roomPreviews;
         }
     }
 };

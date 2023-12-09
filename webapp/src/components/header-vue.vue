@@ -1,7 +1,7 @@
 <template>
   <div class="header-wrapper">
     <div class="header">
-      <button class="button-activate small-btn" v-on:click="shareLink()"><img style="width:30px;"
+      <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
                                                                     src="../assets/sharelink.svg"> invite link
       </button>
       <timer v-bind:timer="estimationTimer"></timer>
@@ -9,7 +9,7 @@
         <user v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
               v-on:click="toggleUserMenu"></user>
         <div v-if="displayUserMenu" class="user-menu">
-          <div class="user-menu-header"> {{ localUser.name }}</div>
+          <div class="user-menu-header"> {{ localUser?.name }}</div>
           <span v-on:click="openAvatarEditor">Edit User</span>
           <span>delete user</span>
         </div>
@@ -79,16 +79,16 @@ export default {
 .header {
   position: relative;
   display: flex;
-  width: 1150px;
+  width: 100%;
   height: 5.5vh;
   align-items: center;
   gap: 10px;
   background-color: transparent;
   justify-content: flex-end;
+  max-width: 1280px;
 }
 
 .user-icon-and-menu {
-  padding: 0 10px;
 
   .user-menu {
     background-color: #9f92e4;

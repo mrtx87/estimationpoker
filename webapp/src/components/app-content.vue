@@ -144,7 +144,7 @@ export default {
   max-width: 1280px;
   box-sizing: border-box;
   height: calc(100vh - 60px - 40px);
-  width: 1280px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;

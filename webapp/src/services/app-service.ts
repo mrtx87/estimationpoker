@@ -15,6 +15,7 @@ export class AppService {
     initApp() {
         if (!this.hasConfirmedPrivacyPolicy()) {
             this.store.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+            this.store.reset();
             return
         }
 
