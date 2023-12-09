@@ -169,6 +169,9 @@ export class WebsocketControllerImpl {
         try {
             cachedRoom.currentEstimation.state = VOTING_STATE.REVEALED;
             //cachedRoom.currentEstimation.votes = cachedRoom.currentEstimation.votes.filter(vote => cachedRoom.connections.find(c => c.userId === vote.userId));
+            cachedRoom.currentEstimation.votes = cachedRoom.currentEstimation.votes
+                .filter(vote => cachedRoom.connections.find(c => c.userId === vote.userId))
+                .filter(vote => cachedRoom.getUser(vote.userId)?.roles.includes(ROLE.PARTICIPANT));
             cachedRoom.currentEstimation.evaluation.amountOfVotes = cachedRoom.currentEstimation.votes.length;
             cachedRoom.currentEstimation.evaluation.avg = this.calculateAverage(cachedRoom.currentEstimation.votes);
             cachedRoom.currentEstimation.evaluation.valuesByAmount = this.generateValuesByAmount(cachedRoom.currentEstimation.votes);
