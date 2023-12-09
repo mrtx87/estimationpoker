@@ -1,104 +1,105 @@
 <template>
-    <div class="user-wrapper" :class="{'no-user-name':noUserName}"
-         :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
-        <div class="readyonly-player-container poker-area-user" :class="{clickable: isLocalUserInstance}"
-             v-on:dblclick="openAvatarEditor">
-            <div class="readonly-avatar-container">
-                <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
-                </div>
-                <div class="readyonly-avatar-head" v-html="displayedAvatar?.head">
-                </div>
-                <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
-                </div>
-            </div>
-            <img v-if="isModerator(user) && !noUserRoleIcon" :src="require('../assets/crown2.svg')"
-                 class="is-moderator">
-            <img v-if="isSpectator(user) && !noUserRoleIcon" :src="require('../assets/eye.svg')" class="is-spectator">
+  <div class="user-wrapper" :class="{'no-user-name':noUserName}"
+       :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
+    <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}"
+         v-on:dblclick="openAvatarEditor">
+      <div class="readonly-avatar-container">
+        <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
         </div>
-        <div v-if="!noUserName" class="user-name"> {{ user?.name }}</div>
+        <div class="readyonly-avatar-head" v-html="displayedAvatar?.head">
+        </div>
+        <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
+        </div>
+      </div>
+      <div class="role-icon-container bottom-left" v-if="isModerator(user) && !noUserRoleIcon">
+        <img :src="require('../assets/crown2.svg')"
+             class="is-moderator">
+      </div>
+      <div class="role-icon-container bottom-right" v-if="isObserver(user) && !noUserRoleIcon">
+        <img :src="require('../assets/eye.svg')" class="is-observer">
+      </div>
     </div>
+    <div v-if="!noUserName" class="user-name"> {{ user?.name }}</div>
+  </div>
 </template>
 
 <script>
 
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {
-    HAIR_COLOR_PLACEHOLDER,
-    SHIRT_COLOR_PLACEHOLDER,
-    SKIN_COLOR_PLACEHOLDER
+  HAIR_COLOR_PLACEHOLDER,
+  SHIRT_COLOR_PLACEHOLDER,
+  SKIN_COLOR_PLACEHOLDER
 } from "@/assets/avatar/avatar-constants.ts";
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
 
 export default {
-    name: 'User',
-    props: ['noUserName', 'user', 'noUserRoleIcon'],
-    components: {},
-    created() {
-        this.appStore = useAppStateStore();
-    },
-    data() {
-        return {
-            displayedAvatar: null,
-            appStore: null
-        }
-    },
-    watch: {
-        user: function (user, oldUser) { // watch it
-            this.externalUpdate(user.avatar);
-        }
-    },
-    methods: {
-        openAvatarEditor() {
-            if (this.isLocalUserInstance) {
-                this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR)
-            }
-        },
-        isModerator(user) {
-            return user && user.roles.includes(Roles.MODERATOR)
-        },
-        isSpectator(user) {
-            return user && user.roles.includes(Roles.SPECTATOR)
-        },
-        isOnline(userId) {
-            return this.room?.connections.find(uid => uid === userId);
-        },
-        findElementByTypeAndCode: function (options, code) {
-            const found = options.find(o => +o.code === +code);
-            return found ? found : options[0];
-        },
-        externalUpdate: function (updatedAvatarConfig) {
-            if (!updatedAvatarConfig) {
-                return;
-            }
-
-            const hair = this.findElementByTypeAndCode(avatars.avatarHairsOptions, updatedAvatarConfig.hair.code);
-            const head = this.findElementByTypeAndCode(avatars.avatarHeadsOptions, updatedAvatarConfig.head.code);
-            const shirt = this.findElementByTypeAndCode(avatars.avatarShirtsOptions, updatedAvatarConfig.shirt.code);
-            this.displayedAvatar = {
-                hair: hair.value.replaceAll(HAIR_COLOR_PLACEHOLDER, updatedAvatarConfig.hair.color),
-                head: head.value.replaceAll(SKIN_COLOR_PLACEHOLDER, updatedAvatarConfig.head.color),
-                shirt: shirt.value.replaceAll(SHIRT_COLOR_PLACEHOLDER, updatedAvatarConfig.shirt.color)
-            }
-        }
-    },
-    computed: {
-        DISPLAY_OVERLAY_STATE() {
-            return DISPLAY_OVERLAY_STATE
-        },
-        room() {
-            return this.appStore.room;
-        },
-        isLocalUserInstance() {
-            return this.appStore.localUser && this.user && this.appStore.localUser.id === this.user.id;
-        }
-    },
-    beforeMount: function () {
-        if (!this.user) {
-            return;
-        }
-        this.externalUpdate(this.user.avatar);
+  name: 'User',
+  props: ['noUserName', 'user', 'noUserRoleIcon'],
+  components: {},
+  created() {
+    this.appStore = useAppStateStore();
+  },
+  data() {
+    return {
+      displayedAvatar: null,
+      appStore: null
     }
+  },
+  watch: {
+    user: function (user, oldUser) { // watch it
+      this.externalUpdate(user.avatar);
+    }
+  },
+  methods: {
+    openAvatarEditor() {
+      if (this.isLocalUserInstance) {
+        this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR)
+      }
+    },
+    isModerator(user) {
+      return user && user.roles.includes(Roles.MODERATOR)
+    },
+    isObserver(user) {
+      return user && user.roles.includes(Roles.OBSERVER)
+    },
+    findElementByTypeAndCode: function (options, code) {
+      const found = options.find(o => +o.code === +code);
+      return found ? found : options[0];
+    },
+    externalUpdate: function (updatedAvatarConfig) {
+      if (!updatedAvatarConfig) {
+        return;
+      }
+
+      const hair = this.findElementByTypeAndCode(avatars.avatarHairsOptions, updatedAvatarConfig.hair.code);
+      const head = this.findElementByTypeAndCode(avatars.avatarHeadsOptions, updatedAvatarConfig.head.code);
+      const shirt = this.findElementByTypeAndCode(avatars.avatarShirtsOptions, updatedAvatarConfig.shirt.code);
+      this.displayedAvatar = {
+        hair: hair.value.replaceAll(HAIR_COLOR_PLACEHOLDER, updatedAvatarConfig.hair.color),
+        head: head.value.replaceAll(SKIN_COLOR_PLACEHOLDER, updatedAvatarConfig.head.color),
+        shirt: shirt.value.replaceAll(SHIRT_COLOR_PLACEHOLDER, updatedAvatarConfig.shirt.color)
+      }
+    }
+  },
+  computed: {
+    DISPLAY_OVERLAY_STATE() {
+      return DISPLAY_OVERLAY_STATE
+    },
+    room() {
+      return this.appStore.room;
+    },
+    isLocalUserInstance() {
+      return this.appStore.localUser && this.user && this.appStore.localUser.id === this.user.id;
+    }
+  },
+  beforeMount: function () {
+    if (!this.user) {
+      return;
+    }
+    this.externalUpdate(this.user.avatar);
+  }
 }
 </script>
 
@@ -119,17 +120,26 @@ export default {
   }
 }
 
+.poker-area-user {
+  .readyonly-player-container {
+    width: 125px;
+    aspect-ratio: 1/1;
+  }
+}
+
+.header-user {
+  .readyonly-player-container {
+    width: 65px;
+    aspect-ratio: 1/1;
+  }
+}
+
 .readyonly-player-container {
   display: flex;
   margin: 0.5vh;
   position: relative;
   min-width: 35px;
   min-height: 35px;
-
-  &.poker-area-user {
-    width: 65px;
-    aspect-ratio: 1/1;
-  }
 
   &.clickable {
     cursor: pointer;
@@ -198,13 +208,36 @@ export default {
   height: auto;
 }
 
-.is-moderator, .is-spectator {
+.role-icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 1vh;
-  height: 1vh;
-  z-index: 1;
+  z-index: 5;
+  aspect-ratio: 1/1;
+  background-color: blue;
+  padding: 4px;
+  box-sizing: border-box;
+  width: 30%;
+
+
+  &.bottom-left {
+    bottom: 0;
+    left: 0;
+  }
+
+  &.bottom-right {
+    bottom: 0;
+    right: 0;
+  }
+
+  .is-moderator, .is-observer {
+    width: 100%;
+    aspect-ratio: 1/1;
+    box-sizing: border-box;
+  }
 }
+
 
 </style>
