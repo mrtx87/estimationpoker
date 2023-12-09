@@ -11,20 +11,17 @@
                        v-bind:placeholder="'Name der Schätzung'"
                        v-on:onTextInputChange="updateEstimationName($event)"></general-input>
 
-        <div class="room-status-container">
-            <voting-information></voting-information>
-        </div>
+        <voting-information></voting-information>
         <user-list></user-list>
+        <Evaluation v-bind:estimation="room?.currentEstimation"
+                    v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
         <div class="action-area">
-            <div class="vote-cards" v-if="room?.currentEstimation.state === VOTING_STATE.VOTING">
+            <div class="vote-cards">
                 <VoteCard v-for="value in displayedVoteOptions" :key="value" class="vote-size"
                           v-bind:value="value">
                     {{ value }}
                 </VoteCard>
             </div>
-
-            <Evaluation v-bind:estimation="room?.currentEstimation"
-                        v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
             <div class="moderator-actions">
                 <button v-if="isLocalUserModerator()"
                         :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING || room?.currentEstimation.votes.length === 0"
@@ -44,6 +41,7 @@
                 </button>
             </div>
         </div>
+
         <estimation-history v-if="estimationHistory.length"></estimation-history>
     </div>
 </template>
@@ -144,7 +142,7 @@ export default {
   padding-top: 15px;
   max-width: 1280px;
   box-sizing: border-box;
-  height: calc(100vh - 60px - 40px);
+  //height: calc(100vh - 60px - 40px);
   width: 100%;
   display: flex;
   flex-direction: column;

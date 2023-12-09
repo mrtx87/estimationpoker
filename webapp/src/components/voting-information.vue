@@ -4,7 +4,7 @@
         <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlineParticipants.length }} aktiven Teilnehmern abgestimmt.</span>
 
         <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">Auswertungsphase</span>
-        <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{estimation.evaluation.avg}}.</span>
+        <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{ estimation.evaluation.avg }}.</span>
     </div>
 </template>
 
@@ -51,13 +51,24 @@ export default {
 <style lang="scss">
 
 .voting-information-wrapper {
+  background-color: var(--primary-color);
+  width: 100%;
+  height: 90px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
   display: flex;
   flex-direction: column;
 
-    .fat {
-        font-weight: bold;
-        font-style: italic;
-    }
+  .fat {
+    font-weight: bold;
+    font-style: italic;
+  }
 }
 
 </style>

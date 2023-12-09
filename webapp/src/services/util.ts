@@ -59,7 +59,16 @@ export function getPieChartObj(title: { text: string, subtext: string },
             top: 'left'
         },
         tooltip: {
-            trigger: 'item'
+            trigger: 'item',
+            height: '100px',
+            responsive: true,
+            position: 'top',
+            backgroundColor: '#fafcfe',
+            borderColor: '#c8e2f7',
+            borderWidth: '0.8',
+            textStyle: {
+                color: '#5d6f80'
+            }
         },
         legend: {
             orient: 'vertical',
@@ -77,7 +86,7 @@ export function getPieChartObj(title: { text: string, subtext: string },
                     align: 'right',
                     color: 'black',
                     fontWeight: 'bold',
-                    fontSize: '18',
+                    fontSize: '13',
                 }
             }
         },
@@ -85,7 +94,8 @@ export function getPieChartObj(title: { text: string, subtext: string },
             {
                 name: series.title,
                 type: 'pie',
-                radius: series.radius ? series.radius : '80%',
+                center: ['50%', '40%'],
+                radius: series.radius ? series.radius : '50%',
                 color: series.color ? series.color : [
                     '#37A2DA',
                     '#32C5E9',
