@@ -63,7 +63,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .vote-card-wrapper {
   appearance: none;
@@ -81,6 +81,7 @@ export default {
   color: #7d8694;
   font-weight: bold;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+  height: min-content;
 
   &:disabled {
     cursor: default;

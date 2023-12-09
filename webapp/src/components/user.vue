@@ -1,6 +1,7 @@
 <template>
-    <div class="user-wrapper" :class="{'no-user-name':noUserName}" :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
-        <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}"
+    <div class="user-wrapper" :class="{'no-user-name':noUserName}"
+         :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
+        <div class="readyonly-player-container poker-area-user" :class="{clickable: isLocalUserInstance}"
              v-on:dblclick="openAvatarEditor">
             <div class="readonly-avatar-container">
                 <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
@@ -10,8 +11,6 @@
                 <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
                 </div>
             </div>
-            <div v-if="!noUserRoleIcon" class="online-status"
-                 :class="[isOnline(user?.id) ? 'is-online' : 'is-offline' ]"></div>
             <img v-if="isModerator(user) && !noUserRoleIcon" :src="require('../assets/crown2.svg')"
                  class="is-moderator">
             <img v-if="isSpectator(user) && !noUserRoleIcon" :src="require('../assets/eye.svg')" class="is-spectator">
@@ -108,26 +107,29 @@ export default {
 
 .user-wrapper {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
   align-items: center;
   box-sizing: border-box;
   color: black;
   width: 100%;
   user-select: none;
 
-    &.no-user-name {
-        width: min-content;
-    }
+  &.no-user-name {
+    width: min-content;
+  }
 }
 
 .readyonly-player-container {
   display: flex;
   margin: 0.5vh;
   position: relative;
-  height: 4vh;
-  width: 4vh;
-  min-width: 2vh;
-  min-height: 2vh;
+  min-width: 35px;
+  min-height: 35px;
+
+  &.poker-area-user {
+    width: 65px;
+    aspect-ratio: 1/1;
+  }
 
   &.clickable {
     cursor: pointer;
@@ -196,32 +198,13 @@ export default {
   height: auto;
 }
 
-.online-status {
-  position: absolute;
-  right: 0px;
-  bottom: 0px;
-  background-color: #49ff49;
-  width: 1vh;
-  height: 1vh;
-  border-radius: 15px;
-  z-index: 9999;
-}
-
-.is-online {
-  background-color: #49ff49;
-}
-
-.is-offline {
-  background-color: #9a9a9a;
-}
-
 .is-moderator, .is-spectator {
   position: absolute;
   top: 0;
   right: 0;
   width: 1vh;
   height: 1vh;
-  z-index: 9999;
+  z-index: 1;
 }
 
 </style>

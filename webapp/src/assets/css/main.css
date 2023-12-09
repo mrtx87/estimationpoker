@@ -250,11 +250,6 @@ body {
     cursor: pointer;
 }
 
-.plain-button-with-image img {
-    width: 25px;
-    height: auto;
-}
-
 .input-elem-container {
     display: flex;
     gap: 20px;

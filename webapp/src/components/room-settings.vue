@@ -1,7 +1,7 @@
 <template>
     <div class="room-settings-wrapper">
         <div class="room-title-header">
-          <span>Room Settings</span>
+            <span>Room Settings</span>
         </div>
         <div class="room-settings-item">
             <input placeholder="Room-title" class="room-name-input" :disabled="localUserIsNotModerator" v-model="title">
@@ -129,10 +129,11 @@ export default {
   gap: 10px;
   max-width: 700px;
 
-  .room-title-header{
+  .room-title-header {
     font-weight: bold;
     color: var(--default-grey-font-color)
   }
+
   .room-settings-item {
     display: flex;
     gap: 10px;
@@ -158,7 +159,6 @@ export default {
     padding: 10px;
     border-radius: 3px;
     gap: 15px;
-      aspect-ratio: 2/3;
   }
 
   .room-settings-buttons-panel {
@@ -166,7 +166,6 @@ export default {
     gap: 15px;
     padding: 5px;
   }
-
 
 
 }

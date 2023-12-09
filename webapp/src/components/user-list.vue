@@ -1,21 +1,13 @@
 <template>
     <div class="user-list-wrapper">
-        <div class="users-heading">Online - {{ onlineUsers.length }}</div>
         <div class="user-and-submenu" v-for="user in sortedOnlineUsers" :key="user.id">
             <User v-bind:user="user"></User>
-            <button class="plain-button-with-image show-on-hover"><img src="../assets/three_dots.svg"></button>
-        </div>
-        <div class="offline-users-heading" v-on:click="displayOfflineUsers = !displayOfflineUsers">
-            <span>Offline - {{ offlineUsers.length }}</span>
-            <svg class="triangle" :class="{'updown':displayOfflineUsers}" xmlns="http://www.w3.org/2000/svg" width="24"
-                 height="24"
-                 viewBox="0 0 24 24">
-                <path d="M24 22h-24l12-20z"/>
-            </svg>
-        </div>
-        <div class="user-and-submenu" v-for="user in sortedOfflineUsers" :key="user.id">
-            <User v-bind:user="user"></User>
-            <button class="plain-button-with-image show-on-hover"><img src="../assets/three_dots.svg"></button>
+            <button class="plain-button-with-image show-on-hover" v-if="appStore.localUserId === user.id"
+                    :disabled="appStore.localUserId !== user.id"
+                    v-on:click="openUserMenu(user.id)">
+                <img class="user-menu-icon" src="../assets/three_dots.svg">
+            </button>
+            <user-menu v-bind:user="user" v-if="showMenu === user.id" v-on-click-outside="clickedOutside"></user-menu>
         </div>
     </div>
 </template>
@@ -24,13 +16,18 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import User from "@/components/user.vue";
-import {Roles} from "@/constants/vue-constants";
 import {sortUser} from "@/services/util";
+import UserMenu from "@/components/user-menu.vue";
+import {vOnClickOutside} from '@vueuse/components'
 
 export default {
     name: "User-List",
     components: {
+        UserMenu,
         User
+    },
+    directives: {
+        onClickOutside: vOnClickOutside
     },
     created() {
         this.appStore = useAppStateStore();
@@ -39,10 +36,18 @@ export default {
         return {
             appStore: null,
             userNameInput: '',
-            displayOfflineUsers: false
+            displayOfflineUsers: false,
+            showMenu: false
         }
     },
-    methods: {},
+    methods: {
+        clickedOutside() {
+            this.showMenu = null;
+        },
+        openUserMenu(userId) {
+            this.showMenu = userId;
+        }
+    },
     computed: {
         room() {
             return this.appStore.room;
@@ -78,9 +83,8 @@ export default {
 
 .user-list-wrapper {
   display: flex;
-  flex-direction: column;
   box-sizing: border-box;
-  background-color: white;
+  gap: 10px;
 
   .users-heading {
     border-bottom: 1px solid #f2f3f4;
@@ -89,44 +93,36 @@ export default {
     font-size: 1rem;
   }
 
-  .offline-users-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: #ebebeb;
-    padding: 5px;
-    font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-
-    .triangle {
-      transition: all 0.2s ease-in-out;
-
-      &.updown {
-        transform: rotate(60deg) translateY(-3px) translateX(-1px);
-      }
-    }
-
-  }
-
   .user-and-submenu {
     display: flex;
-    width: 100%;
-    justify-content: space-between;
-    border-bottom: 1px solid #f2f3f4;
-    padding: 7px;
-
-    &:hover {
-      .show-on-hover {
-        display: flex;
-      }
-    }
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    background-color: white;
+    border-radius: 5px;
+    width: 125px;
+    aspect-ratio: 1/1;
+    position: relative;
 
     .show-on-hover {
-      display: none;
+      position: absolute;
+      z-index: 2;
+      right: 0px;
+      top: 5px;
     }
   }
 
+  .user-menu-icon {
+    height: 20px;
+    width: auto;
+    border-radius: 50%;
+    padding: 2px;
+    transition: 0.15s ease-in-out;
+
+    &:hover {
+      background-color: #f2f3f4;
+    }
+  }
 
 }
 

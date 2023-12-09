@@ -1,6 +1,7 @@
 import {AuthenticatedRequest} from "../model/authenticated-request.model";
 import {BasicRequest} from "../model/basic-request.model";
 import {
+    EXISTING_ROLES,
     RequestMessageType,
     ResponseMessageType,
     ROLE,
@@ -72,7 +73,7 @@ export class WebsocketControllerImpl {
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_AVATAR,
             action: this.changeAvatar.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.userId
+            authorize: this.getRequestingUserIdentityPredicate()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
             action: this.changeEstimationTitle.bind(this),
@@ -84,11 +85,11 @@ export class WebsocketControllerImpl {
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_USERNAME,
             action: this.changeUsername.bind(this),
-            authorize: (user: User, connection: any) => user.id === connection.userId
+            authorize: this.getRequestingUserIdentityPredicate()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_ROLE,
             action: this.changeRole.bind(this),
-            authorize: this.getModeratorOnlyPredicament()
+            authorize: this.getRequestingUserIdentityPredicate()
         }).addWebsocketEndpoint({
             type: RequestMessageType.VOTE_REQUEST,
             action: this.userVote.bind(this),
@@ -247,11 +248,18 @@ export class WebsocketControllerImpl {
 
     changeRole(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         try {
+            if(!Array.isArray(request.data)) {
+                return;
+            }
+            const appliedRoles = request.data.filter((receivedRole: string) => EXISTING_ROLES.includes(receivedRole));
+            if(appliedRoles.length === 0) {
+                return;
+            }
             const user = cachedRoom.getUser(userId);
-            const roles = request.data;
-            user.roles = roles;
-            userService.updateUser(user);
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_ROLE, user, cachedRoom.connections, userId);
+            user.roles = appliedRoles;
+            userService.updateUser(user).then(user => {
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_ROLE, user, cachedRoom.connections, userId);
+            }, e => websocketService.notifyUser(new BasicResponse(ResponseMessageType.USER_NOT_EXISTING), connection));
         } catch (e) {
             websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_ROLE), connection);
             logger.error(e);
@@ -357,6 +365,10 @@ export class WebsocketControllerImpl {
 
     private getTruePredicament() {
         return (user: User, connection: any) => true;
+    }
+
+    private getRequestingUserIdentityPredicate() {
+        return (user: User, connection: any) => user.id === connection.userId;
     }
 
     private notifyAllUsersAboutUpdate(responseMessageType: string, data: any, connections: any[], triggeredBy: string = 'system',) {

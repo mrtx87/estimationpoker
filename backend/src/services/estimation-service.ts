@@ -14,7 +14,6 @@ export class EstimationService {
     public static get estimationService(): EstimationService {
         return EstimationService.INSTANCE;
     }
-
     private constructor() {
     }
 

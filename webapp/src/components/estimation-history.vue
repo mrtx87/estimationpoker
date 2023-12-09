@@ -40,7 +40,7 @@ export default {
         }
     },
     methods: {
-      formatTime,
+        formatTime,
         formattedDate(date) {
             return formatDate(date);
         }
@@ -64,6 +64,7 @@ export default {
   border-radius: 4px;
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+  width: 100%;
 
   .estimation-history-heading {
     border-bottom: 2px solid #d7d7d7;

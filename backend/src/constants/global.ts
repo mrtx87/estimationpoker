@@ -9,6 +9,8 @@ export const ROLE = {
     SPECTATOR: 'spectator'
 };
 
+export const EXISTING_ROLES = [ROLE.MODERATOR, ROLE.SPECTATOR, ROLE.PARTICIPANT];
+
 export const RequestMessageType = {
     FINALIZE_JOIN: 'finalize-join',
     JOIN_GAME: 'join-session',
