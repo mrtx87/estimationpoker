@@ -4,8 +4,8 @@
             Room Settings
         </div>
         <div class="input-elem-container">
-            <input type="text" placeholder="Room-title" :disabled="localUserIsNotModerator" v-model="title">
-            <span v-if="userNameInvalid" style="color:red;">maximal 20 Zeichen</span>
+            <input type="text" placeholder="Room Title" :disabled="localUserIsNotModerator" v-model="title">
+            <span v-if="roomTitleTooLong" class="validation-message">maximal 40 Zeichen</span>
         </div>
 
         <div class="room-settings-item">
@@ -74,7 +74,7 @@ export default {
     methods: {
         isValid() {
             return this.roomSettings.realtimeVoting !== this.realtimeVoting
-                || this.roomSettings.title !== this.title
+                || (this.roomSettings.title !== this.title && this.title.length > 1 && !this.roomTitleTooLong)
                 || this.roomSettings.valueOptionsId !== this.selectedValueTypeId;
         },
         initRoomSettings(roomSettings) {
@@ -106,6 +106,9 @@ export default {
         },
         localUserIsNotModerator() {
             return !this.appStore.isLocalUserModerator
+        },
+        roomTitleTooLong() {
+            return this.title.length > 40;
         }
     }
 };
