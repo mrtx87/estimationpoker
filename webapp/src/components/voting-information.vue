@@ -32,7 +32,7 @@ export default {
             return VOTING_STATE
         },
         votes() {
-            return this.appStore.room ? this.appStore.room.currentEstimation.votes.filter(vote => this.appStore.room.connections.includes(vote.userId) && this.onlinePlayers.find()) : [];
+            return this.appStore.room ? this.appStore.room.currentEstimation.votes.filter(vote => this.onlinePlayers.find(p => p.id === vote.userId && p.roles.includes(Roles.PLAYER))) : [];
         },
         players() {
             return this.appStore.users ? this.appStore.users.filter(u => u.roles.includes(Roles.PLAYER)) : [];
