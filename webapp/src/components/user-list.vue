@@ -1,10 +1,14 @@
 <template>
     <div class="user-list-wrapper">
         <div class="user-tile" v-for="user in sortedOnlineUsers" :key="user.id">
-          <vote-card v-if="userVote(user.id)?.value && user.roles.includes(Roles.PLAYER) && hasBeenRevealed()" v-bind:value="userVote(user.id)?.value" v-bind:disabled="true" class="user-tile-size"></vote-card>
-          <div class="card" :class="{'grey-card': !userVote(user.id), 'green-card': userVote(user.id)}" v-if="!hasBeenRevealed() && user.roles.includes(Roles.PLAYER)">
-          </div>
-          <User class="poker-area-user" v-bind:user="user"></User>
+            <vote-card
+                    v-if="displayVoteCard(user)"
+                    v-bind:value="userVote(user.id)?.value" v-bind:disabled="true"
+                    class="user-tile-size"></vote-card>
+            <div class="card" :class="{'grey-card': !userVote(user.id), 'green-card': userVote(user.id)}"
+                 v-if="displayVoteCardBeforeReveal(user)">
+            </div>
+            <User class="poker-area-user" v-bind:user="user"></User>
         </div>
     </div>
 </template>
@@ -20,7 +24,7 @@ import {Roles, VOTING_STATE} from "@/constants/vue-constants";
 export default {
     name: "User-List",
     components: {
-      VoteCard,
+        VoteCard,
         User,
     },
     created() {
@@ -35,19 +39,28 @@ export default {
         }
     },
     methods: {
-      userVote(userId) {
-        return this.estimation.votes.find(vote => vote.userId === userId)
-      },
-      hasBeenRevealed() {
-        return this.estimation.state === VOTING_STATE.REVEALED;
-      },
+        userVote(userId) {
+            return this.estimation.votes.find(vote => vote.userId === userId)
+        },
+        hasBeenRevealed() {
+            return this.estimation.state === VOTING_STATE.REVEALED;
+        },
+        displayVoteCard(user) {
+            return user.roles.includes(Roles.PLAYER) && this.userVote(user.id)?.value &&(this.hasBeenRevealed() || (this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
+        },
+        displayVoteCardBeforeReveal(user) {
+            return !this.hasBeenRevealed() && user?.roles.includes(Roles.PLAYER) && (!this.userVote(user.id) || !(this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
+        }
     },
     computed: {
-      Roles() {
-        return Roles
-      },
+        Roles() {
+            return Roles
+        },
         room() {
             return this.appStore.room;
+        },
+        localUser() {
+            return this.appStore.localUser;
         },
         estimation() {
             return this.room.currentEstimation;
@@ -112,8 +125,8 @@ export default {
     position: absolute;
     z-index: 13;
     border-radius: 4px;
-    left: -5px;
-    top: -10%;
+    left: -8px;
+    top: -10px;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
   }
 
@@ -129,7 +142,7 @@ export default {
 
 @media only screen and (max-width: 775px) {
 
-  .user-list-wrapper{
+  .user-list-wrapper {
     gap: 10px !important;
   }
 

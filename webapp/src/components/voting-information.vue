@@ -54,7 +54,6 @@ export default {
 
 .voting-information-wrapper {
   background-color: var(--primary-color);
-  height: 55px;
   align-items: center;
   justify-content: center;
   text-align: center;
@@ -63,6 +62,7 @@ export default {
   flex-direction: column;
   width: 100%;
   justify-self: center;
+  padding: 5px;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
 
   .fat {

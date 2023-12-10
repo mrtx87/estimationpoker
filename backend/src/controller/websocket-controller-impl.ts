@@ -319,7 +319,7 @@ export class WebsocketControllerImpl {
 
     userVote(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         try {
-            if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && (cachedRoom.currentEstimation.state === VOTING_STATE.VOTING || cachedRoom.roomSettings.voteAfterReveal)) {
+            if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && (cachedRoom.currentEstimation.state === VOTING_STATE.VOTING || (cachedRoom.currentEstimation.state === VOTING_STATE.REVEALED && cachedRoom.roomSettings.voteAfterReveal))) {
                 if (request.data) {
                     const vote = Vote.of(request.data)
                     cachedRoom.setVotes([...cachedRoom.getVotes().filter(v => v.userId !== userId), vote]);
@@ -337,10 +337,10 @@ export class WebsocketControllerImpl {
                     return;
                 }
 
-                const moderatorConnections = cachedRoom.getAllConnectionsByRole(ROLE.MODERATOR);
-                const otherConnections = cachedRoom.getAllConnectionsWithoutRole(ROLE.MODERATOR);
+                const observerConnections = cachedRoom.getAllConnectionsByRole(ROLE.OBSERVER);
+                const otherConnections = cachedRoom.getAllConnectionsWithoutRole(ROLE.OBSERVER);
 
-                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), moderatorConnections);
+                this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, cachedRoom.getVotes(), observerConnections);
                 this.notifyAllUsersAboutUpdate(ResponseMessageType.USER_VOTED, maskVoteValues(cachedRoom.getVotes()), otherConnections);
             }
         } catch (e) {

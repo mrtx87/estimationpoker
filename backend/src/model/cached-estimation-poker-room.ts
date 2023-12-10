@@ -72,7 +72,7 @@ export class CachedEstimationPokerRoom extends CachedPublicEstimationPokerRoom {
             return dto;
         }
 
-        if(this.getUser(userId).roles.includes(ROLE.MODERATOR)) {
+        if(this.getUser(userId).roles.includes(ROLE.OBSERVER)) {
             return dto;
         }
 

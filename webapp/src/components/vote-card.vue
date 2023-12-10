@@ -76,6 +76,7 @@ export default {
   font-weight: bold;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
   height: min-content;
+  z-index: 5;
 
   &:disabled {
     cursor: default;
@@ -100,9 +101,8 @@ export default {
     font-size: 0.95rem;
     position: absolute;
     z-index: 10;
-    left: -10px;
-    top: -12%;
-
+    left: -8px;
+    top: -10px;
   }
 
   &.selected {
@@ -117,11 +117,11 @@ export default {
 
 @media only screen and (max-width: 775px) {
 
-    .user-tile-size {
-        width: 25px !important;
-        left: 0px !important;
-        top: -8% !important;
-    }
+  .user-tile-size {
+    width: 25px !important;
+    left: 0px !important;
+    top: -8% !important;
+  }
 }
 
 </style>
