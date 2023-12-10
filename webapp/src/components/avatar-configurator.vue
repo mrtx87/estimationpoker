@@ -2,12 +2,10 @@
     <div class="avatar-configurator-wrapper">
         <div v-on:click="closeOverlay" class="close-btn"><img src="../assets/close.svg"></div>
 
-        <general-input class="heading2"
-                       v-bind:text="userName"
-                       v-bind:isDisabled="false"
-                       v-bind:placeholder="'Benutzername'"
-                       v-on:onTextInputChange="changeUserName($event)"
-        ></general-input>
+        <div class="input-elem-container" style="width:50%;">
+            <input type=text v-model="editedUserName" placeholder="Dein Benutzername">
+            <span v-if="userNameTooLong" class="validation-message">maximal 20 Zeichen</span>
+        </div>
         <div class="avatar-needles">
             <button title="random avatar" class="random-avatar-button"
                     v-if="!disabled"
@@ -151,12 +149,11 @@ import {
 } from "@/assets/avatar/avatar-constants.ts";
 import {DISPLAY_OVERLAY_STATE, RequestMessageType} from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
-import GeneralInput from "@/components/general-input.vue";
 
 
 export default {
     name: 'AvatarConfigurator',
-    components: {GeneralInput, AvatarColorCarouselSelector, AvatarElementSlideSelector},
+    components: {AvatarColorCarouselSelector, AvatarElementSlideSelector},
     props: ['userName', 'avatar', 'disabled', 'isReady'],
     data() {
         return {
@@ -174,13 +171,11 @@ export default {
             shirtOptions: [...avatars.avatarShirtsOptions],
             colorOptions: [...avatars.colorOptions],
             editedAvatar: null,
-            updatedAvatar: null
+            updatedAvatar: null,
+            editedUserName: ''
         }
     },
     methods: {
-        changeUserName(name) {
-            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_USERNAME, name);
-        },
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
         },
@@ -216,12 +211,18 @@ export default {
                 })
             });
         },
-        sendAvatarUpdateToServer: function (newAvatar) {
-            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_AVATAR, newAvatar);
+        sendAvatarUpdateToServer: function (requestData) {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_USER, requestData);
         },
         onDone: function () {
-            const updatedAvatar = this.onAvatarChange();
-            this.sendAvatarUpdateToServer(updatedAvatar);
+            const requestData = {avatar: null, userName: null};
+            if (this.hasValidAvatarChange) {
+                requestData.avatar = this.onAvatarChange();
+            }
+            if(this.isValidUserNameChange){
+                requestData.userName = this.editedUserName;
+            }
+            this.sendAvatarUpdateToServer(requestData);
         },
         updateAvatarHair(value) {
             this.selectedHair = value;
@@ -266,11 +267,17 @@ export default {
             }
             this.editedAvatar = {...avatar};
             this.externalUpdate(this.editedAvatar);
+            this.updatedAvatar = this.onAvatarChange();
+        },
+        userName(nextUserName, previousUserName) {
+            this.editedUserName = nextUserName;
         }
     },
     beforeMount: function () {
         this.appStore = useAppStateStore();
         this.externalUpdate(this.avatar);
+        this.updatedAvatar = this.onAvatarChange();
+        this.editedUserName = this.userName;
     },
     computed: {
         selectedHairReplaced: function () {
@@ -299,13 +306,24 @@ export default {
             }
             return '';
         },
-        isInputValid() {
+        hasValidAvatarChange() {
             return this.updatedAvatar && (this.avatar.hair.code !== this.updatedAvatar.hair.code
                 || this.avatar.head.code !== this.updatedAvatar.head.code
                 || this.avatar.shirt.code !== this.updatedAvatar.shirt.code
                 || this.avatar.hair.color !== this.updatedAvatar.hair.color
                 || this.avatar.head.color !== this.updatedAvatar.head.color
-                || this.avatar.shirt.color !== this.updatedAvatar.shirt.color);
+                || this.avatar.shirt.color !== this.updatedAvatar.shirt.color)
+        },
+        isValidUserNameChange() {
+            return this.editedUserName !== this.userName && this.editedUserName.length < 25 && this.editedUserName.length > 1;
+        },
+        isInputValid() {
+            return this.hasValidAvatarChange ||
+                this.isValidUserNameChange;
+        },
+        userNameTooLong() {
+            console.log(this.editedUserName, this.userName)
+            return this.editedUserName.length > 25;
         }
     }
 

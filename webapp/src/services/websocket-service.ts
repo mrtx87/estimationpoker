@@ -217,8 +217,7 @@ export class WebsocketService {
                     return this.store.setRoom(room);
                 }
                 case ResponseMessageType.CHANGED_USER_ROLE:
-                case ResponseMessageType.CHANGED_USER_NAME:
-                case ResponseMessageType.AVATAR_CHANGED: {
+                case ResponseMessageType.CHANGED_USER: {
                     const updatedUser = message.data;
                     const room = {...this.store.room};
                     room.users = [...room.users.filter((u: any) => u.id !== message.data.id), updatedUser];

@@ -195,9 +195,8 @@ body {
 }
 
 .button-activate.invers {
-    background-color: white;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
+    background-color: #ebebeb;
+    color: var(--default-grey-font-color);
 }
 
 .button-activate:not(.button-activate:disabled):hover {
@@ -208,12 +207,10 @@ body {
 }
 
 .button-activate:not(.button-activate:disabled).invers:hover {
-    background-color: white;
     opacity: 1;
     transform: translateY(0);
     transition-duration: .35s;
-    color: var(--primary-color-darkend);
-    border: 1px solid var(--primary-color-darkend);
+    background-color: #dadada;
 }
 
 .button-activate:not(.button-activate:disabled):active {
@@ -265,6 +262,11 @@ body {
     outline: 1px solid #d7d7d7;
     border-radius: 3px;
     color: #2C3E50;
+    background-color: white;
+}
+
+.custom-select:disabled {
+    background: #f5f5f5;
 }
 
 .custom-select:focus {
@@ -282,6 +284,7 @@ body {
 .input-elem-container {
     display: flex;
     gap: 20px;
+    position: relative;
 }
 
 .input-elem-container input[type=text] {
@@ -319,4 +322,26 @@ body {
 .close-btn:hover {
     color: white;
     background-color: var(--default-cancel-color-hover);
+}
+
+.large-heading {
+    color: black;
+    font-size: 1.5rem;
+    line-height: 1.5rem;
+    padding: 5px 0;
+}
+
+.medium-heading {
+    color: black;
+    font-size: 1.3rem;
+    line-height: 1.3rem;
+    padding: 5px 0;
+}
+
+.validation-message {
+    left: 0px;
+    bottom: -10px;
+    position: absolute;
+    color: red;
+    font-size: 12px;
 }

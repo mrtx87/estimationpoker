@@ -1,20 +1,19 @@
 <template>
     <div class="room-settings-wrapper">
-        <div class="room-title-header">
-            <span>Room Settings</span>
+        <div class="large-heading">
+            Room Settings
         </div>
-        <div class="room-settings-item">
-            <input placeholder="Room-title" class="room-name-input" :disabled="localUserIsNotModerator" v-model="title">
+        <div class="input-elem-container">
+            <input type="text" placeholder="Room-title" :disabled="localUserIsNotModerator" v-model="title">
+            <span v-if="userNameInvalid" style="color:red;">maximal 20 Zeichen</span>
         </div>
 
         <div class="room-settings-item">
-            <div class="custom-select">
-                <select :disabled="localUserIsNotModerator" v-model="selectedValueTypeId">
-                    <option :value="typeOption.id" v-for="typeOption in valueTypeOptions" :key="typeOption.id">
-                        {{ typeOption.name }}
-                    </option>
-                </select>
-            </div>
+            <select class="custom-select" :disabled="localUserIsNotModerator" v-model="selectedValueTypeId">
+                <option :value="typeOption.id" v-for="typeOption in valueTypeOptions" :key="typeOption.id">
+                    {{ typeOption.name }}
+                </option>
+            </select>
         </div>
         <div class="card-values">
             <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
@@ -26,8 +25,15 @@
             <span>Do you want observers to see other players voting in real time?</span>
         </div>
         <div class="room-settings-buttons-panel">
-            <button class="save-btn" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()"
-                    v-on:click="updateRoomSettings">save
+            <button class="button-activate" v-if="!localUserIsNotModerator"
+                    :disabled="localUserIsNotModerator || !isValid()"
+                    v-on:click="updateRoomSettings">speichern
+            </button>
+            <button class="button-activate invers" v-if="!localUserIsNotModerator"
+                    v-on:click="cancel">abbrechen
+            </button>
+            <button class="button-activate" v-if="localUserIsNotModerator"
+                    v-on:click="cancel">ok
             </button>
         </div>
 
@@ -111,12 +117,8 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 700px;
-
-  .room-title-header {
-    font-weight: bold;
-    color: var(--default-grey-font-color)
-  }
+  max-width: 500px;
+  box-sizing: border-box;
 
   .room-settings-item {
     display: flex;
@@ -130,10 +132,6 @@ export default {
     border-radius: 3px;
   }
 
-  .room-name-input:focus {
-    outline: 2px solid #78B2CE;
-  }
-
   .card-values {
     box-sizing: border-box;
     display: flex;
@@ -143,7 +141,7 @@ export default {
     padding: 10px;
     border-radius: 3px;
     gap: 15px;
-   }
+  }
 
   .room-settings-buttons-panel {
     display: flex;

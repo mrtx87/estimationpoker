@@ -11,26 +11,28 @@
             <div class="room-history-list-row">
                 <div class="room-history-list-column title-column bold">Titel</div>
                 <div class="room-history-list-column bold">Teilnehmer</div>
-                <div class="room-history-list-column bold">Schätzungen</div>
-                <div class="room-history-list-column bold">Dein User</div>
-                <div class="room-history-list-column bold">Erstelldatum</div>
-                <div class="room-history-list-column bold">Aktionen</div>
+                <div class="room-history-list-column bold large-table">Schätzungen</div>
+                <div class="room-history-list-column bold large-table">Dein User</div>
+                <div class="room-history-list-column bold large-table">Erstelldatum</div>
+                <div class="room-history-list-column bold"></div>
             </div>
             <div v-for="roomPreviewItem in roomPreviews" :key="roomPreviewItem.id" class="room-history-list-row">
                 <div class="room-history-list-column title-column">{{ roomPreviewItem.title }}</div>
                 <div class="room-history-list-column">{{ roomPreviewItem.userCount }}</div>
-                <div class="room-history-list-column">{{ roomPreviewItem.estimationCount }}</div>
-                <div class="room-history-list-column">
+                <div class="room-history-list-column large-table">{{ roomPreviewItem.estimationCount }}</div>
+                <div class="room-history-list-column large-table">
                     <user v-bind:user="roomPreviewItem.localUser" v-bind:noUserName="true"></user>
                 </div>
-                <div class="room-history-list-column">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
-                <div class="room-history-list-column">
-                    <button title="delete">delete</button><!-- TODO icon -->
-                    <button title="join" v-on:click="joinRoom(roomPreviewItem.id)">join</button> <!-- TODO icon -->
+                <div class="room-history-list-column large-table">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
+                <div class="room-history-list-column btns-column">
+                    <button class="button-activate small-btn" title="join" v-on:click="joinRoom(roomPreviewItem.id)">
+                        <img src="../assets/enter.svg"><span>join</span></button> <!-- TODO icon -->
                 </div>
             </div>
         </div>
-        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> Du hast bisher noch keine Räume erstellt oder betreten.</div>
+        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> Du hast bisher noch keine Räume erstellt oder
+            betreten.
+        </div>
 
     </div>
 </template>
@@ -91,7 +93,8 @@ export default {
 
 .room-history-wrapper {
   display: flex;
-  width: 1200px;
+  width: 90%;
+  max-width: 1200px;
   flex-direction: column;
   box-sizing: border-box;
   border: 4px;
@@ -114,7 +117,7 @@ export default {
 
     .room-history-list-row {
       display: grid;
-      grid-template-columns: 40% 10% 10% 10% 15% 15%;
+      grid-template-columns: 40% 10% 15% 10% 10% 15%;
       border-bottom: 1px solid #f2f3f4;
       align-items: center;
       box-sizing: border-box;
@@ -127,13 +130,17 @@ export default {
         height: inherit;
         box-sizing: border-box;
 
-          &.bold {
-              font-weight: bold;
-          }
+        &.bold {
+          font-weight: bold;
+        }
 
-          &.title-column {
-              justify-content: flex-start;
-          }
+        &.title-column {
+          justify-content: flex-start;
+        }
+
+        &.btns-column {
+          gap: 15px;
+        }
       }
     }
   }
@@ -145,5 +152,20 @@ export default {
   }
 }
 
+@media only screen and (max-width: 1150px) {
+  .room-history-wrapper {
+    font-size: 13px !important;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .room-history-list-row {
+    grid-template-columns: 40% 20% 40% !important;
+
+    .large-table {
+      display: none !important;
+    }
+  }
+}
 
 </style>

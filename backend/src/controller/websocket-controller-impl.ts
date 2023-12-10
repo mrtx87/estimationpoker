@@ -71,8 +71,8 @@ export class WebsocketControllerImpl {
             action: this.deleteUser.bind(this),
             authorize: this.getModeratorOnlyPredicament()
         }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_AVATAR,
-            action: this.changeAvatar.bind(this),
+            type: RequestMessageType.CHANGE_USER,
+            action: this.changeUser.bind(this),
             authorize: this.getRequestingUserIdentityPredicate()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_ESTIMATION_TITLE,
@@ -82,10 +82,6 @@ export class WebsocketControllerImpl {
             type: RequestMessageType.CHANGE_ROOM_SETTINGS,
             action: this.changeRoomSettings.bind(this),
             authorize: this.getModeratorOnlyPredicament()
-        }).addWebsocketEndpoint({
-            type: RequestMessageType.CHANGE_USERNAME,
-            action: this.changeUsername.bind(this),
-            authorize: this.getRequestingUserIdentityPredicate()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_ROLE,
             action: this.changeRole.bind(this),
@@ -251,11 +247,11 @@ export class WebsocketControllerImpl {
 
     changeRole(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         try {
-            if(!Array.isArray(request.data)) {
+            if (!Array.isArray(request.data)) {
                 return;
             }
             const appliedRoles = request.data.filter((receivedRole: string) => EXISTING_ROLES.includes(receivedRole));
-            if(appliedRoles.length === 0) {
+            if (appliedRoles.length === 0) {
                 return;
             }
             const user = cachedRoom.getUser(userId);
@@ -269,28 +265,22 @@ export class WebsocketControllerImpl {
         }
     }
 
-    changeAvatar(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
+    changeUser(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         try {
-            const newAvatar = request.data;
             const user = cachedRoom.users.find(u => u.id === userId);
-            user.avatar = newAvatar;
+            const newAvatar = request.data.avatar;
+            const newUserName = request.data.userName;
+            if (newAvatar) {
+                user.avatar = newAvatar;
+            }
+
+            if (newUserName) {
+                user.name = newUserName;
+            }
             userService.updateUser(user);
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.AVATAR_CHANGED, user, cachedRoom.connections, userId);
+            this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER, user, cachedRoom.connections, userId);
         } catch (e) {
             websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_AVATAR), connection);
-            logger.error(e);
-        }
-    }
-
-    changeUsername(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
-        try {
-            const userName = request.data;
-            const user = cachedRoom.getUser(userId);
-            user.name = userName;
-            userService.updateUser(user);
-            this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER_NAME, user, cachedRoom.connections, userId);
-        } catch (e) {
-            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_USER_NAME), connection);
             logger.error(e);
         }
     }

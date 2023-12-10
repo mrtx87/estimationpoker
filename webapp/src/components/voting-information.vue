@@ -1,7 +1,7 @@
 <template>
     <div class="voting-information-wrapper">
         <span class="fat" v-if="votingState === VOTING_STATE.VOTING">Schätzrunde läuft</span>
-        <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlineParticipants.length }} aktiven Teilnehmern abgestimmt.</span>
+        <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlinePlayers.length }} aktiven Teilnehmern abgestimmt.</span>
 
         <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">Auswertungsphase</span>
         <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{
@@ -32,13 +32,13 @@ export default {
             return VOTING_STATE
         },
         votes() {
-            return this.appStore.room ? this.appStore.room.currentEstimation.votes.filter(vote => this.appStore.room.connections.includes(vote.userId)) : [];
+            return this.appStore.room ? this.appStore.room.currentEstimation.votes.filter(vote => this.appStore.room.connections.includes(vote.userId) && this.onlinePlayers.find()) : [];
         },
-        participants() {
+        players() {
             return this.appStore.users ? this.appStore.users.filter(u => u.roles.includes(Roles.PLAYER)) : [];
         },
-        onlineParticipants() {
-            return this.participants.filter(u => this.appStore.room.connections.includes(u.id));
+        onlinePlayers() {
+            return this.players.filter(u => this.appStore.room.connections.includes(u.id));
         },
         votingState() {
             return this.appStore.room ? this.appStore.room.currentEstimation.state : 0;

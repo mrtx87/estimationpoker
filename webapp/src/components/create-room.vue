@@ -1,19 +1,20 @@
 <template>
     <div class="create-room-wrapper">
         <div class="room-settings-create">
-            <div class="create-room-heading">Erstelle einen Raum</div>
+            <div class="large-heading">Erstelle einen Raum</div>
             <div class="input-elem-container">
                 <input type=text v-model="userNameInput" placeholder="Dein Benutzername">
+                <div v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</div>
             </div>
             <div class="input-elem-container">
                 <input type=text placeholder="Name des Raums eingeben" v-model="roomSettings.title">
+                <div v-if="roomTitleTooLong" class="validation-message">maximal 40 Zeichen</div>
+
                 <select class="custom-select" v-model="selectedValueTypeIndex">
                     <option :value="index" v-for="(typeOption, index) in valueTypeOptions" :key="typeOption.id">
                         {{ typeOption.name }}
                     </option>
                 </select>
-
-
             </div>
             <div class="card-values">
                 <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
@@ -93,7 +94,13 @@ export default {
             return VALUE_TYPE_OPTIONS;
         },
         isInvalid() {
-            return this.userNameInput.length < 2 || this.roomSettings.title.length < 2 || this.selectedValueTypeIndex < 0;
+            return this.userNameInput.length < 2 || this.userNameTooLong || this.roomSettings.title.length < 2 || this.selectedValueTypeIndex < 0;
+        },
+        userNameTooLong() {
+            return this.userNameInput.length > 25;
+        },
+        roomTitleTooLong() {
+            return this.roomSettings.title.length > 40;
         }
     }
 };
@@ -102,21 +109,17 @@ export default {
 <style lang="scss" scoped>
 
 .create-room-wrapper {
+  width: 100%;
+  max-width: 500px;
+  box-sizing: border-box;
 
   .room-settings-create {
-    width: 500px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
     border-radius: 5px;
-    padding: 15px;
-
-    .create-room-heading {
-      color: black;
-      font-size: 1.5rem;
-      line-height: 1.5rem;
-      padding: 5px 0;
-    }
+    box-sizing: border-box;
 
     .card-values {
       box-sizing: border-box;
