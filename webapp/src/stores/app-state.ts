@@ -17,7 +17,8 @@ export const useAppStateStore = defineStore('AppStore', {
             _state: APP_STATE.NO_ROOM_ENTERED,
             _localVoteValue: '',
             _estimationHistory: [],
-            _roomPreviews: []
+            _roomPreviews: [],
+            _screenDimensions: {width: 0, height: 0}
         }
     },
     actions: {
@@ -68,6 +69,9 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setRoomPreviews(roomPreviews: any) {
             this._roomPreviews = roomPreviews;
+        },
+        setScreenDimensions(dimensions: any) {
+            this._screenDimensions = dimensions;
         }
     },
     getters: {
@@ -83,6 +87,7 @@ export const useAppStateStore = defineStore('AppStore', {
         state: (state: any) => state._state,
         localVoteValue: (state: any) => state._localVoteValue,
         estimationHistory: (state: any) => state._estimationHistory,
+        screenDimensions: (state: any) => state._screenDimensions,
         sortedEstimationHistory: (state: any) => {
             const history = state._estimationHistory;
             history.sort((a: any, b: any) => {

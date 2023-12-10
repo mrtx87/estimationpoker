@@ -1,105 +1,105 @@
 <template>
-  <div class="user-wrapper" :class="{'no-user-name':noUserName}"
-       :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
-    <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}"
-         v-on:dblclick="openAvatarEditor">
-      <div class="readonly-avatar-container">
-        <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
+    <div class="user-wrapper" :class="{'no-user-name':noUserName}"
+         :title="user ? user.name + ' - ' + user.roles.join(',') : ''">
+        <div class="readyonly-player-container" :class="{clickable: isLocalUserInstance}"
+             v-on:dblclick="openAvatarEditor">
+            <div class="readonly-avatar-container">
+                <div class="readyonly-avatar-hair" v-html="displayedAvatar?.hair">
+                </div>
+                <div class="readyonly-avatar-head" v-html="displayedAvatar?.head">
+                </div>
+                <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
+                </div>
+            </div>
+            <div class="role-icon-container bottom-left" v-if="isModerator(user) && !noUserRoleIcon">
+                <img :src="require('../assets/crown2.svg')"
+                     class="is-moderator">
+            </div>
+            <div class="role-icon-container bottom-right" v-if="isObserver(user) && !noUserRoleIcon">
+                <img :src="require('../assets/eye.svg')" class="is-observer">
+            </div>
         </div>
-        <div class="readyonly-avatar-head" v-html="displayedAvatar?.head">
-        </div>
-        <div class="readyonly-avatar-shirt" v-html="displayedAvatar?.shirt">
-        </div>
-      </div>
-      <div class="role-icon-container bottom-left" v-if="isModerator(user) && !noUserRoleIcon">
-        <img :src="require('../assets/crown2.svg')"
-             class="is-moderator">
-      </div>
-      <div class="role-icon-container bottom-right" v-if="isObserver(user) && !noUserRoleIcon">
-        <img :src="require('../assets/eye.svg')" class="is-observer">
-      </div>
+        <div v-if="!noUserName" class="user-name"> {{ user?.name }}</div>
     </div>
-    <div v-if="!noUserName" class="user-name"> {{ user?.name }}</div>
-  </div>
 </template>
 
 <script>
 
 import * as avatars from "@/assets/avatar/avatar-constants.ts";
 import {
-  HAIR_COLOR_PLACEHOLDER,
-  SHIRT_COLOR_PLACEHOLDER,
-  SKIN_COLOR_PLACEHOLDER
+    HAIR_COLOR_PLACEHOLDER,
+    SHIRT_COLOR_PLACEHOLDER,
+    SKIN_COLOR_PLACEHOLDER
 } from "@/assets/avatar/avatar-constants.ts";
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
 
 export default {
-  name: 'User',
-  props: ['noUserName', 'user', 'noUserRoleIcon'],
-  components: {},
-  created() {
-    this.appStore = useAppStateStore();
-  },
-  data() {
-    return {
-      displayedAvatar: null,
-      appStore: null
-    }
-  },
-  watch: {
-    user: function (user, oldUser) { // watch it
-      this.externalUpdate(user.avatar);
-    }
-  },
-  methods: {
-    openAvatarEditor() {
-      if (this.isLocalUserInstance) {
-        this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR)
-      }
+    name: 'User',
+    props: ['noUserName', 'user', 'noUserRoleIcon'],
+    components: {},
+    created() {
+        this.appStore = useAppStateStore();
     },
-    isModerator(user) {
-      return user && user.roles.includes(Roles.MODERATOR)
+    data() {
+        return {
+            displayedAvatar: null,
+            appStore: null
+        }
     },
-    isObserver(user) {
-      return user && user.roles.includes(Roles.OBSERVER)
+    watch: {
+        user: function (user, oldUser) { // watch it
+            this.externalUpdate(user.avatar);
+        }
     },
-    findElementByTypeAndCode: function (options, code) {
-      const found = options.find(o => +o.code === +code);
-      return found ? found : options[0];
-    },
-    externalUpdate: function (updatedAvatarConfig) {
-      if (!updatedAvatarConfig) {
-        return;
-      }
+    methods: {
+        openAvatarEditor() {
+            if (this.isLocalUserInstance) {
+                this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR)
+            }
+        },
+        isModerator(user) {
+            return user && user.roles.includes(Roles.MODERATOR)
+        },
+        isObserver(user) {
+            return user && user.roles.includes(Roles.OBSERVER)
+        },
+        findElementByTypeAndCode: function (options, code) {
+            const found = options.find(o => +o.code === +code);
+            return found ? found : options[0];
+        },
+        externalUpdate: function (updatedAvatarConfig) {
+            if (!updatedAvatarConfig) {
+                return;
+            }
 
-      const hair = this.findElementByTypeAndCode(avatars.avatarHairsOptions, updatedAvatarConfig.hair.code);
-      const head = this.findElementByTypeAndCode(avatars.avatarHeadsOptions, updatedAvatarConfig.head.code);
-      const shirt = this.findElementByTypeAndCode(avatars.avatarShirtsOptions, updatedAvatarConfig.shirt.code);
-      this.displayedAvatar = {
-        hair: hair.value.replaceAll(HAIR_COLOR_PLACEHOLDER, updatedAvatarConfig.hair.color),
-        head: head.value.replaceAll(SKIN_COLOR_PLACEHOLDER, updatedAvatarConfig.head.color),
-        shirt: shirt.value.replaceAll(SHIRT_COLOR_PLACEHOLDER, updatedAvatarConfig.shirt.color)
-      }
-    }
-  },
-  computed: {
-    DISPLAY_OVERLAY_STATE() {
-      return DISPLAY_OVERLAY_STATE
+            const hair = this.findElementByTypeAndCode(avatars.avatarHairsOptions, updatedAvatarConfig.hair.code);
+            const head = this.findElementByTypeAndCode(avatars.avatarHeadsOptions, updatedAvatarConfig.head.code);
+            const shirt = this.findElementByTypeAndCode(avatars.avatarShirtsOptions, updatedAvatarConfig.shirt.code);
+            this.displayedAvatar = {
+                hair: hair.value.replaceAll(HAIR_COLOR_PLACEHOLDER, updatedAvatarConfig.hair.color),
+                head: head.value.replaceAll(SKIN_COLOR_PLACEHOLDER, updatedAvatarConfig.head.color),
+                shirt: shirt.value.replaceAll(SHIRT_COLOR_PLACEHOLDER, updatedAvatarConfig.shirt.color)
+            }
+        }
     },
-    room() {
-      return this.appStore.room;
+    computed: {
+        DISPLAY_OVERLAY_STATE() {
+            return DISPLAY_OVERLAY_STATE
+        },
+        room() {
+            return this.appStore.room;
+        },
+        isLocalUserInstance() {
+            return this.appStore.localUser && this.user && this.appStore.localUser.id === this.user.id;
+        }
     },
-    isLocalUserInstance() {
-      return this.appStore.localUser && this.user && this.appStore.localUser.id === this.user.id;
+    beforeMount: function () {
+        if (!this.user) {
+            return;
+        }
+        this.externalUpdate(this.user.avatar);
     }
-  },
-  beforeMount: function () {
-    if (!this.user) {
-      return;
-    }
-    this.externalUpdate(this.user.avatar);
-  }
 }
 </script>
 
@@ -113,6 +113,7 @@ export default {
   box-sizing: border-box;
   color: black;
   width: 100%;
+
   user-select: none;
 
   &.no-user-name {
@@ -121,13 +122,17 @@ export default {
 }
 
 .poker-area-user {
+  max-width: 80px;
+
   .readyonly-player-container {
-    width: 75px;
+    width: 80px;
     aspect-ratio: 1/1;
   }
 }
 
 .header-user {
+  max-width: 65px;
+
   .readyonly-player-container {
     width: 65px;
     aspect-ratio: 1/1;
@@ -236,6 +241,25 @@ export default {
     width: 100%;
     aspect-ratio: 1/1;
     box-sizing: border-box;
+  }
+}
+
+.user-name {
+  text-align: center;
+}
+
+
+@media only screen and (max-width: 775px) {
+
+  .poker-area-user {
+    .readyonly-player-container {
+      width: 60px;
+      aspect-ratio: 1/1;
+    }
+  }
+
+  .user-name {
+        font-size: 14px !important;
   }
 }
 

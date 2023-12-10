@@ -2,7 +2,7 @@
     <div class="user-list-wrapper">
         <div class="user-tile" v-for="user in sortedOnlineUsers" :key="user.id">
           <vote-card v-if="userVote(user.id)?.value && user.roles.includes(Roles.PLAYER) && hasBeenRevealed()" v-bind:value="userVote(user.id)?.value" v-bind:disabled="true" class="user-tile-size"></vote-card>
-          <div class="card" :class="{'grey-card': !userVote(user.id), 'green-card': userVote(user.id)}" v-if="!hasBeenRevealed()">
+          <div class="card" :class="{'grey-card': !userVote(user.id), 'green-card': userVote(user.id)}" v-if="!hasBeenRevealed() && user.roles.includes(Roles.PLAYER)">
           </div>
           <User class="poker-area-user" v-bind:user="user"></User>
         </div>
@@ -62,7 +62,7 @@ export default {
             return [...this.users.filter(u => !this.room.connections.includes(u.id))];
         },
         sortedOnlineUsers() {
-            const users = [...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers,...this.onlineUsers];
+            const users = [...this.onlineUsers];
             users.sort(sortUser);
             return users;
         },
@@ -82,11 +82,12 @@ export default {
 <style lang="scss" scoped>
 
 .user-list-wrapper {
+  margin-top: 25px;
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
   justify-content: space-around;
-  gap: 10px;
+  gap: 20px;
 
   .users-heading {
     border-bottom: 1px solid #f2f3f4;
@@ -97,7 +98,7 @@ export default {
 
   .user-tile {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     border-radius: 5px;
     aspect-ratio: 1/1;
@@ -105,14 +106,14 @@ export default {
   }
 
   .card {
-    width: 35%;
+    width: 35px;
     aspect-ratio: 2/3;
     font-size: 0.8rem;
     position: absolute;
     z-index: 13;
     border-radius: 4px;
-    left: 5px;
-    top: 0;
+    left: -5px;
+    top: -10%;
     box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
   }
 
@@ -124,6 +125,17 @@ export default {
     background: #b3efa2;
   }
 
+}
+
+@media only screen and (max-width: 775px) {
+
+  .user-list-wrapper{
+    gap: 10px !important;
+  }
+
+  .card {
+    width: 25px !important;
+  }
 }
 
 

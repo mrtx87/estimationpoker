@@ -50,17 +50,20 @@ export function getPieChartObj(title: { text: string, subtext: string },
                                    data: [{ value: number, name: string }],
                                    radius?: string | string[],
                                    color?: string[]
-                               }) {
+                               }, fontSize: string) {
     return {
         title: {
             text: title.text,
             subtext: title.subtext,
             right: 'right',
-            top: 'left'
+            top: 'left',
+            textStyle: {
+                fontSize: fontSize,
+                fontWeight: 'normal'
+            }
         },
         tooltip: {
             trigger: 'item',
-            height: '100px',
             responsive: true,
             position: 'top',
             backgroundColor: '#fafcfe',
@@ -78,15 +81,17 @@ export function getPieChartObj(title: { text: string, subtext: string },
                     .filter((a) => a.name === name)
                     .map((a) => `{count| - ${a.value} votes}`)}`;
             },
-
+            textStyle: {
+                color: 'black',
+                fontSize: fontSize
+            }
         },
         textStyle: {
             rich: {
                 'count': {
                     align: 'right',
                     color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: '13',
+                    fontSize: fontSize,
                 }
             }
         },
@@ -94,8 +99,7 @@ export function getPieChartObj(title: { text: string, subtext: string },
             {
                 name: series.title,
                 type: 'pie',
-                center: ['50%', '40%'],
-                radius: series.radius ? series.radius : '50%',
+                radius: series.radius ? series.radius : '80%',
                 color: series.color ? series.color : [
                     '#37A2DA',
                     '#32C5E9',

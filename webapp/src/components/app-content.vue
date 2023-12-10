@@ -1,21 +1,21 @@
 <template>
     <div class="app-content">
-      <div class="room-header">
-        <div class="title-container">
-          <general-input class="heading1"
-                         v-bind:text="room?.roomSettings.title"
-                         v-bind:isDisabled="!isLocalUserModerator()"
-                         v-bind:placeholder="'Name des Raums'"
-                         v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
-          <general-input class="heading2"
-                         v-bind:text="room?.currentEstimation.title"
-                         v-bind:isDisabled="!isLocalUserModerator()"
-                         v-bind:placeholder="'Name der Schätzung'"
-                         v-on:onTextInputChange="updateEstimationName($event)"></general-input>
+        <div class="room-header">
+            <div class="title-container">
+                <general-input class="heading1"
+                               v-bind:text="room?.roomSettings.title"
+                               v-bind:isDisabled="!isLocalUserModerator()"
+                               v-bind:placeholder="'Name des Raums'"
+                               v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
+                <general-input class="heading2"
+                               v-bind:text="room?.currentEstimation.title"
+                               v-bind:isDisabled="!isLocalUserModerator()"
+                               v-bind:placeholder="'Name der Schätzung'"
+                               v-on:onTextInputChange="updateEstimationName($event)"></general-input>
+            </div>
+            <voting-information></voting-information>
+            <timer class="estimation-timer" v-bind:timer="estimationTimer"></timer>
         </div>
-        <voting-information></voting-information>
-        <timer style="justify-self: center" v-bind:timer="estimationTimer"></timer>
-      </div>
 
 
         <user-list></user-list>
@@ -23,7 +23,10 @@
                     v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
         <div class="action-area">
             <div class="vote-cards">
-                <VoteCard v-for="value in displayedVoteOptions" :key="value" class="vote-size"
+                <VoteCard v-for="value in displayedVoteOptions"
+                          v-bind:disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING"
+                          v-bind:isSelected="isLocalSelected(value)"
+                          :key="value" class="vote-size"
                           v-bind:value="value">
                     {{ value }}
                 </VoteCard>
@@ -69,7 +72,7 @@ import Timer from "@/components/timer.vue";
 export default {
     name: "App-Content",
     components: {
-      Timer,
+        Timer,
         GeneralInput,
         EstimationHistory,
         VotingInformation,
@@ -116,6 +119,9 @@ export default {
         },
         isLocalUserModerator() {
             return this.localUser?.roles.includes(Roles.MODERATOR);
+        },
+        isLocalSelected(value) {
+            return this.localVoteValue?.label === value.label;
         }
     },
     computed: {
@@ -141,8 +147,11 @@ export default {
             return this.room ? VALUE_TYPE_OPTIONS.find(vto => vto.id === this.room.currentEstimation.valueOptionsId).values : [];
         },
         estimationTimer() {
-        return this.appStore.room ? this.appStore.room.currentEstimation.timer : null;
-        }
+            return this.appStore.room ? this.appStore.room.currentEstimation.timer : null;
+        },
+        localVoteValue() {
+            return this.appStore.localVoteValue;
+        },
     }
 };
 </script>
@@ -160,13 +169,13 @@ export default {
   justify-content: flex-start;
   flex-wrap: wrap;
   gap: 10px;
+  padding: 10px;
 
   .room-header {
     display: grid;
     align-items: center;
     justify-content: space-between;
-    grid-template-columns: 30% 50% 30%;
-    padding: 10px;
+    grid-template-columns: 35% 30% 35%;
     box-sizing: border-box;
     max-width: 1280px;
     width: 100%;
@@ -174,6 +183,11 @@ export default {
     .title-container {
       display: flex;
       flex-direction: column;
+    }
+
+    .estimation-timer {
+      font-size: max(20px, min(1.7vw, 28px));
+      justify-self: center;
     }
   }
 
@@ -189,7 +203,7 @@ export default {
       display: flex;
       flex-wrap: wrap;
       padding: 15px;
-      gap: 20px 20px;
+      gap: 15px;
       box-sizing: border-box;
       height: min-content;
     }
@@ -243,10 +257,6 @@ export default {
       height: 20px;
       width: auto;
     }
-  }
-
-  .moderator-actions {
-    justify-content: center !important;
   }
 }
 

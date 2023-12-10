@@ -95,7 +95,6 @@ export default {
 
 .heading2 .general-input {
   font-size: 1.3rem;
-  text-align: center;
 }
 
 .general-input {

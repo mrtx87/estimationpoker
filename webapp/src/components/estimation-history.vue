@@ -3,20 +3,28 @@
         <div class="estimation-history-heading">Abgeschlossene Schätzungen</div>
         <div class="estimation-history-row">
             <div class="estimation-history-list-column title-column bold">Name</div>
-            <div class="estimation-history-list-column bold">AVG</div>
+            <div class="estimation-history-list-column bold" :title="'average'">Ø</div>
             <div class="estimation-history-list-column bold">Abweichung</div>
             <div class="estimation-history-list-column bold">Stimmen</div>
-            <div class="estimation-history-list-column bold">Zeit</div>
-            <div class="estimation-history-list-column bold">Erstellt am</div>
+            <div class="estimation-history-list-column bold displayLarge">Zeit</div>
+            <div class="estimation-history-list-column bold displayLarge">Erstellt am</div>
         </div>
         <div class="estimation-rows">
             <div class="estimation-history-row" v-for="eHistoryItem in estimationHistory" :key="eHistoryItem.id">
-                <div class="estimation-history-list-column title-column">{{ eHistoryItem.title }}</div>
+                <div class="estimation-history-list-column title-column" :title="eHistoryItem.title">
+                    {{ eHistoryItem.title }}
+                </div>
                 <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.avg }}</div>
                 <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.deviation }}</div>
                 <div class="estimation-history-list-column">{{ eHistoryItem.evaluation.amountOfVotes }}</div>
-                <div class="estimation-history-list-column">{{ formatTime(eHistoryItem.timer.passedTime) }}</div>
-                <div class="estimation-history-list-column">{{ formattedDate(eHistoryItem.createdAt) }}</div>
+                <div class="estimation-history-list-column displayLarge">{{
+                    formatTime(eHistoryItem.timer.passedTime)
+                    }}
+                </div>
+                <div class="estimation-history-list-column displayLarge">{{
+                    formattedDate(eHistoryItem.createdAt)
+                    }}
+                </div>
             </div>
         </div>
     </div>
@@ -69,7 +77,7 @@ export default {
   .estimation-history-heading {
     border-bottom: 2px solid #d7d7d7;
     padding: 6px;
-    font-weight: bold;
+    font-size: 17px;
   }
 
   .estimation-rows {
@@ -81,7 +89,7 @@ export default {
 
   .estimation-history-row {
     display: grid;
-    grid-template-columns: 35% 10% 15% 10% 15% 15%
+    grid-template-columns: 35% 10% 15% 10% 15% 15%;
   }
 
   .estimation-history-row:nth-child(even) {
@@ -95,6 +103,9 @@ export default {
     padding: 10px;
     height: inherit;
     box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &.title-column {
       justify-content: flex-start;
@@ -103,6 +114,18 @@ export default {
     &.bold {
       font-weight: bold;
     }
+  }
+}
+
+@media only screen and (max-width: 775px) {
+
+  .displayLarge {
+    display: none !important;
+  }
+
+  .estimation-history-row {
+    grid-template-columns: 45% 15% 20% 20% !important;
+    font-size: 13px !important;
   }
 }
 

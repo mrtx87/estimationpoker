@@ -1,7 +1,9 @@
 <template>
     <div class="eval-wrapper">
+        <span style="font-size: 1.3rem; font-weight: bold; padding: 10px;">Evaluation</span>
         <div class="eval-chart-container">
-            <chart v-if="donut" class="echarts" theme="custom" :options="donut" :initOptions="initOptions" ref="chart1"></chart>
+            <chart v-if="donut" class="echarts" theme="custom" :options="donut" :initOptions="initOptions" ref="chart1"
+                   v-bind:autoresize="true"></chart>
         </div>
     </div>
 </template>
@@ -15,6 +17,7 @@ import ECharts from "vue-echarts/components/ECharts.vue";
 import "echarts/lib/chart/pie";
 import "echarts/theme/dark";
 import {getPieChartObj, mapValuesByAmount} from "@/services/util";
+import {tShirtVoteOptionId} from "@/constants/vue-constants";
 
 ECharts.registerTheme("custom", {
     ...theme, backgroundColor: 'transparent', legend: {
@@ -45,6 +48,10 @@ export default {
     watch: {
         estimation(nextEstimation, previousEstimation) {
             this.refreshEvaluationChart(nextEstimation);
+        },
+        screenDimensions(nextScreenDimensions, previousScreenDimensions) {
+            this.refreshInitOptions();
+            this.refreshEvaluationChart(this.estimation);
         }
     },
     data: function () {
@@ -52,8 +59,8 @@ export default {
             appStore: null,
             donut: null,
             initOptions: {
-                width: '450px',
-                height: '250px',
+                width: document.body.clientWidth * 0.85,
+                height: '200px',
                 useDirtyRect: true,
             }
         }
@@ -61,42 +68,76 @@ export default {
     methods: {
         refreshEvaluationChart(nextEstimation) {
             if (nextEstimation) {
-                this.donut = getPieChartObj({
-                        text: `avg: ${nextEstimation.evaluation.avg} \n\n deviation: ${nextEstimation.evaluation.deviation}`,
-                        subtext:`Abgegebene Votes: ${nextEstimation.evaluation.amountOfVotes}`
+                const screenWidth = this.screenDimensions.width;
+                this.donut = getPieChartObj(
+                    {
+                        text: `Ø - ${nextEstimation.evaluation.avg} \n\n ${this.getDeviationText(nextEstimation.evaluation.deviation)}`,
+                        subtext: `Abgegebene Votes - ${nextEstimation.evaluation.amountOfVotes}`
                     }, {
                         title: nextEstimation.title,
                         data: mapValuesByAmount(nextEstimation.evaluation.valuesByAmount),
-                        color: nextEstimation.evaluation.valuesByAmount.map(v => v.voteValue.color)
-                    }
-                )
+                        color: nextEstimation.evaluation.valuesByAmount.map(v => v.voteValue.color),
+                        radius: screenWidth < 700 ? '50%' : '85%'
+                    },
+                    screenWidth < 700 ? '13' : '18'
+                );
             }
+        },
+        refreshInitOptions() {
+            this.initOptions = {
+                width: Math.min(document.body.clientWidth * 0.85, 800),
+                height: '200px',
+                useDirtyRect: true,
+            }
+        },
+        getDeviationText(deviation) {
+            let semanticDescription = '';
+            if (deviation === 0) {
+                semanticDescription = 'none';
+            }
+
+            if (deviation < 1) {
+                semanticDescription = 'small';
+            }
+
+            if (deviation > 1.5 && deviation < 2) {
+                semanticDescription = 'medium';
+            }
+
+            if (deviation >= 2) {
+                semanticDescription = 'large';
+            }
+
+            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? `deviation: ${deviation} (${semanticDescription})` : `deviation: ${semanticDescription}`;
         }
     },
-    computed: {}
+    computed: {
+        screenDimensions() {
+            return this.appStore?.screenDimensions;
+        }
+    }
 };
 </script>
 
 <style lang="scss">
 
 .eval-wrapper {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 
 }
 
 .eval-chart-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 350px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .echarts {
-    width: 100%;
-    height: min-content;
-    overflow: hidden;
+  width: 100%;
+  height: min-content;
 }
 
 </style>

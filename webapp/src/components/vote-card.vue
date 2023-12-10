@@ -1,6 +1,6 @@
 <template>
     <button class="vote-card-wrapper" :disabled="disabled" v-on:click="triggerVote(value)"
-            :class="{'selected': isSelected && !disabled}">
+            :class="{'selected': isSelected}">
         {{ value?.label }}
     </button>
 </template>
@@ -12,7 +12,7 @@ import {RequestMessageType, Roles} from "@/constants/vue-constants";
 
 export default {
     name: "Vote-Card",
-    props: ['value', 'disabled'],
+    props: ['value', 'disabled', 'isSelected'],
     created() {
         this.appStore = useAppStateStore();
     },
@@ -44,12 +44,6 @@ export default {
         }
     },
     computed: {
-        localVoteValue() {
-            return this.appStore.localVoteValue;
-        },
-        isSelected() {
-            return this.appStore.localVoteValue.label === this.value.label;
-        },
         localUser() {
             return this.appStore.localUser;
         },
@@ -102,12 +96,13 @@ export default {
   }
 
   &.user-tile-size {
-    width: 35%;
-    font-size: 0.8rem;
+    width: 35px;
+    font-size: 0.95rem;
     position: absolute;
     z-index: 10;
-    left: 0px;
-    top: -10%;
+    left: -10px;
+    top: -12%;
+
   }
 
   &.selected {
@@ -118,6 +113,15 @@ export default {
   &:not(:disabled):hover {
     transform: translateY(3px);
   }
+}
+
+@media only screen and (max-width: 775px) {
+
+    .user-tile-size {
+        width: 25px !important;
+        left: 0px !important;
+        top: -8% !important;
+    }
 }
 
 </style>

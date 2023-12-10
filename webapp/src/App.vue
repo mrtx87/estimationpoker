@@ -42,7 +42,14 @@ export default {
         this.onRouteChange(this.$route)
         const toast = useToast();
         this.appStore.addToastImpl(toast);
+        this.getDimensions();
 
+    },
+    mounted() {
+        window.addEventListener('resize', this.getDimensions);
+    },
+    unmounted() {
+        window.removeEventListener('resize', this.getDimensions);
     },
     watch: {
         $route(to) {
@@ -58,6 +65,12 @@ export default {
         onRouteChange(routeTo) {
             this.$appService.setRouteOn(routeTo);
             this.$appService.initApp();
+        },
+        getDimensions() {
+            this.appStore.setScreenDimensions({
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight
+            });
         }
     },
     computed: {

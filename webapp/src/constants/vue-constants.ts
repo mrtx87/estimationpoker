@@ -136,8 +136,9 @@ export const sequential = {
     ]
 }
 
+export const tShirtVoteOptionId = 4;
 export const tshirt = {
-    id: 4,
+    id: tShirtVoteOptionId,
     name: 'T-Shirt',
     values: [
         {label: 'XS', color: '#3CA8F6', numericValue: 1},
