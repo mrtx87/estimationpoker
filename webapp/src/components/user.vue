@@ -161,7 +161,7 @@ export default {
   width: 100%;
   min-width: inherit;
   min-height: inherit;
-  background-color: #daf3ff;
+  background-color: #a0c7db;
   box-shadow: rgb(0 0 0 / 50%) 1.95px 3.95px 3.6px;
   border-radius: 50%;
   overflow: hidden;
@@ -221,20 +221,20 @@ export default {
   position: absolute;
   z-index: 5;
   aspect-ratio: 1/1;
-  background-color: blue;
+  background-color: #a0c7db;
   padding: 4px;
   box-sizing: border-box;
   width: 30%;
 
 
   &.bottom-left {
-    bottom: 0;
-    left: 0;
+    top: 26px;
+    right: -11px;
   }
 
   &.bottom-right {
-    bottom: 0;
-    right: 0;
+    top: 0;
+    right: -3px;
   }
 
   .is-moderator, .is-observer {
@@ -245,7 +245,22 @@ export default {
 }
 
 .user-name {
+  position: absolute;
+  bottom: -19px;
+  z-index: 2;
   text-align: center;
+  display: flex;
+  background-color: #adc7dc;
+  width: 85px;
+  height: 30px;
+  border-radius: 3px;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: rgb(0 0 0 / 41%) 2.4px 2.4px 3.2px;
+  font-size: 13px;
+  word-break: break-all;
 }
 
 
@@ -259,7 +274,7 @@ export default {
   }
 
   .user-name {
-        font-size: 14px !important;
+        font-size: 12px !important;
   }
 }
 

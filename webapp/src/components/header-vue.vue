@@ -1,17 +1,23 @@
 <template>
-    <div class="header-wrapper">
-        <div class="header">
-            <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
-                    src="../assets/sharelink.svg"> invite link
-            </button>
-            <div class="user-icon-and-menu">
-                <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true" v-bind:noUserRoleIcon="true"
-                      v-on:click="toggleUserMenu"></user>
-                <user-menu v-bind:user="localUser" v-if="displayUserMenu"
-                           v-on-click-outside="clickedOutside"></user-menu>
-            </div>
-        </div>
+  <div class="header-wrapper">
+    <div class="header">
+      <label v-on:click="isChecked" :class="{ 'toggle': !checked, 'toggle change-color': checked}">
+        <input type="checkbox">
+        <span class="slider"></span>
+        <span class="labels" data-on="EN" data-off="DE"></span>
+      </label>
+      <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
+          src="../assets/sharelink.svg"> invite link
+      </button>
+      <div class="user-icon-and-menu">
+        <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true"
+              v-bind:noUserRoleIcon="true"
+              v-on:click="toggleUserMenu"></user>
+        <user-menu v-bind:user="localUser" v-if="displayUserMenu"
+                   v-on-click-outside="clickedOutside"></user-menu>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -23,44 +29,48 @@ import UserMenu from "@/components/user-menu.vue";
 import {vOnClickOutside} from "@vueuse/components/index";
 
 export default {
-    name: "HeaderVue",
-    components: {UserMenu, User},
-    directives: {
-        onClickOutside: vOnClickOutside
-    },
-    created() {
-        this.appStore = useAppStateStore();
-    },
-    data: function () {
-        return {
-            isAvatarConfiguratorOpen: false,
-            appStore: null,
-            displayUserMenu: false
-        }
-    },
-    methods: {
-        clickedOutside() {
-            this.displayUserMenu = null;
-        },
-        shareLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
-        },
-        toggleUserMenu: function () {
-            this.displayUserMenu = !this.displayUserMenu;
-        },
-        openAvatarEditor: function () {
-            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
-            this.toggleUserMenu();
-        },
-    },
-    computed: {
-        localUserId() {
-            return this.appStore.localUserId;
-        },
-        localUser() {
-            return this.appStore.room && this.localUserId ? this.appStore.room.users.find(u => u.id === this.localUserId) : null;
-        }
+  name: "HeaderVue",
+  components: {UserMenu, User},
+  directives: {
+    onClickOutside: vOnClickOutside
+  },
+  created() {
+    this.appStore = useAppStateStore();
+  },
+  data: function () {
+    return {
+      isAvatarConfiguratorOpen: false,
+      appStore: null,
+      displayUserMenu: false,
+      checked: false,
     }
+  },
+  methods: {
+    isChecked() {
+      this.checked = !this.checked;
+    },
+    clickedOutside() {
+      this.displayUserMenu = null;
+    },
+    shareLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
+    },
+    toggleUserMenu: function () {
+      this.displayUserMenu = !this.displayUserMenu;
+    },
+    openAvatarEditor: function () {
+      this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
+      this.toggleUserMenu();
+    },
+  },
+  computed: {
+    localUserId() {
+      return this.appStore.localUserId;
+    },
+    localUser() {
+      return this.appStore.room && this.localUserId ? this.appStore.room.users.find(u => u.id === this.localUserId) : null;
+    }
+  }
 };
 </script>
 
@@ -105,6 +115,102 @@ export default {
       min-height: 30px;
     }
   }
+}
+
+.toggle {
+  --width: 60px;
+  --height: 37px;
+  position: relative;
+  display: inline-block;
+  width: var(--width);
+  height: var(--height);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #acc5da;
+}
+
+.change-color{
+  background-color: #ff0000;
+}
+.toggle input {
+  display: none;
+}
+
+.toggle .slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  background-color: #fdfdfd;
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle .slider::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 4px;
+  width: calc(var(--height) / 1.2);
+  height: calc(var(--height) / 1.2);
+  border-radius: calc(var(--height) / 8);
+  background-color: #fff;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle input:checked+.slider {
+  background-color: #a0c7db;
+}
+
+.toggle input:checked+.slider::before {
+  transform: translateX(calc(var(--width) - var(--height)));
+}
+
+.toggle .labels {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  font-family: sans-serif;
+  transition: all 0.4s ease-in-out;
+  overflow: hidden;
+}
+
+.toggle .labels::after {
+  content: attr(data-off);
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  color: #7c8593;
+  font-weight: bold;
+  opacity: 1;
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle .labels::before {
+  content: attr(data-on);
+  position: absolute;
+  top: 4px;
+  left: calc(var(--height) - var(--width) + 6px);
+  color: #ffffff;
+  opacity: 0;
+  transition: all 0.4s ease-in-out;
+  font-weight: bold;
+}
+
+.toggle input:checked~.labels::after {
+  opacity: 0;
+  transform: translateX(calc(var(--width) - var(--height)));
+}
+
+.toggle input:checked~.labels::before {
+  opacity: 1;
+  transform: translateX(calc(var(--width) - var(--height)));
 }
 
 
