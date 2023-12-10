@@ -4,7 +4,7 @@
 
         <div class="input-elem-container" style="width:50%;">
             <input type=text v-model="editedUserName" placeholder="Dein Benutzername">
-            <span v-if="userNameTooLong" class="validation-message">maximal 20 Zeichen</span>
+            <span v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</span>
         </div>
         <div class="avatar-needles">
             <button title="random avatar" class="random-avatar-button"
@@ -315,14 +315,13 @@ export default {
                 || this.avatar.shirt.color !== this.updatedAvatar.shirt.color)
         },
         isValidUserNameChange() {
-            return this.editedUserName !== this.userName && this.editedUserName.length < 25 && this.editedUserName.length > 1;
+            return this.editedUserName !== this.userName && !this.userNameTooLong && this.editedUserName.length > 1;
         },
         isInputValid() {
             return this.hasValidAvatarChange ||
                 this.isValidUserNameChange;
         },
         userNameTooLong() {
-            console.log(this.editedUserName, this.userName)
             return this.editedUserName.length > 25;
         }
     }
