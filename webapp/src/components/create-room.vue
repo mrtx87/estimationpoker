@@ -26,14 +26,6 @@
                     <input v-model="roomSettings.realtimeVoting" type="checkbox">
                     <span>Do you want moderators to see other players voting in real time?</span>
                 </div>
-                <div class="secondary-option">
-                    <input v-model="roomSettings.voteAfterReveal" type="checkbox">
-                    <span>Allow players to change vote after scores shown</span>
-                </div>
-                <div class="secondary-option">
-                    <input v-model="roomSettings.autoReveal" type="checkbox">
-                    <span>Do you want to auto reveal votes when voting is completed?</span>
-                </div>
             </div>
             <div class="create-room-buttons-panel">
                 <button class="button-activate" :disabled="isInvalid" v-on:click="createRoom()">Raum erstellen</button>
@@ -66,8 +58,6 @@ export default {
             roomSettings: {
                 title: '',
                 realtimeVoting: false,
-                voteAfterReveal: false,
-                autoReveal: false,
                 valueOptions: null
             }
         }

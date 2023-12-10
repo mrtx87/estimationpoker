@@ -46,7 +46,7 @@ export default {
 
     },
     mounted() {
-        window.addEventListener('resize', this.getDimensions);
+        window.addEventListener('resize', this.getDimensions, { passive: true });
     },
     unmounted() {
         window.removeEventListener('resize', this.getDimensions);

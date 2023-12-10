@@ -319,7 +319,7 @@ export class WebsocketControllerImpl {
 
     userVote(cachedRoom: CachedEstimationPokerRoom, userId: string, request: BasicRequest, connection: any) {
         try {
-            if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && (cachedRoom.currentEstimation.state === VOTING_STATE.VOTING || (cachedRoom.currentEstimation.state === VOTING_STATE.REVEALED && cachedRoom.roomSettings.voteAfterReveal))) {
+            if (cachedRoom.currentEstimation.state !== VOTING_STATE.CLOSED && cachedRoom.currentEstimation.state === VOTING_STATE.VOTING) {
                 if (request.data) {
                     const vote = Vote.of(request.data)
                     cachedRoom.setVotes([...cachedRoom.getVotes().filter(v => v.userId !== userId), vote]);

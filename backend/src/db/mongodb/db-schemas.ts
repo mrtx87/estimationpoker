@@ -54,9 +54,7 @@ export const EstimationPokerRoomSchema = new mongoose.Schema<EstimationPokerRoom
     roomSettings: {
         title: String,
         valueOptionsId: Number,
-        realtimeVoting: Boolean,
-        voteAfterReveal: Boolean,
-        autoReveal: Boolean,
+        realtimeVoting: Boolean
     },
     currentEstimationId: String
 });

@@ -25,14 +25,6 @@
             <input :disabled="localUserIsNotModerator" v-model="realtimeVoting" type="checkbox">
             <span>Do you want observers to see other players voting in real time?</span>
         </div>
-        <div class="room-settings-item">
-            <input :disabled="localUserIsNotModerator" v-model="voteAfterReveal" type="checkbox">
-            <span>Allow Players to vote after reveal</span>
-        </div>
-        <div class="room-settings-item">
-            <input :disabled="localUserIsNotModerator" v-model="autoReveal" type="checkbox">
-            <span>Do you want to auto reveal votes when voting completed?</span>
-        </div>
         <div class="room-settings-buttons-panel">
             <button class="save-btn" v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator || !isValid()"
                     v-on:click="updateRoomSettings">save
@@ -70,8 +62,6 @@ export default {
             appStore: null,
             realtimeVoting: false,
             title: '',
-            voteAfterReveal: false,
-            autoReveal: false,
             selectedValueTypeId: 0
         }
     },
@@ -79,14 +69,10 @@ export default {
         isValid() {
             return this.roomSettings.realtimeVoting !== this.realtimeVoting
                 || this.roomSettings.title !== this.title
-                || this.roomSettings.voteAfterReveal !== this.voteAfterReveal
-                || this.roomSettings.autoReveal !== this.autoReveal
                 || this.roomSettings.valueOptionsId !== this.selectedValueTypeId;
         },
         initRoomSettings(roomSettings) {
             this.realtimeVoting = roomSettings.realtimeVoting;
-            this.voteAfterReveal = roomSettings.voteAfterReveal;
-            this.autoReveal = roomSettings.autoReveal;
             this.title = roomSettings.title;
             this.selectedValueTypeId = roomSettings.valueOptionsId;
         },
@@ -94,9 +80,7 @@ export default {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {
                 realtimeVoting: this.realtimeVoting,
                 title: this.title,
-                valueOptionsId: this.selectedValueTypeId,
-                voteAfterReveal: this.voteAfterReveal,
-                autoReveal: this.autoReveal,
+                valueOptionsId: this.selectedValueTypeId
             });
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         },
@@ -159,7 +143,7 @@ export default {
     padding: 10px;
     border-radius: 3px;
     gap: 15px;
-  }
+   }
 
   .room-settings-buttons-panel {
     display: flex;

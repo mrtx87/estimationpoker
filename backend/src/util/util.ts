@@ -130,8 +130,6 @@ export function hasRequiredAppConfig(init: InitAppProcess) {
 export function getTestRoom() {
     return EstimationPokerRoom.createEstimationPokerRoom(new RoomSettings({
         title: "Testraum" + UUID(),
-        voteAfterReveal: false,
-        autoReveal: false,
         realtimeVoting: false,
         valueOptionsId: 1
     }), UUID());
