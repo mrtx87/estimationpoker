@@ -3,6 +3,7 @@
         <div class="join-room-heading">Raum beitreten</div>
         <div class="input-elem-container">
             <input type=text v-model="userNameInput" placeholder="Dein Benutzername">
+            <div v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</div>
         </div>
         <div class="join-room-buttons-panel">
             <button class="button-activate" :disabled="!inputValid" v-on:click="joinRoom()">Raum beitreten</button>
@@ -51,7 +52,10 @@ export default {
             return this.appStore.roomId;
         },
         inputValid() {
-            return this.userNameInput.length > 2
+            return this.userNameInput.length > 1 && !this.userNameTooLong
+        },
+        userNameTooLong() {
+            return this.userNameInput.length > 25;
         }
     }
 };
