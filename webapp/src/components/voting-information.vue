@@ -9,14 +9,17 @@
 
         <div class="voting-info-row">
             <span class="fat" v-if="votingState === VOTING_STATE.VOTING">Schätzrunde läuft:</span>
-            <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlinePlayers.length }} aktiven Teilnehmern abgestimmt.</span>
+            <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlinePlayers.length }} aktiven Teilnehmern abgestimmt</span>
 
         </div>
+        <div class="voting-info-row">
+            <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">Auswertungsphase:</span>
+            <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{
+                estimation.evaluation.avg
+                }}</span>
+        </div>
 
-        <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">Auswertungsphase</span>
-        <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{
-            estimation.evaluation.avg
-            }}.</span>
+
     </div>
 </template>
 
@@ -101,6 +104,7 @@ export default {
     flex-wrap: wrap;
     gap: 0 8px;
     justify-content: center;
+    font-size: 13px;
   }
 
   .estimation-timer {
@@ -119,8 +123,8 @@ export default {
 }
 
 @media only screen and (max-width: 775px) {
-  .voting-information-wrapper {
-    font-size: 13px !important;
+  .voting-info-row {
+    font-size: 12px !important;
   }
 }
 
