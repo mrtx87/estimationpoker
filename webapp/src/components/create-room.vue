@@ -85,7 +85,7 @@ export default {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         },
         tl8(key) {
-            return languageService.t(key);
+            return languageService.t(key, this.appStore.langKey);
         }
     },
     computed: {

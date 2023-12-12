@@ -1,6 +1,10 @@
 <template>
     <div class="header-wrapper">
         <div class="header">
+            <div>LOGO</div>
+            <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="createRoomOverlay()">
+                <img src="../assets/cross.svg"> create room
+            </button>
             <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
                 <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
                 <span class="slider"></span>
@@ -38,11 +42,8 @@ export default {
         onClickOutside: vOnClickOutside
     },
     created() {
-        this.initLanguageSetting();
-        if (languageService.selectedLanguageKey !== germanKey) {
-            this.checked = true;
-        }
         this.appStore = useAppStateStore();
+        this.initLanguageSetting();
     },
     data: function () {
         return {
@@ -55,18 +56,18 @@ export default {
     methods: {
         initLanguageSetting() {
             let langKey = getCookie(LANG_COOKIE_KEY);
-            if(!langKey) {
+            if (!langKey) {
                 langKey = germanKey;
                 setCookie(LANG_COOKIE_KEY, langKey);
             }
-            languageService.setLanguage(langKey);
+            this.checked = langKey === englishKey;
+            this.appStore.setLangKey(langKey);
         },
         onCheckedChange(nextChecked) {
             this.checked = nextChecked;
             const langKey = nextChecked ? englishKey : germanKey;
             setCookie(LANG_COOKIE_KEY, langKey);
-            languageService.setLanguage(langKey);
-            console.log(nextChecked)
+            this.appStore.setLangKey(langKey);
         },
         clickedOutside() {
             this.displayUserMenu = null;
@@ -74,13 +75,12 @@ export default {
         shareLink() {
             navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
         },
+        createRoomOverlay() {
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.CREATE_ROOM);
+        },
         toggleUserMenu: function () {
             this.displayUserMenu = !this.displayUserMenu;
-        },
-        openAvatarEditor: function () {
-            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
-            this.toggleUserMenu();
-        },
+        }
     },
     computed: {
         localUserId() {
@@ -104,7 +104,7 @@ export default {
   background-color: #ebebeb;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
   height: 75px;
-
+  padding: 0 10px;
 }
 
 .header {
@@ -114,7 +114,7 @@ export default {
   align-items: center;
   gap: 10px;
   background-color: transparent;
-  justify-content: flex-end;
+  justify-content: space-between;
   max-width: 1280px;
 }
 
@@ -149,9 +149,6 @@ export default {
   background-color: #acc5da;
 }
 
-.change-color {
-  background-color: #ff0000;
-}
 
 .toggle input {
   display: none;
@@ -164,7 +161,6 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 4px;
-  background-color: #fdfdfd;
   transition: all 0.4s ease-in-out;
 }
 
@@ -206,10 +202,10 @@ export default {
   position: absolute;
   right: 4px;
   top: 4px;
-  color: #7c8593;
   font-weight: bold;
   opacity: 1;
   transition: all 0.4s ease-in-out;
+  color: #fff;
 }
 
 .toggle .labels::before {
