@@ -108,7 +108,7 @@ export default {
     justify-self: center;
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 5px;
   }
 
   .fat {

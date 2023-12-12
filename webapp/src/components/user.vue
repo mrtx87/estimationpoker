@@ -139,6 +139,15 @@ export default {
   }
 }
 
+.room-history-user {
+  max-width: 70px;
+
+  .readyonly-player-container {
+    width: 70px;
+    aspect-ratio: 1/1;
+  }
+}
+
 .readyonly-player-container {
   display: flex;
   margin: 0.5vh;
@@ -228,13 +237,13 @@ export default {
 
 
   &.bottom-left {
-    top: 26px;
-    right: -11px;
+    top: 30%;
+    right: -20%;
   }
 
   &.bottom-right {
     top: 0;
-    right: -3px;
+    right: -7%;
   }
 
   .is-moderator, .is-observer {

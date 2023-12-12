@@ -73,8 +73,8 @@ export default {
         }
     },
     methods: {
-        tl8(key) {
-          return languageService.t(key, this.appStore.langKey);
+        tl8(key, vars) {
+          return languageService.t(key, this.appStore.langKey, vars);
         },
         isValid() {
             return this.roomSettings.realtimeVoting !== this.realtimeVoting

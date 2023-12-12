@@ -91,12 +91,12 @@ export default {
 }
 
 .heading1 .general-input {
-  font-size: 1.6rem;
+  font-size: 0.8rem;
   text-align: center;
 }
 
 .heading2 .general-input {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   text-align: center;
 }
 
@@ -186,13 +186,13 @@ export default {
 
 
   .heading1 .general-input {
-    font-size: 1.25rem !important;
+    font-size: 0.7rem !important;
     font-weight: bold;
 
   }
 
   .heading2 .general-input {
-    font-size: 1.1rem !important;
+    font-size: 1rem !important;
   }
 }
 </style>

@@ -21,7 +21,7 @@
                 <div class="room-history-list-column">{{ roomPreviewItem.userCount }}</div>
                 <div class="room-history-list-column large-table">{{ roomPreviewItem.estimationCount }}</div>
                 <div class="room-history-list-column large-table">
-                    <user v-bind:user="roomPreviewItem.localUser" v-bind:noUserName="true"></user>
+                    <user class="room-history-user" v-bind:user="roomPreviewItem.localUser" v-bind:noUserName="true"></user>
                 </div>
                 <div class="room-history-list-column large-table">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
                 <div class="room-history-list-column btns-column">
