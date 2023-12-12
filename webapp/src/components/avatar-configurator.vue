@@ -4,7 +4,7 @@
 
         <div class="avatar-configurator-input-elem-container" style="width:50%;">
             <input type=text v-model="editedUserName" placeholder="Dein Benutzername" spellcheck="false">
-            <span v-if="userNameTooLong" class="validation-message">{{ tl8('app.content.btn.reveal') }}</span>
+            <span v-if="userNameTooLong" class="validation-message">{{ tl8('validation.text.user.name') }}</span>
         </div>
         <div class="avatar-needles">
             <button title="random avatar" class="random-avatar-button"

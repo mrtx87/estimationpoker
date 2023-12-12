@@ -281,7 +281,7 @@ body {
 }
 
 
-.input-elem-container {
+.input-elem-container, .avatar-configurator-input-elem-container {
     display: flex;
     gap: 20px;
     position: relative;
@@ -304,6 +304,7 @@ body {
 }
 
 .input-elem-container input[type=text] {
+    position: relative;
     padding: 15px;
     border: none;
     border-radius: 3px;
@@ -328,8 +329,6 @@ body {
     border-radius: 50%;
     padding: -5px;
     transition: 0.15s ease-in-out;
-
-
 }
 
 .close-btn img {

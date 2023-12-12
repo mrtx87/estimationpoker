@@ -5,7 +5,7 @@
         </div>
         <div class="input-elem-container">
             <input type="text" placeholder="Room Title" :disabled="localUserIsNotModerator" v-model="title">
-            <span v-if="roomTitleTooLong" class="validation-message">{{ tl8('room.settings.title') }}</span>
+            <span v-if="roomTitleTooLong" class="validation-message">{{ tl8('validation.text.room.title') }}</span>
         </div>
 
         <div class="room-settings-item">
