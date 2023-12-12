@@ -1,8 +1,13 @@
 <template>
     <div class="input-wrapper" :class="{focused: isFocused}">
-        <input ref="genInput" class="general-input heading1" :disabled="isDisabled" :class="{focused: isFocused}"
+        <input ref="genInput"
+               class="general-input heading1"
+               :disabled="isDisabled"
+               :class="{focused: isFocused}"
                :placeholder="placeholder"
-               v-model="inputText" v-on:focus="makeEditable()">
+               v-model="inputText"
+               v-on:focus="makeEditable()"
+               v-on:keydown.enter="changeInputText">
         <div class="change-title-btn" v-if="isFocused">
             <button class="save-change" :disabled="isInvalid" v-on:click="changeInputText()">
                 <img class="accept-img"
@@ -57,9 +62,18 @@ export default {
             this.inputText = this.text;
             this.makeNotEditable();
         },
+        changeInputTextViaEnter() {
+            if (this.isFocused) {
+                this.changeInputText();
+            }
+        },
         changeInputText() {
+            if (this.isInvalid) {
+                return;
+            }
             this.$emit('onTextInputChange', this.inputText);
             this.makeNotEditable();
+            this.$refs.genInput.blur();
         },
     },
     computed: {
@@ -118,6 +132,9 @@ export default {
     text-align: left !important;
     font-size: 18px;
   }
+    &:focus-visible {
+        outline: none;
+    }
 }
 
 .change-title-btn {

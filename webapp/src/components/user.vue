@@ -292,10 +292,6 @@ export default {
       aspect-ratio: 1/1;
     }
   }
-
-  .user-name {
-    font-size: 12px !important;
-  }
 }
 
 
