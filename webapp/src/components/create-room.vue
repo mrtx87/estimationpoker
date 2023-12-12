@@ -2,11 +2,11 @@
     <div class="create-room-wrapper">
         <div class="room-settings-create">
             <div class="large-heading">{{ tl8('create.room.title')}}</div>
-            <div class="create-room-input-elem-container">
+            <div class="input-elem-container">
                 <input type=text v-model="userNameInput" :placeholder="tl8('create.room.user.name.placeholder')">
                 <div v-if="userNameTooLong" class="validation-message">{{ tl8('validation.text.user.name') }}</div>
             </div>
-            <div class="create-room-input-elem-container">
+            <div class="input-elem-container">
                 <input type=text :placeholder="tl8('create.room.room.title.placeholder')" v-model="roomSettings.title">
                 <div v-if="roomTitleTooLong" class="validation-message">{{ tl8('validation.text.user.name') }}</div>
 

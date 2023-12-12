@@ -2,17 +2,18 @@
     <div class="header-wrapper">
         <div class="header">
             <div>LOGO</div>
-            <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="createRoomOverlay()">
-                <img src="../assets/cross.svg"> create room
-            </button>
-            <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
-                <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
-                <span class="slider"></span>
-                <span class="labels" data-on="EN" data-off="DE"></span>
-            </label>
-            <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
-                    src="../assets/sharelink.svg"> invite link
-            </button>
+            <div class="header-btns">
+                <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute"
+                        v-on:click="createRoomOverlay()">
+                    <img src="../assets/cross.svg"> create room
+                </button>
+                <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
+                    <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
+                    <span class="slider"></span>
+                    <span class="labels" data-on="EN" data-off="DE"></span>
+                </label>
+            </div>
+
             <div class="user-icon-and-menu">
                 <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true"
                       v-bind:noUserRoleIcon="true"
@@ -72,9 +73,6 @@ export default {
         clickedOutside() {
             this.displayUserMenu = null;
         },
-        shareLink() {
-            navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
-        },
         createRoomOverlay() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.CREATE_ROOM);
         },
@@ -116,6 +114,14 @@ export default {
   background-color: transparent;
   justify-content: space-between;
   max-width: 1280px;
+
+  .header-btns {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: flex-end;
+    margin: 0 25px;
+  }
 }
 
 .user-icon-and-menu {
@@ -146,7 +152,7 @@ export default {
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
   border-radius: 4px;
   cursor: pointer;
-  background-color: #acc5da;
+  background-color: var(--primary-color);
 }
 
 

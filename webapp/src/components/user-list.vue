@@ -46,7 +46,7 @@ export default {
             return this.estimation.state === VOTING_STATE.REVEALED;
         },
         displayVoteCard(user) {
-            return user.roles.includes(Roles.PLAYER) && this.userVote(user.id)?.value &&(this.hasBeenRevealed() || (this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
+            return user.roles.includes(Roles.PLAYER) && this.userVote(user.id)?.value && (this.hasBeenRevealed() || (this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
         },
         displayVoteCardBeforeReveal(user) {
             return !this.hasBeenRevealed() && user?.roles.includes(Roles.PLAYER) && (!this.userVote(user.id) || !(this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
@@ -95,12 +95,13 @@ export default {
 <style lang="scss" scoped>
 
 .user-list-wrapper {
-  margin-top: 25px;
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
   justify-content: space-around;
   gap: 20px;
+  padding: 15px 0;
+  min-height: 25vh;
 
   .users-heading {
     border-bottom: 1px solid #f2f3f4;

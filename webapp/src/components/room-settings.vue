@@ -3,7 +3,7 @@
         <div class="large-heading">
           {{ tl8('room.settings.title') }}
         </div>
-        <div class="create-room-input-elem-container">
+        <div class="input-elem-container">
             <input type="text" placeholder="Room Title" :disabled="localUserIsNotModerator" v-model="title">
             <span v-if="roomTitleTooLong" class="validation-message">maximal 40 Zeichen</span>
         </div>
@@ -74,7 +74,7 @@ export default {
     },
     methods: {
         tl8(key) {
-          return languageService.t(key);
+          return languageService.t(key, this.appStore.langKey);
         },
         isValid() {
             return this.roomSettings.realtimeVoting !== this.realtimeVoting

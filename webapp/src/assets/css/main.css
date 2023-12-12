@@ -287,7 +287,7 @@ body {
     position: relative;
 }
 
-.input-elem-container input[type=text] {
+.avatar-configurator-input-elem-container input[type=text] {
     padding: 15px;
     border: none;
     border-radius: 3px;
@@ -299,15 +299,11 @@ body {
     font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
     background: #adc7dc;
     outline: none;
-    font-weight: bold;
     text-align: center;
     box-shadow: rgba(0, 0, 0, 0.41) 2.4px 2.4px 3.2px;
-    &::-webkit-input-placeholder {
-        color: #8f8f8f;
-    }
 }
 
-.create-room-input-elem-container input[type=text] {
+.input-elem-container input[type=text] {
     padding: 15px;
     border: none;
     border-radius: 3px;
@@ -318,10 +314,6 @@ body {
     font-size: 13px;
     font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
     background: white;
-    font-weight: bold;
-    &::-webkit-input-placeholder {
-        color: #8f8f8f;
-    }
 }
 
 
