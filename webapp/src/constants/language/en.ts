@@ -12,8 +12,20 @@ export const english = {
         'app.content.btn.reset': 'reset',
         'app.content.btn.reveal': 'reveal',
         'room.settings.title': 'Room settings',
-
-
+        'room.settings.max-40-symbols': 'maximum 40 characters',
+        'room.settings.real-time-voting': 'Do you want observers to see other players voting in real time?',
+        'room.settings.save': 'save',
+        'room.settings.cancel': 'cancel',
+        'avatar-configurator.max-25-symbols': 'maximum 25 characters',
+        'avatar-configurator.hair': 'Hair',
+        'avatar-configurator.face': 'Head',
+        'avatar-configurator.shirt': 'Shirt',
+        'estimation-history.completed-estimates': 'Completed estimates',
+        'estimation-history.name': 'Name',
+        'estimation-history.deviation': 'Deviation',
+        'estimation-history.votes': 'Votes',
+        'estimation-history.time': 'Time',
+        'estimation-history.createdAt': 'created at',
         'validation.text.user.name': '25 characters max',
         'validation.text.room.title': '40 characters max',
 

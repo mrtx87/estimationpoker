@@ -4,7 +4,7 @@
 
         <div class="avatar-configurator-input-elem-container" style="width:50%;">
             <input type=text v-model="editedUserName" placeholder="Dein Benutzername" spellcheck="false">
-            <span v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</span>
+            <span v-if="userNameTooLong" class="validation-message">{{ tl8('app.content.btn.reveal') }}</span>
         </div>
         <div class="avatar-needles">
             <button title="random avatar" class="random-avatar-button"
@@ -54,7 +54,7 @@
                  :class="{'activated': editingAvatarElementType === 'hair'}"
                  v-if="!disabled"
                  v-on:click="onChangeEditAvatar('hair')">
-                Hair
+              {{ tl8('avatar-configurator.hair') }}
             </div>
 
             <div class="head-needle"
@@ -73,7 +73,7 @@
                  v-if="!disabled"
                  title="Choose Head Style"
                  v-on:click="onChangeEditAvatar('head')">
-                Face
+              {{ tl8('avatar-configurator.face') }}
             </div>
 
             <div class="shirt-needle"
@@ -92,7 +92,7 @@
                  title="Choose Shirt Style"
                  :class=" {'activated': editingAvatarElementType === 'shirt'}"
                  v-if="!disabled"
-                 v-on:click="onChangeEditAvatar('shirt')">shirt
+                 v-on:click="onChangeEditAvatar('shirt')">{{ tl8('avatar-configurator.shirt') }}
             </div>
             <div class="avatar-container">
                 <div class="avatar-hair" v-html="selectedHairReplaced">
@@ -129,7 +129,7 @@
                     title="save avatar changes"
                     v-if="!!editingAvatarElementType"
                     :disabled="!isInputValid"
-                    v-on:click="onDone()">Speichern
+                    v-on:click="onDone()">{{ tl8('room.settings.save') }}
             </button>
         </div>
     </div>
@@ -149,6 +149,7 @@ import {
 } from "@/assets/avatar/avatar-constants.ts";
 import {DISPLAY_OVERLAY_STATE, RequestMessageType} from "@/constants/vue-constants";
 import {useAppStateStore} from "@/stores/app-state";
+import {languageService} from "@/services/language";
 
 
 export default {
@@ -176,6 +177,9 @@ export default {
         }
     },
     methods: {
+        tl8(key) {
+          return languageService.t(key, this.appStore.langKey);
+        },
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
         },

@@ -5,7 +5,7 @@
         </div>
         <div class="input-elem-container">
             <input type="text" placeholder="Room Title" :disabled="localUserIsNotModerator" v-model="title">
-            <span v-if="roomTitleTooLong" class="validation-message">maximal 40 Zeichen</span>
+            <span v-if="roomTitleTooLong" class="validation-message">{{ tl8('room.settings.title') }}</span>
         </div>
 
         <div class="room-settings-item">
@@ -22,15 +22,15 @@
         </div>
         <div class="room-settings-item">
             <input :disabled="localUserIsNotModerator" v-model="realtimeVoting" type="checkbox">
-            <span>Do you want observers to see other players voting in real time?</span>
+            <span>{{ tl8('room.settings.real-time-voting') }}</span>
         </div>
         <div class="room-settings-buttons-panel">
             <button class="button-activate" v-if="!localUserIsNotModerator"
                     :disabled="localUserIsNotModerator || !isValid()"
-                    v-on:click="updateRoomSettings">speichern
+                    v-on:click="updateRoomSettings">{{ tl8('room.settings.save') }}
             </button>
             <button class="button-activate invers" v-if="!localUserIsNotModerator"
-                    v-on:click="cancel">abbrechen
+                    v-on:click="cancel">{{ tl8('room.settings.cancel') }}
             </button>
             <button class="button-activate" v-if="localUserIsNotModerator"
                     v-on:click="cancel">ok

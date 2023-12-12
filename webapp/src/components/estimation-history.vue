@@ -1,13 +1,13 @@
 <template>
     <div class="estimation-history-wrapper">
-        <div class="estimation-history-heading">Abgeschlossene Schätzungen</div>
+        <div class="estimation-history-heading">{{ tl8('estimation-history.completed-estimates') }}</div>
         <div class="estimation-history-row">
-            <div class="estimation-history-list-column title-column bold">Name</div>
+            <div class="estimation-history-list-column title-column bold">{{ tl8('estimation-history.name') }}</div>
             <div class="estimation-history-list-column bold" :title="'average'">Ø</div>
-            <div class="estimation-history-list-column bold">Abweichung</div>
-            <div class="estimation-history-list-column bold">Stimmen</div>
-            <div class="estimation-history-list-column bold displayLarge">Zeit</div>
-            <div class="estimation-history-list-column bold displayLarge">Erstellt am</div>
+            <div class="estimation-history-list-column bold">{{ tl8('estimation-history.deviation') }}</div>
+            <div class="estimation-history-list-column bold">{{ tl8('estimation-history.name') }}</div>
+            <div class="estimation-history-list-column bold displayLarge">{{ tl8('estimation-history.name') }}</div>
+            <div class="estimation-history-list-column bold displayLarge">{{ tl8('estimation-history.createdAt') }}</div>
         </div>
         <div class="estimation-rows">
             <div class="estimation-history-row" v-for="eHistoryItem in estimationHistory" :key="eHistoryItem.id">
@@ -34,6 +34,7 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {formatDate, formatTime} from "@/services/util";
+import {languageService} from "@/services/language";
 
 export default {
     name: "Estimation-History",
@@ -48,6 +49,9 @@ export default {
         }
     },
     methods: {
+        tl8(key) {
+          return languageService.t(key, this.appStore.langKey);
+        },
         formatTime,
         formattedDate(date) {
             return formatDate(date);
