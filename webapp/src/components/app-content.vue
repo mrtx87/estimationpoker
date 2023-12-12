@@ -1,23 +1,11 @@
 <template>
     <div class="app-content">
-        <div class="room-header">
-            <div class="title-container">
-                <general-input class="heading1"
-                               v-bind:text="room?.roomSettings.title"
-                               v-bind:isDisabled="!isLocalUserModerator()"
-                               v-bind:placeholder="'Name des Raums'"
-                               v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
-                <general-input class="heading2"
-                               v-bind:text="room?.currentEstimation.title"
-                               v-bind:isDisabled="!isLocalUserModerator()"
-                               v-bind:placeholder="'Name der Schätzung'"
-                               v-on:onTextInputChange="updateEstimationName($event)"></general-input>
-            </div>
-            <voting-information></voting-information>
-            <timer class="estimation-timer" v-bind:timer="estimationTimer"></timer>
-        </div>
-
-
+        <general-input class="heading1"
+                       v-bind:text="room?.roomSettings.title"
+                       v-bind:isDisabled="!isLocalUserModerator()"
+                       v-bind:placeholder="'Name des Raums'"
+                       v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
+        <voting-information></voting-information>
         <user-list></user-list>
         <Evaluation v-bind:estimation="room?.currentEstimation"
                     v-if="room?.currentEstimation.state !== VOTING_STATE.VOTING"></Evaluation>
@@ -49,11 +37,11 @@
                 <div class="all-users-buttons">
                     <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
                                                                                          src="../assets/gear.svg">
-                       <span>{{ tl8('app.content.btn.settings') }}</span>
+                        <span>{{ tl8('app.content.btn.settings') }}</span>
                     </button>
                     <button class="button-activate" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
                             style="width:30px;" src="../assets/sharelink.svg">
-                      <span>invite link</span>
+                        <span>invite link</span>
                     </button>
                 </div>
 
@@ -75,14 +63,11 @@ import VoteCard from "@/components/vote-card.vue";
 import VotingInformation from "@/components/voting-information.vue";
 import EstimationHistory from "@/components/estimation-history.vue";
 import GeneralInput from "@/components/general-input.vue";
-import Timer from "@/components/timer.vue";
 import {languageService} from "@/services/language";
-
 
 export default {
     name: "App-Content",
     components: {
-        Timer,
         GeneralInput,
         EstimationHistory,
         VotingInformation,
@@ -117,12 +102,6 @@ export default {
         },
         triggerNextEstimation() {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.NEXT_ESTIMATION);
-        },
-        updateEstimationName(value) {
-            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {
-                estimationId: this.room.currentEstimation.id,
-                title: value
-            })
         },
         changeRoomTitle(value) {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ROOM_SETTINGS, {
@@ -162,9 +141,6 @@ export default {
         displayedVoteOptions() {
             return this.room ? VALUE_TYPE_OPTIONS.find(vto => vto.id === this.room.currentEstimation.valueOptionsId).values : [];
         },
-        estimationTimer() {
-            return this.appStore.room ? this.appStore.room.currentEstimation.timer : null;
-        },
         localVoteValue() {
             return this.appStore.localVoteValue;
         },
@@ -175,38 +151,16 @@ export default {
 <style lang="scss" scoped>
 
 .app-content {
-  padding-top: 15px;
   max-width: 1280px;
   box-sizing: border-box;
-  //height: calc(100vh - 60px - 40px);
   width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
   padding: 10px;
-
-  .room-header {
-    display: grid;
-    align-items: center;
-    justify-content: space-between;
-    grid-template-columns: 35% 30% 35%;
-    box-sizing: border-box;
-    max-width: 1280px;
-    width: 100%;
-
-    .title-container {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .estimation-timer {
-      font-size: max(20px, min(1.7vw, 28px));
-      justify-self: center;
-    }
-  }
-
 
   .action-area {
     box-sizing: border-box;
@@ -227,7 +181,7 @@ export default {
     .actions {
       display: flex;
       flex-wrap: wrap;
-      justify-content: space-between;
+      justify-content: space-around;
       align-items: center;
       gap: 20px;
       flex-wrap: wrap;
@@ -246,8 +200,6 @@ export default {
         gap: 20px;
       }
     }
-
-
   }
 
   .large-screen {

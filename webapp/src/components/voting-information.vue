@@ -1,7 +1,17 @@
 <template>
     <div class="voting-information-wrapper">
-        <span class="fat" v-if="votingState === VOTING_STATE.VOTING">Schätzrunde läuft</span>
-        <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlinePlayers.length }} aktiven Teilnehmern abgestimmt.</span>
+        <timer class="estimation-timer" v-bind:timer="estimation?.timer"></timer>
+        <general-input class="heading2"
+                       v-bind:text="room?.currentEstimation.title"
+                       v-bind:isDisabled="!isLocalUserModerator"
+                       v-bind:placeholder="'Name der Schätzung'"
+                       v-on:onTextInputChange="updateEstimationTitle($event)"></general-input>
+
+        <div class="voting-info-row">
+            <span class="fat" v-if="votingState === VOTING_STATE.VOTING">Schätzrunde läuft:</span>
+            <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlinePlayers.length }} aktiven Teilnehmern abgestimmt.</span>
+
+        </div>
 
         <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">Auswertungsphase</span>
         <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{
@@ -13,11 +23,13 @@
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {Roles, VOTING_STATE} from "@/constants/vue-constants";
+import {RequestMessageType, Roles, VOTING_STATE} from "@/constants/vue-constants";
+import Timer from "@/components/timer.vue";
+import GeneralInput from "@/components/general-input.vue";
 
 export default {
     name: "voting-information",
-    components: {},
+    components: {GeneralInput, Timer},
     created() {
         this.appStore = useAppStateStore();
     },
@@ -26,7 +38,14 @@ export default {
             appStore: null,
         }
     },
-    methods: {},
+    methods: {
+        updateEstimationTitle(value) {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {
+                estimationId: this.room.currentEstimation.id,
+                title: value
+            })
+        },
+    },
     computed: {
         VOTING_STATE() {
             return VOTING_STATE
@@ -45,6 +64,15 @@ export default {
         },
         estimation() {
             return this.appStore.room ? this.appStore.room.currentEstimation : null;
+        },
+        isLocalUserModerator() {
+            return this.localUser?.roles.includes(Roles.MODERATOR);
+        },
+        room() {
+            return this.appStore.room;
+        },
+        localUser() {
+            return this.appStore.localUser;
         }
     }
 };
@@ -53,6 +81,8 @@ export default {
 <style lang="scss">
 
 .voting-information-wrapper {
+  position: relative;
+  box-sizing: border-box;
   background-color: var(--primary-color);
   align-items: center;
   justify-content: center;
@@ -61,9 +91,25 @@ export default {
   border-radius: 4px;
   flex-direction: column;
   width: 100%;
+  max-width: 900px;
   justify-self: center;
   padding: 5px;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+
+  .voting-info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 8px;
+    justify-content: center;
+  }
+
+  .estimation-timer {
+    font-size: 16px;
+    justify-self: center;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
 
   .fat {
     font-weight: bold;

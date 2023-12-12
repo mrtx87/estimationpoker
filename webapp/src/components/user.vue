@@ -131,10 +131,10 @@ export default {
 }
 
 .header-user {
-  max-width: 65px;
+  max-width: 40px;
 
   .readyonly-player-container {
-    width: 65px;
+    width: 40px;
     aspect-ratio: 1/1;
   }
 }
@@ -263,18 +263,29 @@ export default {
   word-break: break-all;
 }
 
-
-@media only screen and (max-width: 775px) {
+@media only screen and (max-width: 1000px) {
 
   .poker-area-user {
     .readyonly-player-container {
       width: 60px;
       aspect-ratio: 1/1;
     }
+
+    .user-name {
+        font-size: 11px !important;
+    }
+  }
+  .header-user {
+    max-width: 45px;
+
+    .readyonly-player-container {
+      width: 45px;
+      aspect-ratio: 1/1;
+    }
   }
 
   .user-name {
-        font-size: 12px !important;
+    font-size: 12px !important;
   }
 }
 
