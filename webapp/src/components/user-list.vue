@@ -1,16 +1,16 @@
 <template>
-    <div class="user-list-wrapper">
-        <div class="user-tile" v-for="user in sortedOnlineUsers" :key="user.id">
-            <vote-card
-                    v-if="displayVoteCard(user)"
-                    v-bind:value="userVote(user.id)?.value" v-bind:disabled="true"
-                    class="user-tile-size"></vote-card>
-            <div class="card" :class="{'grey-card': !userVote(user.id), 'green-card': userVote(user.id)}"
-                 v-if="displayVoteCardBeforeReveal(user)">
-            </div>
-            <User class="poker-area-user" v-bind:user="user"></User>
-        </div>
+  <div class="user-list-wrapper">
+    <div class="user-tile" v-for="user in sortedOnlineUsers" :key="user.id">
+      <vote-card
+          v-if="displayVoteCard(user)"
+          v-bind:value="userVote(user.id)?.value" v-bind:disabled="true"
+          class="user-tile-size"></vote-card>
+      <div class="card" :class="{'grey-card': !userVote(user.id), 'green-card': userVote(user.id)}"
+           v-if="displayVoteCardBeforeReveal(user)">
+      </div>
+      <User class="poker-area-user" v-bind:user="user"></User>
     </div>
+  </div>
 </template>
 
 <script>
@@ -22,72 +22,72 @@ import VoteCard from "@/components/vote-card.vue";
 import {Roles, VOTING_STATE} from "@/constants/vue-constants";
 
 export default {
-    name: "User-List",
-    components: {
-        VoteCard,
-        User,
-    },
-    created() {
-        this.appStore = useAppStateStore();
-    },
-    data: function () {
-        return {
-            appStore: null,
-            userNameInput: '',
-            displayOfflineUsers: false,
-            showMenu: false
-        }
-    },
-    methods: {
-        userVote(userId) {
-            return this.estimation.votes.find(vote => vote.userId === userId)
-        },
-        hasBeenRevealed() {
-            return this.estimation.state === VOTING_STATE.REVEALED;
-        },
-        displayVoteCard(user) {
-            return user.roles.includes(Roles.PLAYER) && this.userVote(user.id)?.value && (this.hasBeenRevealed() || (this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
-        },
-        displayVoteCardBeforeReveal(user) {
-            return !this.hasBeenRevealed() && user?.roles.includes(Roles.PLAYER) && (!this.userVote(user.id) || !(this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
-        }
-    },
-    computed: {
-        Roles() {
-            return Roles
-        },
-        room() {
-            return this.appStore.room;
-        },
-        localUser() {
-            return this.appStore.localUser;
-        },
-        estimation() {
-            return this.room.currentEstimation;
-        },
-        users() {
-            return this.appStore.room ? this.appStore.room.users : [];
-        },
-        onlineUsers() {
-            return [...this.users.filter(u => this.room.connections.includes(u.id))];
-        },
-        offlineUsers() {
-            return [...this.users.filter(u => !this.room.connections.includes(u.id))];
-        },
-        sortedOnlineUsers() {
-            const users = [...this.onlineUsers];
-            users.sort(sortUser);
-            return users;
-        },
-        sortedOfflineUsers() {
-            if (!this.displayOfflineUsers) {
-                return [];
-            }
-            const users = [...this.offlineUsers];
-            users.sort(sortUser);
-            return users;
-        }
+  name: "User-List",
+  components: {
+    VoteCard,
+    User,
+  },
+  created() {
+    this.appStore = useAppStateStore();
+  },
+  data: function () {
+    return {
+      appStore: null,
+      userNameInput: '',
+      displayOfflineUsers: false,
+      showMenu: false
     }
+  },
+  methods: {
+    userVote(userId) {
+      return this.estimation.votes.find(vote => vote.userId === userId)
+    },
+    hasBeenRevealed() {
+      return this.estimation.state === VOTING_STATE.REVEALED;
+    },
+    displayVoteCard(user) {
+      return user.roles.includes(Roles.PLAYER) && this.userVote(user.id)?.value && (this.hasBeenRevealed() || (this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
+    },
+    displayVoteCardBeforeReveal(user) {
+      return !this.hasBeenRevealed() && user?.roles.includes(Roles.PLAYER) && (!this.userVote(user.id) || !(this.localUser?.roles.includes(Roles.OBSERVER) && this.room?.roomSettings.realtimeVoting));
+    }
+  },
+  computed: {
+    Roles() {
+      return Roles
+    },
+    room() {
+      return this.appStore.room;
+    },
+    localUser() {
+      return this.appStore.localUser;
+    },
+    estimation() {
+      return this.room.currentEstimation;
+    },
+    users() {
+      return this.appStore.room ? this.appStore.room.users : [];
+    },
+    onlineUsers() {
+      return [...this.users.filter(u => this.room.connections.includes(u.id))];
+    },
+    offlineUsers() {
+      return [...this.users.filter(u => !this.room.connections.includes(u.id))];
+    },
+    sortedOnlineUsers() {
+      const users = [...this.onlineUsers];
+      users.sort(sortUser);
+      return users;
+    },
+    sortedOfflineUsers() {
+      if (!this.displayOfflineUsers) {
+        return [];
+      }
+      const users = [...this.offlineUsers];
+      users.sort(sortUser);
+      return users;
+    }
+  }
 };
 
 </script>
@@ -102,6 +102,7 @@ export default {
   gap: 20px;
   padding: 15px 0;
   min-height: 25vh;
+  width: 100%;
 
   .users-heading {
     border-bottom: 1px solid #f2f3f4;
@@ -117,6 +118,7 @@ export default {
     border-radius: 5px;
     aspect-ratio: 1/1;
     position: relative;
+    height: fit-content;
   }
 
   .card {

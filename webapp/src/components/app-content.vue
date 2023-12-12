@@ -49,10 +49,11 @@
                 <div class="all-users-buttons">
                     <button class="button-activate" v-on:click="openRoomSettings()"><img style="width:30px;"
                                                                                          src="../assets/gear.svg">
-                        {{ tl8('app.content.btn.settings') }}
+                       <span>{{ tl8('app.content.btn.settings') }}</span>
                     </button>
                     <button class="button-activate" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
-                            style="width:30px;" src="../assets/sharelink.svg"> invite link
+                            style="width:30px;" src="../assets/sharelink.svg">
+                      <span>invite link</span>
                     </button>
                 </div>
 
@@ -228,19 +229,21 @@ export default {
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
 
       .moderator-actions {
         display: flex;
         justify-content: center !important;
         gap: 20px;
         box-sizing: border-box;
-        padding: 15px;
+        flex-wrap: wrap;
       }
 
       .all-users-buttons {
         display: flex;
+        justify-content: center;
         gap: 20px;
-        width: 30%;
       }
     }
 
