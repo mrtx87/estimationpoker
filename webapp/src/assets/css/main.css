@@ -289,15 +289,22 @@ body {
 
 .input-elem-container input[type=text] {
     padding: 15px;
-    outline: 1px solid #d7d7d7;
     border: none;
     border-radius: 3px;
     margin-bottom: 10px;
     width: 100%;
     box-sizing: border-box;
-    color: #2C3E50;
+    color: white;
     font-size: 13px;
     font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: #adc7dc;
+    outline: none;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: rgba(0, 0, 0, 0.41) 2.4px 2.4px 3.2px;
+    &::-webkit-input-placeholder {
+        color: #8f8f8f;
+    }
 }
 
 .close-btn {

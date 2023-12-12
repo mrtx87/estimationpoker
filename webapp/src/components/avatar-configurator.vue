@@ -3,7 +3,7 @@
         <div v-on:click="closeOverlay" class="close-btn"><img src="../assets/close.svg"></div>
 
         <div class="input-elem-container" style="width:50%;">
-            <input type=text v-model="editedUserName" placeholder="Dein Benutzername">
+            <input type=text v-model="editedUserName" placeholder="Dein Benutzername" spellcheck="false">
             <span v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</span>
         </div>
         <div class="avatar-needles">
