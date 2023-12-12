@@ -5,30 +5,18 @@ export const germanKey = 'de';
 export const englishKey = 'en';
 
 export class LanguageService {
-    selectedLanguageKey: string | undefined;
-    language: {
-        key: string;
-        texts: any;
-    } | undefined;
-
-
-    constructor(langKey: 'en' | 'de') {
-        this.setLanguage(langKey);
+    languages = LanguageService.initLanguageMap();
+    t(key: string, langKey: 'de' | 'en', vars?: any) {
+        return this.languages.get(langKey).texts[key];
     }
 
-    setLanguage(langKey: 'en' | 'de') {
-        this.selectedLanguageKey = langKey;
-        this.language = this.getLanguageTexts();
-    }
-
-    getLanguageTexts() {
-        return this.selectedLanguageKey === germanKey ? german : english;
-    }
-
-    t(key: string, vars?: any) {
-        return this.language?.texts[key];
+    private static initLanguageMap() {
+        const map = new Map();
+        map.set(germanKey, german);
+        map.set(englishKey, english);
+        return map;
     }
 
 }
 
-export const languageService  = new LanguageService(germanKey);
+export const languageService  = new LanguageService();

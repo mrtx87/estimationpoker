@@ -18,7 +18,8 @@ export const useAppStateStore = defineStore('AppStore', {
             _localVoteValue: '',
             _estimationHistory: [],
             _roomPreviews: [],
-            _screenDimensions: {width: 0, height: 0}
+            _screenDimensions: {width: 0, height: 0},
+            _langKey: 'de'
         }
     },
     actions: {
@@ -53,7 +54,7 @@ export const useAppStateStore = defineStore('AppStore', {
             this._toast = toast;
         },
         getUser(userId: string) {
-          this._room ? this.users.find((u: any) => u.id === userId) : null;
+            this._room ? this.users.find((u: any) => u.id === userId) : null;
         },
         setIsOnRoomRoute(value: boolean) {
             this._isOnRoomRoute = value;
@@ -72,6 +73,9 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setScreenDimensions(dimensions: any) {
             this._screenDimensions = dimensions;
+        },
+        setLangKey(langKey: string) {
+            this._langKey = langKey;
         }
     },
     getters: {
@@ -106,5 +110,7 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         toast: (state: any) => state._toast,
         roomPreviews: (state: any) => state._roomPreviews,
+        langKey: (state: any) => state._langKey,
+
     }
 });
