@@ -1,9 +1,9 @@
 <template>
     <div class="room-settings-wrapper">
         <div class="large-heading">
-            Room Settings
+          {{ tl8('room.settings.title') }}
         </div>
-        <div class="input-elem-container">
+        <div class="create-room-input-elem-container">
             <input type="text" placeholder="Room Title" :disabled="localUserIsNotModerator" v-model="title">
             <span v-if="roomTitleTooLong" class="validation-message">maximal 40 Zeichen</span>
         </div>
@@ -46,6 +46,7 @@ import {useAppStateStore} from "@/stores/app-state";
 import {restService} from "@/services/rest-service";
 import {DISPLAY_OVERLAY_STATE, RequestMessageType, VALUE_TYPE_OPTIONS} from "@/constants/vue-constants";
 import VoteCard from "@/components/vote-card.vue";
+import {languageService} from "@/services/language";
 
 
 export default {
@@ -72,6 +73,9 @@ export default {
         }
     },
     methods: {
+        tl8(key) {
+          return languageService.t(key);
+        },
         isValid() {
             return this.roomSettings.realtimeVoting !== this.realtimeVoting
                 || (this.roomSettings.title !== this.title && this.title.length > 1 && !this.roomTitleTooLong)

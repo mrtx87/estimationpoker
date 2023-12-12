@@ -307,6 +307,24 @@ body {
     }
 }
 
+.create-room-input-elem-container input[type=text] {
+    padding: 15px;
+    border: none;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    color: black;
+    font-size: 13px;
+    font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
+    background: white;
+    font-weight: bold;
+    &::-webkit-input-placeholder {
+        color: #8f8f8f;
+    }
+}
+
+
 .close-btn {
     position: absolute;
     top: -5px;
