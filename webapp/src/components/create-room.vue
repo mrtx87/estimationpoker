@@ -1,14 +1,14 @@
 <template>
     <div class="create-room-wrapper">
         <div class="room-settings-create">
-            <div class="large-heading">Erstelle einen Raum</div>
+            <div class="large-heading">{{ tl8('create.room.title')}}</div>
             <div class="input-elem-container">
-                <input type=text v-model="userNameInput" placeholder="Dein Benutzername">
-                <div v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</div>
+                <input type=text v-model="userNameInput" :placeholder="tl8('create.room.user.name.placeholder')">
+                <div v-if="userNameTooLong" class="validation-message">{{ tl8('validation.text.user.name') }}</div>
             </div>
             <div class="input-elem-container">
                 <input type=text placeholder="Name des Raums eingeben" v-model="roomSettings.title">
-                <div v-if="roomTitleTooLong" class="validation-message">maximal 40 Zeichen</div>
+                <div v-if="roomTitleTooLong" class="validation-message">{{ tl8('validation.text.user.name') }}</div>
 
                 <select class="custom-select" v-model="selectedValueTypeIndex">
                     <option :value="index" v-for="(typeOption, index) in valueTypeOptions" :key="typeOption.id">
@@ -25,12 +25,13 @@
             <div class="secondary-options">
                 <div class="secondary-option">
                     <input v-model="roomSettings.realtimeVoting" type="checkbox">
-                    <span>Do you want moderators to see other players voting in real time?</span>
+                    <span>{{ tl8('create.room.option.realtime.voting') }}</span>
                 </div>
             </div>
             <div class="create-room-buttons-panel">
-                <button class="button-activate" :disabled="isInvalid" v-on:click="createRoom()">Raum erstellen</button>
-                <button class="button-activate invers" v-on:click="cancel()">abbrechen</button>
+                <button class="button-activate" :disabled="isInvalid" v-on:click="createRoom()">{{ tl8('create.room.btn.title') }}</button>
+
+                <button class="button-activate invers" v-on:click="cancel()">{{ tl8('create.room.btn.cancel') }}</button>
             </div>
 
         </div>
@@ -43,6 +44,7 @@ import {useAppStateStore} from "@/stores/app-state";
 import {restService} from "@/services/rest-service";
 import {DISPLAY_OVERLAY_STATE, VALUE_TYPE_OPTIONS} from "@/constants/vue-constants";
 import VoteCard from "@/components/vote-card.vue";
+import {languageService} from "@/services/language";
 
 
 export default {
@@ -81,6 +83,9 @@ export default {
         },
         cancel() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
+        },
+        tl8(key) {
+            return languageService.t(key);
         }
     },
     computed: {
