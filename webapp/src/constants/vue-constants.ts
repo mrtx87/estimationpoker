@@ -191,3 +191,5 @@ export const ESTIMATION_TIMER_STATE = {
     RUNNING: 1,
     STOPPED: 0,
 }
+
+export const LANG_COOKIE_KEY = 'estimation-poker-lang';

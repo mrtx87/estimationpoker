@@ -1,76 +1,95 @@
 <template>
-  <div class="header-wrapper">
-    <div class="header">
-      <label v-on:click="isChecked" :class="{ 'toggle': !checked, 'toggle change-color': checked}">
-        <input type="checkbox">
-        <span class="slider"></span>
-        <span class="labels" data-on="EN" data-off="DE"></span>
-      </label>
-      <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
-          src="../assets/sharelink.svg"> invite link
-      </button>
-      <div class="user-icon-and-menu">
-        <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true"
-              v-bind:noUserRoleIcon="true"
-              v-on:click="toggleUserMenu"></user>
-        <user-menu v-bind:user="localUser" v-if="displayUserMenu"
-                   v-on-click-outside="clickedOutside"></user-menu>
-      </div>
+    <div class="header-wrapper">
+        <div class="header">
+            <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
+                <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
+                <span class="slider"></span>
+                <span class="labels" data-on="EN" data-off="DE"></span>
+            </label>
+            <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
+                    src="../assets/sharelink.svg"> invite link
+            </button>
+            <div class="user-icon-and-menu">
+                <user class="header-user" v-if="localUser" v-bind:user="localUser" v-bind:noUserName="true"
+                      v-bind:noUserRoleIcon="true"
+                      v-on:click="toggleUserMenu"></user>
+                <user-menu v-bind:user="localUser" v-if="displayUserMenu"
+                           v-on-click-outside="clickedOutside"></user-menu>
+            </div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, LANG_COOKIE_KEY} from "@/constants/vue-constants";
 import User from "@/components/user.vue";
 import UserMenu from "@/components/user-menu.vue";
 import {vOnClickOutside} from "@vueuse/components/index";
+import {englishKey, germanKey, languageService} from "@/services/language";
+import {german} from "@/constants/language/de";
+import {getCookie, setCookie} from "@/services/cookie-service";
 
 export default {
-  name: "HeaderVue",
-  components: {UserMenu, User},
-  directives: {
-    onClickOutside: vOnClickOutside
-  },
-  created() {
-    this.appStore = useAppStateStore();
-  },
-  data: function () {
-    return {
-      isAvatarConfiguratorOpen: false,
-      appStore: null,
-      displayUserMenu: false,
-      checked: false,
+    name: "HeaderVue",
+    components: {UserMenu, User},
+    directives: {
+        onClickOutside: vOnClickOutside
+    },
+    created() {
+        this.initLanguageSetting();
+        if (languageService.selectedLanguageKey !== germanKey) {
+            this.checked = true;
+        }
+        this.appStore = useAppStateStore();
+    },
+    data: function () {
+        return {
+            isAvatarConfiguratorOpen: false,
+            appStore: null,
+            displayUserMenu: false,
+            checked: false,
+        }
+    },
+    methods: {
+        initLanguageSetting() {
+            let langKey = getCookie(LANG_COOKIE_KEY);
+            if(!langKey) {
+                langKey = germanKey;
+                setCookie(LANG_COOKIE_KEY, langKey);
+            }
+            languageService.setLanguage(langKey);
+        },
+        onCheckedChange(nextChecked) {
+            this.checked = nextChecked;
+            const langKey = nextChecked ? englishKey : germanKey;
+            setCookie(LANG_COOKIE_KEY, langKey);
+            languageService.setLanguage(langKey);
+            console.log(nextChecked)
+        },
+        clickedOutside() {
+            this.displayUserMenu = null;
+        },
+        shareLink() {
+            navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
+        },
+        toggleUserMenu: function () {
+            this.displayUserMenu = !this.displayUserMenu;
+        },
+        openAvatarEditor: function () {
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
+            this.toggleUserMenu();
+        },
+    },
+    computed: {
+        localUserId() {
+            return this.appStore.localUserId;
+        },
+        localUser() {
+            return this.appStore.room && this.localUserId ? this.appStore.room.users.find(u => u.id === this.localUserId) : null;
+        }
     }
-  },
-  methods: {
-    isChecked() {
-      this.checked = !this.checked;
-    },
-    clickedOutside() {
-      this.displayUserMenu = null;
-    },
-    shareLink() {
-      navigator.clipboard.writeText(window.location.href).then(() => this.appStore.toast.info('In Zwischenablage kopiert'));
-    },
-    toggleUserMenu: function () {
-      this.displayUserMenu = !this.displayUserMenu;
-    },
-    openAvatarEditor: function () {
-      this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
-      this.toggleUserMenu();
-    },
-  },
-  computed: {
-    localUserId() {
-      return this.appStore.localUserId;
-    },
-    localUser() {
-      return this.appStore.room && this.localUserId ? this.appStore.room.users.find(u => u.id === this.localUserId) : null;
-    }
-  }
 };
 </script>
 
@@ -130,9 +149,10 @@ export default {
   background-color: #acc5da;
 }
 
-.change-color{
+.change-color {
   background-color: #ff0000;
 }
+
 .toggle input {
   display: none;
 }
@@ -161,11 +181,11 @@ export default {
   transition: all 0.4s ease-in-out;
 }
 
-.toggle input:checked+.slider {
+.toggle input:checked + .slider {
   background-color: #a0c7db;
 }
 
-.toggle input:checked+.slider::before {
+.toggle input:checked + .slider::before {
   transform: translateX(calc(var(--width) - var(--height)));
 }
 
@@ -203,12 +223,12 @@ export default {
   font-weight: bold;
 }
 
-.toggle input:checked~.labels::after {
+.toggle input:checked ~ .labels::after {
   opacity: 0;
   transform: translateX(calc(var(--width) - var(--height)));
 }
 
-.toggle input:checked~.labels::before {
+.toggle input:checked ~ .labels::before {
   opacity: 1;
   transform: translateX(calc(var(--width) - var(--height)));
 }
