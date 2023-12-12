@@ -4,7 +4,7 @@
                :placeholder="placeholder"
                v-model="inputText" v-on:focus="makeEditable()">
         <div class="change-title-btn" v-if="isFocused">
-            <button class="save-change" :disabled="isInvalid()" v-on:click="changeInputText()">
+            <button class="save-change" :disabled="isInvalid" v-on:click="changeInputText()">
                 <img class="accept-img"
                      src="../assets/accept.svg">
             </button>
@@ -61,11 +61,12 @@ export default {
             this.$emit('onTextInputChange', this.inputText);
             this.makeNotEditable();
         },
+    },
+    computed: {
         isInvalid() {
             return this.inputText === this.text || !this.inputText;
         }
-    },
-    computed: {}
+    }
 };
 </script>
 
@@ -76,7 +77,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 4px 8px;
-
+  width: 90%;
 
   &.focused {
     background: rgb(251, 251, 251);
@@ -90,11 +91,13 @@ export default {
 }
 
 .heading1 .general-input {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
+  text-align: center;
 }
 
 .heading2 .general-input {
   font-size: 1.3rem;
+  text-align: center;
 }
 
 .general-input {
@@ -176,6 +179,20 @@ export default {
         transition: .1s linear;
       }
     }
+  }
+}
+
+@media only screen and (max-width: 775px) {
+
+
+  .heading1 .general-input {
+    font-size: 1.25rem !important;
+    font-weight: bold;
+
+  }
+
+  .heading2 .general-input {
+    font-size: 1.1rem !important;
   }
 }
 </style>
