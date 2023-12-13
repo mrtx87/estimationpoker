@@ -1,9 +1,24 @@
 <template>
     <div class="impressum-wrapper">
         <div v-on:click="closeOverlay" class="close-btn"><img src="../assets/close.svg"></div>
+        <div class="impressum-title">Impressum</div>
         <div class="impressum">
-            Lorem ipsum dolor sit amet,
-            DAS IST IMPRESSUM DU KÖPEK
+            <div class="impressum-row">
+                <span class="impressum-row-title">Owner:</span>
+                <span>Patrick Beiersdörfer</span>
+            </div>
+            <div class="impressum-row">
+                <span class="impressum-row-title">Address:</span>
+                <span>10245 Berlin Palmkernzeile 7</span>
+            </div>
+            <div class="impressum-row">
+                <span class="impressum-row-title">E-Mail:</span>
+                <span>contact@curview.net</span>
+            </div>
+            <div class="impressum-row">
+                <span class="impressum-row-title">Domain:</span>
+                <span>??????.net</span>
+            </div>
         </div>
     </div>
 </template>
@@ -26,7 +41,7 @@ export default {
     },
     methods: {
         closeOverlay: function () {
-            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         },
     },
     computed: {}
@@ -34,6 +49,38 @@ export default {
 </script>
 
 <style lang="scss">
+
+.impressum-wrapper {
+  position: relative;
+  padding: 10px;
+  box-sizing: border-box;
+
+  .close-btn {
+    top: -5px;
+    right: -5px;
+  }
+
+  .impressum-title {
+    font-size: 26px;
+    font-weight: 600;
+    padding-bottom: 15px;
+  }
+
+  .impressum {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .impressum-row {
+      display: flex;
+      gap: 20px;
+
+      .impressum-row-title {
+        font-weight: bold;
+      }
+    }
+  }
+}
 
 
 </style>

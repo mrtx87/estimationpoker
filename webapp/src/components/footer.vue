@@ -1,10 +1,11 @@
 <template>
-  <div class="footer-wrapper">
-    <div class="footer">
-      <div class="impressum-btn" v-on:click="openImpressumOnClick">Impressum</div>
-      <div class="dsgvo-btn" v-on:click="openDsgvoOnClick">DSGVO</div>
+    <div class="footer-wrapper">
+        <div class="footer">
+            <div class="footer-btn" v-on:click="openImpressumOnClick">Impressum</div>
+            <div class="footer-btn" v-on:click="openDatenschutzOnClick">Datenschutzerklärung</div>
+            <div class="footer-btn" v-on:click="openDsgvoOnClick">Cookie-Richtlinien</div>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -15,27 +16,28 @@ import Impressum from "@/components/impressum.vue";
 import Dsgvo from "@/components/dsgvo.vue";
 
 export default {
-  name: "FooterVue",
-  components: {
-  },
-  created() {
-    this.appState = useAppStateStore();
-  },
-  data: function () {
-    return {
-      appState: null,
-    }
-  },
-  methods: {
-    openImpressumOnClick: function () {
-      this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.IMPRESSUM);
-      console.log(this.appState._overlayId)
+    name: "FooterVue",
+    components: {},
+    created() {
+        this.appState = useAppStateStore();
     },
-    openDsgvoOnClick: function () {
-      this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+    data: function () {
+        return {
+            appState: null,
+        }
     },
-  },
-  computed: {}
+    methods: {
+        openDatenschutzOnClick: function () {
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DATENSCHUTZ);
+        },
+        openImpressumOnClick: function () {
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.IMPRESSUM);
+        },
+        openDsgvoOnClick: function () {
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+        },
+    },
+    computed: {}
 };
 </script>
 
@@ -47,6 +49,8 @@ export default {
   width: 100%;
   justify-content: center;
   bottom: 0px;
+  padding: 3px;
+  box-sizing: border-box;
 }
 
 .footer {
@@ -54,22 +58,14 @@ export default {
   gap: 20px;
 }
 
-.impressum-btn {
-  color: #dedede;
+.footer-btn {
+  color: #bbbbbb;
   cursor: pointer;
+
+  &:hover {
+    color: white;
+  }
 }
 
-.impressum-btn:hover {
-  color: white;
-}
-
-.dsgvo-btn {
-  color: #dedede;
-  cursor: pointer;
-}
-
-.dsgvo-btn:hover {
-  color: white;
-}
 
 </style>
