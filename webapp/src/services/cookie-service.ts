@@ -43,4 +43,3 @@ export function getRoomAuthenticationsFromCookies(): any[] {
         return {roomId, token: jwt};
     });
 }
-
