@@ -1,6 +1,6 @@
 <template>
     <div class="eval-wrapper">
-        <span style="font-size: 1.3rem; font-weight: bold; padding: 10px;">Evaluation</span>
+        <span style="font-size: 1.3rem; font-weight: bold; padding: 10px;">{{ tl8('evaluation.evaluation') }}</span>
         <div class="eval-chart-container">
             <chart v-if="donut" class="echarts" theme="custom" :options="donut" :initOptions="initOptions" ref="chart1"
                    v-bind:autoresize="true"></chart>
@@ -18,6 +18,7 @@ import "echarts/lib/chart/pie";
 import "echarts/theme/dark";
 import {getPieChartObj, mapValuesByAmount} from "@/services/util";
 import {tShirtVoteOptionId} from "@/constants/vue-constants";
+import {languageService} from "@/services/language";
 
 ECharts.registerTheme("custom", {
     ...theme, backgroundColor: 'transparent', legend: {
@@ -42,16 +43,22 @@ export default {
     },
     props: ['estimation'],
     created() {
-        this.appStore = useAppStateStore();
-        this.refreshEvaluationChart(this.estimation);
+      this.appStore = useAppStateStore();
+      this.refreshInitOptions();
+      this.refreshEvaluationChart(this.estimation);
     },
     watch: {
         estimation(nextEstimation, previousEstimation) {
-            this.refreshEvaluationChart(nextEstimation);
+          this.refreshInitOptions();
+          this.refreshEvaluationChart(nextEstimation);
         },
         screenDimensions(nextScreenDimensions, previousScreenDimensions) {
             this.refreshInitOptions();
             this.refreshEvaluationChart(this.estimation);
+        },
+        langKey(nextLangKey, previousLangKey) {
+          this.refreshInitOptions();
+          this.refreshEvaluationChart(this.estimation);
         }
     },
     data: function () {
@@ -66,13 +73,16 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+          return languageService.t(key, this.appStore.langKey, vars);
+        },
         refreshEvaluationChart(nextEstimation) {
             if (nextEstimation) {
                 const screenWidth = this.screenDimensions.width;
                 this.donut = getPieChartObj(
                     {
                         text: `Ø - ${nextEstimation.evaluation.avg} \n\n ${this.getDeviationText(nextEstimation.evaluation.deviation)}`,
-                        subtext: `Abgegebene Votes - ${nextEstimation.evaluation.amountOfVotes}`
+                        subtext: `${this.tl8('evaluation.submitted-votes')} ${nextEstimation.evaluation.amountOfVotes}`
                     }, {
                         title: nextEstimation.title,
                         data: mapValuesByAmount(nextEstimation.evaluation.valuesByAmount),
@@ -92,32 +102,38 @@ export default {
         },
         getDeviationText(deviation) {
             let semanticDescription = '';
+
             if (deviation === 0) {
-                semanticDescription = 'none';
+                semanticDescription = this.tl8('evaluation.deviation.none');
             }
 
             if (deviation > 0 && deviation < 1) {
-                semanticDescription = 'small';
+                semanticDescription = this.tl8('evaluation.deviation.small');
             }
 
             if (deviation > 1.5 && deviation < 2) {
-                semanticDescription = 'medium';
+                semanticDescription = this.tl8('evaluation.deviation.medium');
             }
 
             if (deviation >= 2 && deviation < 3) {
-                semanticDescription = 'large';
+                semanticDescription = this.tl8('evaluation.deviation.large');
             }
 
             if (deviation > 3) {
-                semanticDescription = 'extreme';
+                semanticDescription = this.tl8('evaluation.deviation.extreme');
             }
 
-            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? `deviation: ${deviation} (${semanticDescription})` : `deviation: ${semanticDescription}`;
-        }
+            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? this.tl8('evaluation.get-deviation-text',[deviation,[semanticDescription]]) :
+                                                                           this.tl8('evaluation.get-deviation-text2',[semanticDescription]);
+        },
+
     },
     computed: {
         screenDimensions() {
             return this.appStore?.screenDimensions;
+        },
+        langKey() {
+         return this.appStore?.langKey;
         }
     }
 };

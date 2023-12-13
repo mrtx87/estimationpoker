@@ -4,19 +4,19 @@
         <general-input class="heading2"
                        v-bind:text="room?.currentEstimation.title"
                        v-bind:isDisabled="!isLocalUserModerator"
-                       v-bind:placeholder="'Name der Schätzung'"
+                       v-bind:placeholder=" tl8('voting.information.name.for.estimation')"
                        v-on:onTextInputChange="updateEstimationTitle($event)"></general-input>
 
         <div class="voting-info-row">
-            <span class="fat" v-if="votingState === VOTING_STATE.VOTING">Schätzrunde läuft:</span>
-            <span v-if="votingState === VOTING_STATE.VOTING">Es haben {{ votes.length }} von {{ onlinePlayers.length }} aktiven Teilnehmern abgestimmt</span>
+            <span class="fat" v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting-information.estimation-underway')}}</span>
+            <span v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting-information.voters-count', [votes.length,onlinePlayers.length]) }}
+            </span>
 
         </div>
         <div class="voting-info-row">
-            <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">Auswertungsphase:</span>
-            <span v-if="votingState === VOTING_STATE.REVEALED">Durchschnittlicher Schätzwert ist {{
-                estimation.evaluation.avg
-                }}</span>
+            <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting-information.evaluation-phase')}}:</span>
+            <span v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting-information.average-estimated-value', [estimation.evaluation.avg]) }}
+            </span>
         </div>
 
 
@@ -29,6 +29,7 @@ import {useAppStateStore} from "@/stores/app-state";
 import {RequestMessageType, Roles, VOTING_STATE} from "@/constants/vue-constants";
 import Timer from "@/components/timer.vue";
 import GeneralInput from "@/components/general-input.vue";
+import {languageService} from "@/services/language";
 
 export default {
     name: "voting-information",
@@ -42,6 +43,9 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+          return languageService.t(key, this.appStore.langKey, vars);
+        },
         updateEstimationTitle(value) {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {
                 estimationId: this.room.currentEstimation.id,

@@ -5,7 +5,7 @@
             <div class="header-btns">
                 <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute"
                         v-on:click="createRoomOverlay()">
-                    <img src="../assets/cross.svg"> create room
+                    <img src="../assets/cross.svg">{{ tl8('header.create.room')}}
                 </button>
                 <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
                     <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
@@ -55,6 +55,9 @@ export default {
         }
     },
     methods: {
+        tl8(key) {
+          return languageService.t(key, this.appStore.langKey);
+        },
         initLanguageSetting() {
             let langKey = getCookie(LANG_COOKIE_KEY);
             if (!langKey) {

@@ -1,6 +1,6 @@
 <template>
     <div class="user-menu-wrapper">
-        <div class="user-menu-item-heading">Roles</div>
+        <div class="user-menu-item-heading">{{ tl8('user.menu.roles') }}</div>
         <div class="user-menu-item" v-on:click="toggleSelectRole(Roles.MODERATOR)">
             <span>Moderator</span>
             <img v-if="user.roles.includes(Roles.MODERATOR)" src="../assets/ok.svg">
@@ -13,9 +13,9 @@
             <span>Observer</span>
             <img v-if="user.roles.includes(Roles.OBSERVER)" src="../assets/ok.svg">
         </div>
-        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">Edit User</div>
+        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">{{ tl8('user.menu.edit-user') }}</div>
         <div v-on:click="openDeleteUserPrompt()" class="user-menu-item-heading active-item">
-            <span>Delete User</span>
+            <span>{{ tl8('user.menu.delete-user') }}</span>
             <img  style="width:17px;" src="../assets/warn.svg">
         </div>
     </div>
@@ -25,6 +25,7 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE, RequestMessageType, Roles} from "@/constants/vue-constants";
+import {languageService} from "@/services/language";
 
 export default {
     name: "user-menu",
@@ -39,6 +40,9 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+          return languageService.t(key, this.appStore.langKey, vars);
+        },
         openEditUser() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
         },

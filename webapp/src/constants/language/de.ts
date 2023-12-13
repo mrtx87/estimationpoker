@@ -26,5 +26,38 @@ export const german = {
         'estimation-history.createdAt': 'Erstellt am',
         'validation.text.user.name': 'maximal 25 Zeichen',
         'validation.text.room.title': 'maximal 40 Zeichen',
+        'voting-information.estimation-underway': 'Schätzrunde läuft:',
+        'voting-information.voters-count': 'Es haben {} von {} aktiven Teilnehmern abgestimmt',
+        'voting-information.evaluation-phase': 'Auswertungsphase',
+        'voting-information.average-estimated-value': 'Durchschnittlicher Schätzwert ist  {}',
+        'voting.information.name.for.estimation': 'Name der Schätzung',
+
+        'evaluation.evaluation': 'Auswertung',
+        'evaluation.submitted-votes': 'Abgegebene Votes - ',
+        'evaluation.get-deviation-text': 'Abweichung: {} {}',
+        'evaluation.get-deviation-text2': 'Abweichung: {}',
+        'evaluation.deviation.none': 'keine',
+        'evaluation.deviation.small': 'klein',
+        'evaluation.deviation.medium': 'mittel',
+        'evaluation.deviation.large': 'groß',
+        'evaluation.deviation.extreme': 'extrem',
+
+        'header.create.room': 'Raum erstellen',
+        'header.room.name.placeholder': 'Name des Raums',
+
+        'user.menu.roles': 'Rollen',
+        'user.menu.edit-user': 'Benutzer bearbeiten',
+        'user.menu.delete-user': 'Benutzer löschen',
+
+        'room-history.create.room': 'Raum erstellen',
+        'room-history.last.time.visited.room': 'Zuletzt besuchte Räume',
+        'room-history.title': 'Titel',
+        'room-history.participants': 'Teilnehmer',
+        'room-history.estimates': 'Schätzungen',
+        'room-history.your.user': 'Dein User',
+        'room-history.date.of.creation': 'Datum der Erstellung',
+        'room-history.join.btn': 'beitreten',
+        'room-history.no.rooms.created.or.joined': 'Du hast bisher noch keine Räume erstellt oder betreten.',
+
     }
 }

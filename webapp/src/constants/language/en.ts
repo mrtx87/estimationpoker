@@ -27,6 +27,40 @@ export const english = {
 
         'validation.text.user.name': '25 characters max',
         'validation.text.room.title': '40 characters max',
+        'voting-information.estimation-underway': 'Estimation round in progress:',
+        'voting-information.voters-count': '{} out of {} active participants have voted',
+        'voting-information.evaluation-phase': 'Evaluation phase',
+        'voting-information.average-estimated-value': 'Average estimated value is {}',
+        'voting.information.name.for.estimation': 'Name for estimation',
+
+        'evaluation.evaluation': 'Evaluation',
+        'evaluation.submitted-votes': 'Submitted Votes - ',
+        'evaluation.get-deviation-text': 'deviation: {} {}',
+        'evaluation.get-deviation-text2': 'deviation: {}',
+        'evaluation.deviation.none': 'none',
+        'evaluation.deviation.small': 'small',
+        'evaluation.deviation.medium': 'medium',
+        'evaluation.deviation.large': 'large',
+        'evaluation.deviation.extreme': 'extreme',
+
+        'header.create.room': 'create room',
+        'header.room.name.placeholder': 'Name of the room',
+
+
+        'user.menu.roles': 'Roles',
+        'user.menu.edit-user': 'Edit User',
+        'user.menu.delete-user': 'delete User',
+
+        'room-history.create.room': 'create Room',
+        'room-history.last.time.visited.room': 'Recently visited rooms',
+        'room-history.title': 'Title',
+        'room-history.participants': 'Participants',
+        'room-history.estimates': 'Estimations',
+        'room-history.your.user': 'Your User',
+        'room-history.date.of.creation': 'Date of creation',
+        'room-history.join.btn': 'join',
+        'room-history.no.rooms.created.or.joined': 'You have not yet created or entered a room.',
+
 
     }
 }

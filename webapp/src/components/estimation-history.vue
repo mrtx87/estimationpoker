@@ -5,8 +5,8 @@
             <div class="estimation-history-list-column title-column bold">{{ tl8('estimation-history.name') }}</div>
             <div class="estimation-history-list-column bold" :title="'average'">Ø</div>
             <div class="estimation-history-list-column bold">{{ tl8('estimation-history.deviation') }}</div>
-            <div class="estimation-history-list-column bold">{{ tl8('estimation-history.name') }}</div>
-            <div class="estimation-history-list-column bold displayLarge">{{ tl8('estimation-history.name') }}</div>
+            <div class="estimation-history-list-column bold">{{ tl8('estimation-history.votes') }}</div>
+            <div class="estimation-history-list-column bold displayLarge">{{ tl8('estimation-history.time') }}</div>
             <div class="estimation-history-list-column bold displayLarge">{{
                 tl8('estimation-history.createdAt')
                 }}

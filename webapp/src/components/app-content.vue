@@ -3,7 +3,7 @@
     <general-input class="heading1"
                    v-bind:text="room?.roomSettings.title"
                    v-bind:isDisabled="!isLocalUserModerator()"
-                   v-bind:placeholder="'Name des Raums'"
+                   v-bind:placeholder=" tl8('header.room.name.placeholder') "
                    v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
     <voting-information></voting-information>
     <user-list></user-list>

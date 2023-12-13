@@ -2,18 +2,17 @@
     <div class="room-history-wrapper">
         <div style="width:100%; display: flex; justify-content: flex-end;">
             <button class="button-activate" v-on:click="openCreateRoomOverlay()"><img style="width: 30px;"
-                                                                                      src="../assets/cross.svg"> Raum
-                erstellen
+                                                                                      src="../assets/cross.svg">{{ tl8('room-history.create.room') }}
             </button>
         </div>
-        <div class="room-history-header">Zuletzt besuchte Räume</div>
+        <div class="room-history-header">{{ tl8('room-history.last.time.visited.room') }}</div>
         <div class="room-history-list">
             <div class="room-history-list-row">
-                <div class="room-history-list-column title-column bold">Titel</div>
-                <div class="room-history-list-column bold">Teilnehmer</div>
-                <div class="room-history-list-column bold large-table">Schätzungen</div>
-                <div class="room-history-list-column bold large-table">Dein User</div>
-                <div class="room-history-list-column bold large-table">Erstelldatum</div>
+                <div class="room-history-list-column title-column bold">{{ tl8('room-history.title') }}</div>
+                <div class="room-history-list-column bold">{{ tl8('room-history.participants') }}</div>
+                <div class="room-history-list-column bold large-table">{{ tl8('room-history.estimates') }}</div>
+                <div class="room-history-list-column bold large-table">{{ tl8('room-history.your.user') }}</div>
+                <div class="room-history-list-column bold large-table">{{ tl8('room-history.date.of.creation') }}</div>
                 <div class="room-history-list-column bold"></div>
             </div>
             <div v-for="roomPreviewItem in roomPreviews" :key="roomPreviewItem.id" class="room-history-list-row">
@@ -26,14 +25,12 @@
                 <div class="room-history-list-column large-table">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
                 <div class="room-history-list-column btns-column">
                     <button class="button-activate small-btn" title="join" v-on:click="joinRoom(roomPreviewItem.id)">
-                        <img src="../assets/enter.svg"><span>join</span></button> <!-- TODO icon -->
+                        <img src="../assets/enter.svg"><span>{{ tl8('room-history.join.btn') }}</span></button> <!-- TODO icon -->
                 </div>
             </div>
         </div>
-        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> Du hast bisher noch keine Räume erstellt oder
-            betreten.
+        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> {{ tl8('room-history.no.rooms.created.or.joined')}}
         </div>
-
     </div>
 </template>
 
@@ -47,6 +44,7 @@ import User from "@/components/user.vue";
 import moment from 'moment';
 import {router} from "@/main";
 import {formatDate} from "@/services/util";
+import {languageService} from "@/services/language";
 
 export default {
     name: "Room-History",
@@ -66,6 +64,9 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+          return languageService.t(key, this.appStore.langKey, vars);
+        },
         joinRoom(roomId) {
             router.push(ROOM_ROUTE + roomId);
         },
