@@ -13,10 +13,13 @@
             <span>Observer</span>
             <img v-if="user.roles.includes(Roles.OBSERVER)" src="../assets/ok.svg">
         </div>
-        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">{{ tl8('user.menu.edit-user') }}</div>
+        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">{{
+            tl8('user.menu.edit-user')
+            }}
+        </div>
         <div v-on:click="openDeleteUserPrompt()" class="user-menu-item-heading active-item">
             <span>{{ tl8('user.menu.delete-user') }}</span>
-            <img  style="width:17px;" src="../assets/warn.svg">
+            <img style="width:17px;" src="../assets/warn.svg">
         </div>
     </div>
 </template>
@@ -41,7 +44,7 @@ export default {
     },
     methods: {
         tl8(key, vars) {
-          return languageService.t(key, this.appStore.langKey, vars);
+            return languageService.t(key, this.appStore.langKey, vars);
         },
         openEditUser() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
@@ -113,7 +116,7 @@ export default {
     padding: 0 3px;
     transition: 0.15s;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12);
-    font-weight: 500;
+    font-weight: 400;
 
     &.top {
       border-top: 1px solid #cbcbcb;
@@ -141,6 +144,7 @@ export default {
     height: 20px;
     transition: 0.15s;
     cursor: pointer;
+    font-weight: 300;
 
 
     &:hover {

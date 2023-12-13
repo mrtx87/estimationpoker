@@ -1,8 +1,9 @@
 <template>
     <div class="footer-wrapper">
         <div class="footer">
-            <div class="impressum-btn" v-on:click="openImpressumOnClick">Impressum</div>
-            <div class="dsgvo-btn" v-on:click="openDsgvoOnClick">DSGVO</div>
+            <div class="footer-btn" v-on:click="openImpressumOnClick">Impressum</div>
+            <div class="footer-btn" v-on:click="openDatenschutzOnClick">Datenschutzerklärung</div>
+            <div class="footer-btn" v-on:click="openDsgvoOnClick">Cookie-Richtlinien</div>
         </div>
     </div>
 </template>
@@ -26,9 +27,11 @@ export default {
         }
     },
     methods: {
+        openDatenschutzOnClick: function () {
+            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DATENSCHUTZ);
+        },
         openImpressumOnClick: function () {
             this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.IMPRESSUM);
-            console.log(this.appState._overlayId)
         },
         openDsgvoOnClick: function () {
             this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
@@ -55,22 +58,14 @@ export default {
   gap: 20px;
 }
 
-.impressum-btn {
+.footer-btn {
   color: #bbbbbb;
   cursor: pointer;
+
+  &:hover {
+    color: white;
+  }
 }
 
-.impressum-btn:hover {
-  color: white;
-}
-
-.dsgvo-btn {
-  color: #bbbbbb;
-  cursor: pointer;
-}
-
-.dsgvo-btn:hover {
-  color: white;
-}
 
 </style>

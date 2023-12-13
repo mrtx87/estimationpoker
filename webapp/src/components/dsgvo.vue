@@ -1,12 +1,22 @@
 <template>
     <div class="dsgvo-wrapper">
+        <div class="dsgvo-title">Cookie Richtlinien</div>
+        <div class="dsgvo-subtitle">Ihre Privatsphäre ist uns wichtig</div>
         <div class="dsgvo">
-            DSGVO TEST
+            <p>Damit Sie EstimationPoker möglichst angenehm nutzen können, müssen Sie der Verwendung von
+                First-Party-Cookies zustimmen. </p>
+            <p>Wir verwenden diese Cookies nur auf dieser Website für folgende Zwecke:</p>
+            <ul>
+                <li>Informationen über besuchte und erstelle Räume</li>
+                <li>Speicherung des ausgewählten Sprache</li>
+            </ul>
+            <p>Durch die Bestätigung erlauben Sie die Verwendung dieser Cookies und damit auch die Speicherung im lokalen Speicher ihres Browsers.</p>
+            <p>Bei Widerruf werden alle gespeicherten Daten gelöscht. Dadurch geht der Zugang zu gespeicherten Räumen verloren.</p>
 
         </div>
-        <div>
-            <button v-on:click="confirmDSGVO()">confirm</button>
-            <button v-on:click="declineDGSVO()">decline</button>
+        <div class="dsgvo-btn-panel">
+            <button class="button-activate" v-on:click="confirmDSGVO()">confirm</button>
+            <button class="button-activate" v-on:click="declineDGSVO()">decline</button>
         </div>
 
     </div>
@@ -32,7 +42,7 @@ export default {
     },
     methods: {
         confirmDSGVO() {
-            if(getCookie(PRIVACY_POLICY_COOKIE_KEY)){
+            if (getCookie(PRIVACY_POLICY_COOKIE_KEY)) {
                 this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
                 return;
             }
@@ -52,14 +62,32 @@ export default {
 
 <style lang="scss">
 
+
+.dsgvo-title {
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.dsgvo-subtitle {
+    font-size: 21px;
+    font-weight: 600;
+}
+
 .dsgvo-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
 }
 
 .dsgvo {
   display: flex;
+  flex-direction: column;
+}
+
+.dsgvo-btn-panel {
+  display: flex;
+  gap: 20px;
 }
 
 

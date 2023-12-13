@@ -13,6 +13,7 @@
             <room-settings v-bind:roomSettings="roomSettings"
                            v-if="overlayId === DISPLAY_OVERLAY_STATE.ROOM_SETTINGS"></room-settings>
             <prompt v-if="overlayId === DISPLAY_OVERLAY_STATE.PROMPT"></prompt>
+            <datenschutz v-if="overlayId === DISPLAY_OVERLAY_STATE.DATENSCHUTZ"></datenschutz>
         </div>
     </div>
 </template>
@@ -28,10 +29,12 @@ import JoiningRoom from "@/components/joining-room.vue";
 import CreateRoom from "@/components/create-room.vue";
 import RoomSettings from "@/components/room-settings.vue";
 import Prompt from "@/components/prompt.vue";
+import Datenschutz from "@/components/datenschutz.vue";
 
 export default {
     name: "Overlay",
     components: {
+        Datenschutz,
         Prompt,
         RoomSettings,
         CreateRoom,

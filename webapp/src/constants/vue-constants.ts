@@ -74,7 +74,8 @@ export const DISPLAY_OVERLAY_STATE = {
     JOIN_ROOM: 7,
     CREATE_ROOM: 8,
     ROOM_SETTINGS: 9,
-    PROMPT: 10
+    PROMPT: 10,
+    DATENSCHUTZ: 11
 }
 
 /** ROUTES **/

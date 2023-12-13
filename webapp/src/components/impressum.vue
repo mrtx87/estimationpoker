@@ -41,7 +41,7 @@ export default {
     },
     methods: {
         closeOverlay: function () {
-            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         },
     },
     computed: {}
