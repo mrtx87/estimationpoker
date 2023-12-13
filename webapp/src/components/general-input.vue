@@ -8,7 +8,7 @@
                v-model="inputText"
                v-on:focus="makeEditable()"
                v-on:keydown.enter="changeInputText">
-        <div class="validation-message" v-if="validation && !validation.isValid(inputText)">{{ validation?.message }}
+        <div class="validation-message" v-if="inputText && validation && !validation.isValid(inputText)">{{ validation?.message }}
         </div>
         <div class="change-title-btn" v-if="isFocused">
             <button class="save-change" :disabled="isInvalid" v-on:click="changeInputText()">
@@ -79,7 +79,7 @@ export default {
     },
     computed: {
         isInvalid() {
-            return this.inputText === this.text || !this.inputText || (this.validation && !this.validation.isValid(this.inputText));
+            return this.inputText === this.text || !this.inputText || (this.inputText && this.validation && !this.validation?.isValid(this.inputText));
         }
     }
 };
