@@ -14,6 +14,7 @@
                     {{ typeOption.name }}
                 </option>
             </select>
+            <div v-if="differentValueOptionsSelected">{{tl8('TODO - Diese Änderung wird erst mit der nächsten Schätzung aktiv')}}</div>
         </div>
         <div class="card-values">
             <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
@@ -115,6 +116,9 @@ export default {
         },
         roomTitleTooLong() {
             return this.title.length > 40;
+        },
+        differentValueOptionsSelected() {
+            return this.selectedValueTypeId !== this.roomSettings.valueOptionsId;
         }
     }
 };
