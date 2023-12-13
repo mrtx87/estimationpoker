@@ -1,7 +1,7 @@
 <template>
     <div class="datenschutz-wrapper">
         <div v-on:click="closeOverlay" class="close-btn"><img src="../assets/close.svg"></div>
-        <div style="overflow: scroll; max-height: 650px;">
+        <div class="datenschutz-content-container">
             <h1>Datenschutzerklärung</h1>
             <p>Stand: 13. Dezember 2023</p>
             <h2>Inhaltsübersicht</h2>
@@ -388,6 +388,12 @@ export default {
   position: relative;
   padding: 10px;
   box-sizing: border-box;
+
+  .datenschutz-content-container {
+    overflow-y: scroll;
+    max-height: 650px;
+    overflow-x: hidden;
+  }
 
   .close-btn {
     top: -5px;

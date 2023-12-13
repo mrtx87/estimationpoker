@@ -3,7 +3,7 @@
         <div class="dsgvo-title">Cookie Richtlinien</div>
         <div class="dsgvo-subtitle">Ihre Privatsphäre ist uns wichtig</div>
         <div class="dsgvo">
-            <p>Damit Sie EstimationPoker möglichst angenehm nutzen können, müssen Sie der Verwendung von
+            <p>Damit Sie EstimationPoker nutzen können, müssen Sie der Verwendung von
                 First-Party-Cookies zustimmen. </p>
             <p>Wir verwenden diese Cookies nur auf dieser Website für folgende Zwecke:</p>
             <ul>
