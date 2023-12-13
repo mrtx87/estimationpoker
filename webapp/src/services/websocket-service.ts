@@ -256,7 +256,6 @@ export class WebsocketService {
                     return this.store.toast.warning(languageService.t(message.type, this.store.langKey));
                 }
                 case ResponseMessageType.ERROR_PROCESSING_USER_VOTE :
-                case ResponseMessageType.ERROR_FINALIZING_JOIN :
                 case ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE :
                 case ResponseMessageType.ERROR_CHANGING_ROOM_SETTINGS :
                 case ResponseMessageType.ERROR_CHANGING_USER_NAME :
