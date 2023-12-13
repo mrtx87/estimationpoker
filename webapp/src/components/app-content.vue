@@ -4,6 +4,7 @@
                    v-bind:text="room?.roomSettings.title"
                    v-bind:isDisabled="!isLocalUserModerator()"
                    v-bind:placeholder="'Name des Raums'"
+                   v-bind:validation="{message: tl8('validation.text.room.title'), isValid: (text) => text.length > 1 && text.length <= 40}"
                    v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
     <voting-information></voting-information>
     <user-list></user-list>

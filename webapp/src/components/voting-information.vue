@@ -5,6 +5,7 @@
                        v-bind:text="room?.currentEstimation.title"
                        v-bind:isDisabled="!isLocalUserModerator"
                        v-bind:placeholder="'Name der Schätzung'"
+                       v-bind:validation="{message: tl8('validation.text.room.title'), isValid: (text) => text.length > 1 && text.length <= 40}"
                        v-on:onTextInputChange="updateEstimationTitle($event)"></general-input>
 
         <div class="voting-info-row">
@@ -29,6 +30,7 @@ import {useAppStateStore} from "@/stores/app-state";
 import {RequestMessageType, Roles, VOTING_STATE} from "@/constants/vue-constants";
 import Timer from "@/components/timer.vue";
 import GeneralInput from "@/components/general-input.vue";
+import {languageService} from "@/services/language";
 
 export default {
     name: "voting-information",
@@ -47,6 +49,9 @@ export default {
                 estimationId: this.room.currentEstimation.id,
                 title: value
             })
+        },
+        tl8(key) {
+            return languageService.t(key, this.appStore.langKey);
         },
     },
     computed: {

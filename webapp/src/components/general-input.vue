@@ -8,6 +8,8 @@
                v-model="inputText"
                v-on:focus="makeEditable()"
                v-on:keydown.enter="changeInputText">
+        <div class="validation-message" v-if="validation && !validation.isValid(inputText)">{{ validation?.message }}
+        </div>
         <div class="change-title-btn" v-if="isFocused">
             <button class="save-change" :disabled="isInvalid" v-on:click="changeInputText()">
                 <img class="accept-img"
@@ -27,8 +29,7 @@ import {useAppStateStore} from "@/stores/app-state";
 
 export default {
     name: "generalInput",
-    components: {},
-    props: ['text', 'isDisabled', 'placeholder'],
+    props: ['text', 'isDisabled', 'placeholder', 'validation'],
     emits: ['onTextInputChange'],
     mounted() {
         this.appStore = useAppStateStore();
@@ -78,7 +79,7 @@ export default {
     },
     computed: {
         isInvalid() {
-            return this.inputText === this.text || !this.inputText;
+            return this.inputText === this.text || !this.inputText || (this.validation && !this.validation.isValid(this.inputText));
         }
     }
 };
@@ -132,9 +133,10 @@ export default {
     text-align: left !important;
     font-size: 18px;
   }
-    &:focus-visible {
-        outline: none;
-    }
+
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .change-title-btn {

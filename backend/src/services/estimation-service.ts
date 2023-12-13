@@ -24,7 +24,7 @@ export class EstimationService {
             id: estimationId,
             createdAt: Date.now(),
             roomId: room.id,
-            title: 'Schätzung' + room.estimationCount,
+            title: 'Estimation ' + room.estimationCount,
             state: VOTING_STATE.VOTING,
             valueOptionsId: room.roomSettings.valueOptionsId,
             evaluation: new Evaluation({
