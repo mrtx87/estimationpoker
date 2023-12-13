@@ -27,12 +27,26 @@ export const ResponseMessageType = {
     ESTIMATION_UPDATED: 'estimation.updated',
     NEXT_ESTIMATION: 'next.estimation',
     ESTIMATION_TITLE_UPDATED: 'estimation.title.updated',
+    ACTION_UNKNOWN: 'action.unknown',
+    UNKNOWN_USER: 'user.unknown',
+    REMOVED_FROM_ROOM: 'user.removed.from.room',
     UPDATED_ROOM_SETTINGS: 'room.settings.updated',
     CHANGED_USER: 'user.updated',
     CHANGED_USER_ROLE: 'user.role.updated',
     USER_VOTED: 'user.voted',
     NOT_PERMITTED: 'user.not.permitted',
-    ERROR_REVEALING_VOTES: 'error.revealing.votes'
+    ERROR_REVEALING_VOTES: 'error.revealing.votes',
+    ERROR_RESETTING_VOTES: 'error.resetting.votes',
+    ERROR_GENERATING_NEXT_ESTIMATION: 'error.generating.next.estimation',
+    ERROR_DELETING_ROOM: 'error.deleting.room',
+    ERROR_DELETING_USER: 'error.deleting.user',
+    ERROR_CHANGING_ROLE: 'error.changing.role',
+    ERROR_CHANGING_AVATAR: 'error.changing.avatar',
+    ERROR_CHANGING_USER_NAME: 'error.changing.user.name',
+    ERROR_CHANGING_ROOM_SETTINGS: 'error.changing.room.settings',
+    ERROR_CHANGING_ESTIMATION_TITLE: 'error.changing.estimation.title',
+    ERROR_PROCESSING_USER_VOTE: 'error.processing.user.vote',
+    ERROR_FINALIZING_JOIN: 'error.finalizing.join',
 }
 
 export const MenuItemKey = {
