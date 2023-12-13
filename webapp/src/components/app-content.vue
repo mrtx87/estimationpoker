@@ -28,8 +28,7 @@
           <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
                   class="button-activate" v-on:click="triggerResetVotes()"><img style="width:25px;"
               src="../assets/repeat.svg"><span>{{ tl8('app.content.btn.reset')}}</span></button>
-          <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
-                  class="button-activate"
+          <button class="button-activate"
                   v-on:click="triggerNextEstimation()"><img style="width:25px;"
               src="../assets/estimationicon.svg"><span>{{ tl8('app.content.btn.new.estimation') }}</span>
           </button>
