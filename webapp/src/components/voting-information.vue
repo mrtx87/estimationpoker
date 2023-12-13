@@ -9,14 +9,20 @@
                        v-on:onTextInputChange="updateEstimationTitle($event)"></general-input>
 
         <div class="voting-info-row">
-            <span class="fat" v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting-information.estimation-underway')}}</span>
-            <span v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting-information.voters-count', [votes.length,onlinePlayers.length]) }}
+            <span class="fat"
+                  v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting-information.estimation-underway') }}</span>
+            <span v-if="votingState === VOTING_STATE.VOTING">{{
+                tl8('voting-information.voters-count', [votes.length, onlinePlayers.length])
+                }}
             </span>
 
         </div>
         <div class="voting-info-row">
-            <span class="fat" v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting-information.evaluation-phase')}}:</span>
-            <span v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting-information.average-estimated-value', [estimation.evaluation.avg]) }}
+            <span class="fat"
+                  v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting-information.evaluation-phase') }}:</span>
+            <span v-if="votingState === VOTING_STATE.REVEALED">{{
+                tl8('voting-information.average-estimated-value', [estimation.evaluation.avg])
+                }}
             </span>
         </div>
 
@@ -44,18 +50,15 @@ export default {
         }
     },
     methods: {
-        tl8(key, vars) {
-          return languageService.t(key, this.appStore.langKey, vars);
+        tl8(key, vars = null) {
+            return languageService.t(key, this.appStore.langKey, vars);
         },
         updateEstimationTitle(value) {
             this.$websocketService.sendAuthenticatedRequest(RequestMessageType.CHANGE_ESTIMATION_TITLE, {
                 estimationId: this.room.currentEstimation.id,
                 title: value
             })
-        },
-        tl8(key) {
-            return languageService.t(key, this.appStore.langKey);
-        },
+        }
     },
     computed: {
         VOTING_STATE() {
