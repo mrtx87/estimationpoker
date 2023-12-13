@@ -82,7 +82,7 @@ export default {
                 this.donut = getPieChartObj(
                     {
                         text: `Ø - ${nextEstimation.evaluation.avg} \n\n ${this.getDeviationText(nextEstimation.evaluation.deviation)}`,
-                        subtext: `${this.tl8('evaluation.submitted-votes')} ${nextEstimation.evaluation.amountOfVotes}`
+                        subtext: `${this.tl8('evaluation.submitted.votes')} ${nextEstimation.evaluation.amountOfVotes}`
                     }, {
                         title: nextEstimation.title,
                         data: mapValuesByAmount(nextEstimation.evaluation.valuesByAmount),
@@ -123,8 +123,8 @@ export default {
                 semanticDescription = this.tl8('evaluation.deviation.extreme');
             }
 
-            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? this.tl8('evaluation.get-deviation-text',[deviation,[semanticDescription]]) :
-                                                                           this.tl8('evaluation.get-deviation-text2',[semanticDescription]);
+            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? this.tl8('evaluation.get.deviation.text',[deviation,[semanticDescription]]) :
+                                                                           this.tl8('evaluation.get.deviation.text2',[semanticDescription]);
         },
 
     },

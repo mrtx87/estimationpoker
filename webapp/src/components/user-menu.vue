@@ -13,9 +13,9 @@
             <span>Observer</span>
             <img v-if="user.roles.includes(Roles.OBSERVER)" src="../assets/ok.svg">
         </div>
-        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">{{ tl8('user.menu.edit-user') }}</div>
+        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">{{ tl8('user.menu.edit.user') }}</div>
         <div v-on:click="openDeleteUserPrompt()" class="user-menu-item-heading active-item">
-            <span>{{ tl8('user.menu.delete-user') }}</span>
+            <span>{{ tl8('user.menu.delete.user') }}</span>
             <img  style="width:17px;" src="../assets/warn.svg">
         </div>
     </div>

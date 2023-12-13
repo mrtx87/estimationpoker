@@ -2,17 +2,17 @@
     <div class="room-history-wrapper">
         <div style="width:100%; display: flex; justify-content: flex-end;">
             <button class="button-activate" v-on:click="openCreateRoomOverlay()"><img style="width: 30px;"
-                                                                                      src="../assets/cross.svg">{{ tl8('room-history.create.room') }}
+                                                                                      src="../assets/cross.svg">{{ tl8('create.room.btn.title') }}
             </button>
         </div>
-        <div class="room-history-header">{{ tl8('room-history.last.time.visited.room') }}</div>
+        <div class="room-history-header">{{ tl8('room.history.last.time.visited.room') }}</div>
         <div class="room-history-list">
             <div class="room-history-list-row">
-                <div class="room-history-list-column title-column bold">{{ tl8('room-history.title') }}</div>
-                <div class="room-history-list-column bold">{{ tl8('room-history.participants') }}</div>
-                <div class="room-history-list-column bold large-table">{{ tl8('room-history.estimates') }}</div>
-                <div class="room-history-list-column bold large-table">{{ tl8('room-history.your.user') }}</div>
-                <div class="room-history-list-column bold large-table">{{ tl8('room-history.date.of.creation') }}</div>
+                <div class="room-history-list-column title-column bold">{{ tl8('room.history.title') }}</div>
+                <div class="room-history-list-column bold">{{ tl8('room.history.participants') }}</div>
+                <div class="room-history-list-column bold large-table">{{ tl8('room.history.estimations') }}</div>
+                <div class="room-history-list-column bold large-table">{{ tl8('room.history.your.user') }}</div>
+                <div class="room-history-list-column bold large-table">{{ tl8('room.history.date.of.creation') }}</div>
                 <div class="room-history-list-column bold"></div>
             </div>
             <div v-for="roomPreviewItem in roomPreviews" :key="roomPreviewItem.id" class="room-history-list-row">
@@ -25,11 +25,11 @@
                 <div class="room-history-list-column large-table">{{ formattedDate(roomPreviewItem.createdAt) }}</div>
                 <div class="room-history-list-column btns-column">
                     <button class="button-activate small-btn" title="join" v-on:click="joinRoom(roomPreviewItem.id)">
-                        <img src="../assets/enter.svg"><span>{{ tl8('room-history.join.btn') }}</span></button> <!-- TODO icon -->
+                        <img src="../assets/enter.svg"><span>{{ tl8('room.history.join.btn') }}</span></button> <!-- TODO icon -->
                 </div>
             </div>
         </div>
-        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> {{ tl8('room-history.no.rooms.created.or.joined')}}
+        <div class="no-rooms-used-message" v-if="!roomPreviews.length"> {{ tl8('room.history.no.rooms.created.or.joined')}}
         </div>
     </div>
 </template>

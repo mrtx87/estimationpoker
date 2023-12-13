@@ -10,18 +10,18 @@
 
         <div class="voting-info-row">
             <span class="fat"
-                  v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting-information.estimation-underway') }}</span>
+                  v-if="votingState === VOTING_STATE.VOTING">{{ tl8('voting.information.estimation.underway') }}</span>
             <span v-if="votingState === VOTING_STATE.VOTING">{{
-                tl8('voting-information.voters-count', [votes.length, onlinePlayers.length])
+                tl8('voting.information.voters.count', [votes.length, onlinePlayers.length])
                 }}
             </span>
 
         </div>
         <div class="voting-info-row">
             <span class="fat"
-                  v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting-information.evaluation-phase') }}:</span>
+                  v-if="votingState === VOTING_STATE.REVEALED">{{ tl8('voting.information.evaluation.phase') }}:</span>
             <span v-if="votingState === VOTING_STATE.REVEALED">{{
-                tl8('voting-information.average-estimated-value', [estimation.evaluation.avg])
+                tl8('voting.information.average.estimated.value', [estimation.evaluation.avg])
                 }}
             </span>
         </div>

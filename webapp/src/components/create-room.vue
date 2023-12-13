@@ -25,7 +25,7 @@
             <div class="secondary-options">
                 <div class="secondary-option">
                     <input v-model="roomSettings.realtimeVoting" type="checkbox">
-                    <span>{{ tl8('create.room.option.realtime.voting') }}</span>
+                    <span>{{ tl8('room.settings.real.time.voting') }}</span>
                 </div>
             </div>
             <div class="create-room-buttons-panel">

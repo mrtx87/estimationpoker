@@ -54,7 +54,7 @@
                  :class="{'activated': editingAvatarElementType === 'hair'}"
                  v-if="!disabled"
                  v-on:click="onChangeEditAvatar('hair')">
-              {{ tl8('avatar-configurator.hair') }}
+              {{ tl8('avatar.configurator.hair') }}
             </div>
 
             <div class="head-needle"
@@ -73,7 +73,7 @@
                  v-if="!disabled"
                  title="Choose Head Style"
                  v-on:click="onChangeEditAvatar('head')">
-              {{ tl8('avatar-configurator.face') }}
+              {{ tl8('avatar.configurator.face') }}
             </div>
 
             <div class="shirt-needle"
@@ -92,7 +92,7 @@
                  title="Choose Shirt Style"
                  :class=" {'activated': editingAvatarElementType === 'shirt'}"
                  v-if="!disabled"
-                 v-on:click="onChangeEditAvatar('shirt')">{{ tl8('avatar-configurator.shirt') }}
+                 v-on:click="onChangeEditAvatar('shirt')">{{ tl8('avatar.configurator.shirt') }}
             </div>
             <div class="avatar-container">
                 <div class="avatar-hair" v-html="selectedHairReplaced">

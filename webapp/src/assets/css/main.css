@@ -306,6 +306,8 @@ body {
     font-size: 13px;
     font-family: Inter, -apple-system, system-ui, "Segoe UI", Helvetica, Arial, sans-serif;
     background: white;
+    outline:1px solid #d7d7d7;
+
 }
 
 

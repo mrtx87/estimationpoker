@@ -14,7 +14,7 @@
                     {{ typeOption.name }}
                 </option>
             </select>
-            <div v-if="differentValueOptionsSelected">{{tl8('TODO - Diese Änderung wird erst mit der nächsten Schätzung aktiv')}}</div>
+            <div style="color:red; font-size: 12px;" v-if="differentValueOptionsSelected">{{ tl8('room.settings.active.after.next.estimation') }}</div>
         </div>
         <div class="card-values">
             <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
@@ -23,7 +23,7 @@
         </div>
         <div class="room-settings-item">
             <input :disabled="localUserIsNotModerator" v-model="realtimeVoting" type="checkbox">
-            <span>{{ tl8('room.settings.real-time-voting') }}</span>
+            <span>{{ tl8('room.settings.real.time.voting') }}</span>
         </div>
         <div class="room-settings-buttons-panel">
             <button class="button-activate small-btn" v-if="!localUserIsNotModerator"
