@@ -233,6 +233,7 @@ export class WebsocketControllerImpl {
         try {
             return userService.deleteUser(request.data.userId).then(deleteSuccess => {
                 if (deleteSuccess) {
+                    cachedRoom.currentEstimation.votes = cachedRoom.currentEstimation.votes.filter(v => v.userId !== request.data.userId);
                     cachedRoom.removeUser(request.data.userId);
                     websocketService.notifyUsers(new BasicResponse(ResponseMessageType.USER_DELETED, SYSTEM_USER_ID, request.data), cachedRoom.connections);
                     return;
