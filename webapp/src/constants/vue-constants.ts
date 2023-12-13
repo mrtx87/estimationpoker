@@ -59,16 +59,9 @@ export const DISPLAY_OVERLAY_STATE = {
     ROOM_SETTING: 4,
     JOIN_ROOM: 7,
     CREATE_ROOM: 8,
-    ROOM_SETTINGS: 9
+    ROOM_SETTINGS: 9,
+    PROMPT: 10
 }
-
-export const APP_STATE = {
-    NO_ROOM_ENTERED: 100,
-    CREATING_ROOM: 101,
-    JOINING_ROOM: 105,
-    ROOM_JOINED: 1010
-}
-
 
 /** ROUTES **/
 

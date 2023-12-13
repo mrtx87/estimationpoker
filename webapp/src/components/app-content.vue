@@ -24,13 +24,13 @@
           <button
               :disabled="room?.currentEstimation.state !== VOTING_STATE.VOTING || room?.currentEstimation.votes.length === 0"
               class="button-activate" v-on:click="triggerRevealVotes()"><img
-              src="../assets/reveal.svg"><span>{{ tl8('app.content.btn.reveal') }}</span></button>
+              src="../assets/reveal.svg" style="width:30px;"><span>{{ tl8('app.content.btn.reveal')}}</span></button>
           <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
-                  class="button-activate" v-on:click="triggerResetVotes()"><img
-              src="../assets/repeat.svg"><span>{{ tl8('app.content.btn.reset') }}</span></button>
+                  class="button-activate" v-on:click="triggerResetVotes()"><img style="width:25px;"
+              src="../assets/repeat.svg"><span>{{ tl8('app.content.btn.reset')}}</span></button>
           <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
                   class="button-activate"
-                  v-on:click="triggerNextEstimation()"><img
+                  v-on:click="triggerNextEstimation()"><img style="width:25px;"
               src="../assets/estimationicon.svg"><span>{{ tl8('app.content.btn.new.estimation') }}</span>
           </button>
         </div>
@@ -152,7 +152,7 @@ export default {
 <style lang="scss" scoped>
 
 .app-content {
-  max-width: 1280px;
+  max-width: 1400px;
   box-sizing: border-box;
   width: 100%;
   display: flex;

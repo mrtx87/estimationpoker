@@ -25,14 +25,16 @@
             <span>{{ tl8('room.settings.real-time-voting') }}</span>
         </div>
         <div class="room-settings-buttons-panel">
-            <button class="button-activate" v-if="!localUserIsNotModerator"
+            <button class="button-activate small-btn" v-if="!localUserIsNotModerator"
                     :disabled="localUserIsNotModerator || !isValid()"
-                    v-on:click="updateRoomSettings">{{ tl8('room.settings.save') }}
+                    v-on:click="updateRoomSettings">
+                <img src="../assets/save.svg">
+                <span>{{ tl8('room.settings.save')}}</span>
             </button>
-            <button class="button-activate invers" v-if="!localUserIsNotModerator"
+            <button class="button-activate small-btn invers" v-if="!localUserIsNotModerator"
                     v-on:click="cancel">{{ tl8('room.settings.cancel') }}
             </button>
-            <button class="button-activate" v-if="localUserIsNotModerator"
+            <button class="button-activate small-btn" v-if="localUserIsNotModerator"
                     v-on:click="cancel">ok
             </button>
         </div>

@@ -1,9 +1,10 @@
-import {getCookie, refreshRoomCookie, setCookie} from "@/services/cookie-service";
+import {getCookie, refreshRoomCookie, removeCookie} from "@/services/cookie-service";
 import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
-import {APP_STATE, DISPLAY_OVERLAY_STATE, ResponseMessageType} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, ResponseMessageType} from "@/constants/vue-constants";
 import {AppService} from "@/services/app-service";
-import {headerConfig, restService} from "@/services/rest-service";
+import {restService} from "@/services/rest-service";
+import {router} from "@/main";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -80,7 +81,6 @@ export class WebsocketService {
 
     sendFinalizeJoinRequest(roomId: string) {
         this.store.reset();
-        this.store.setState(APP_STATE.JOINING_ROOM);
         this.sendAuthenticatedRequest('finalize-join', null, roomId);
     }
 
@@ -93,7 +93,6 @@ export class WebsocketService {
         });
         this.sendMessage(joinRequest);
     }
-
 
     onError(error: any): void {
         console.error("websocket server could not be reached");
@@ -237,6 +236,20 @@ export class WebsocketService {
                 }
                 case ResponseMessageType.ROOM_NOT_EXISTING : {
                     return this.store.toast.error('Dieser Raum existiert nicht mehr.');
+                }
+                case ResponseMessageType.USER_DELETED: {
+                    const deletedUserId = message.data.userId;
+                    const room = {...this.store.room}
+                    const deletedUser = room.users.find((u: any) => u.id === deletedUserId);
+                    if(deletedUser.id === this.store.localUserId) {
+                        router.push(HOME_ROUTE);
+                        this.store.reset();
+                        router.push(HOME_ROUTE);
+                        return this.store.toast.success(`Your User ${deletedUser.name} was successfully deleted!`);
+                    }
+                    room.users = room.users.filter((u: any) => u.id !== deletedUserId);
+                    this.store.setRoom(room);
+                    return this.store.toast.info(`User ${deletedUser.name} has been deleted`);
                 }
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);

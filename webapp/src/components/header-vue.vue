@@ -112,7 +112,7 @@ export default {
   gap: 10px;
   background-color: transparent;
   justify-content: space-between;
-  max-width: 1280px;
+  max-width: 1400px;
 
   .header-btns {
     display: flex;
@@ -143,12 +143,12 @@ export default {
 
 .toggle {
   --width: 60px;
-  --height: 37px;
+  --height: 30px;
   position: relative;
   display: inline-block;
   width: var(--width);
   height: var(--height);
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   border-radius: 4px;
   cursor: pointer;
   background-color: var(--primary-color);
@@ -172,10 +172,10 @@ export default {
 .toggle .slider::before {
   content: "";
   position: absolute;
-  top: 3px;
+  top: 5px;
   left: 4px;
-  width: calc(var(--height) / 1.2);
-  height: calc(var(--height) / 1.2);
+  width: calc(var(--height) / 1.4);
+  height: calc(var(--height) / 1.4);
   border-radius: calc(var(--height) / 8);
   background-color: #fff;
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
@@ -192,8 +192,8 @@ export default {
 
 .toggle .labels {
   position: absolute;
-  top: 8px;
-  left: 0;
+  top: 5px;
+  left: -1px;
   width: 100%;
   height: 100%;
   font-size: 12px;

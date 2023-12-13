@@ -97,7 +97,7 @@ export default {
   max-width: 900px;
   justify-self: center;
   padding: 5px;
-  box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 
   .voting-info-row {
     display: flex;

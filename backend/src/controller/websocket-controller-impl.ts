@@ -69,7 +69,7 @@ export class WebsocketControllerImpl {
         }).addWebsocketEndpoint({
             type: RequestMessageType.DELETE_USER,
             action: this.deleteUser.bind(this),
-            authorize: this.getModeratorOnlyPredicament()
+            authorize: this.getRequestingUserIdentityPredicate()
         }).addWebsocketEndpoint({
             type: RequestMessageType.CHANGE_USER,
             action: this.changeUser.bind(this),

@@ -99,7 +99,7 @@ export default {
   flex-wrap: wrap;
   box-sizing: border-box;
   justify-content: space-around;
-  gap: 20px;
+  gap: 30px 40px;
   padding: 15px 0;
   min-height: 25vh;
   width: 100%;
@@ -146,7 +146,7 @@ export default {
 @media only screen and (max-width: 775px) {
 
   .user-list-wrapper {
-    gap: 10px !important;
+    gap: 25px 20px!important;
   }
 
   .card {

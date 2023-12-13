@@ -1,5 +1,6 @@
 <template>
     <div class="user-menu-wrapper">
+        <div class="user-menu-item-heading">Roles</div>
         <div class="user-menu-item" v-on:click="toggleSelectRole(Roles.MODERATOR)">
             <span>Moderator</span>
             <img v-if="user.roles.includes(Roles.MODERATOR)" src="../assets/ok.svg">
@@ -12,13 +13,18 @@
             <span>Observer</span>
             <img v-if="user.roles.includes(Roles.OBSERVER)" src="../assets/ok.svg">
         </div>
+        <div v-on:click="openEditUser()" class="user-menu-item-heading active-item top">Edit User</div>
+        <div v-on:click="openDeleteUserPrompt()" class="user-menu-item-heading active-item">
+            <span>Delete User</span>
+            <img  style="width:17px;" src="../assets/warn.svg">
+        </div>
     </div>
 </template>
 
 <script>
 
 import {useAppStateStore} from "@/stores/app-state";
-import {RequestMessageType, Roles} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, RequestMessageType, Roles} from "@/constants/vue-constants";
 
 export default {
     name: "user-menu",
@@ -33,6 +39,20 @@ export default {
         }
     },
     methods: {
+        openEditUser() {
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.AVATAR_EDITOR);
+        },
+        openDeleteUserPrompt() {
+            this.appStore.setPrompt({
+                question: 'Do you really want to delete your User?',
+                crucial: true,
+                confirmAction: this.sendDeleteUser.bind(this)
+            });
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.PROMPT);
+        },
+        sendDeleteUser() {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.DELETE_USER, {userId: this.appStore.localUserId})
+        },
         toggleSelectRole(role) {
             const currentRoles = this.user.roles;
             if (currentRoles.includes(role)) {
@@ -72,23 +92,52 @@ export default {
   display: flex;
   flex-direction: column;
   background-color: white;
-  border-radius: 4px;
   z-index: 5;
-  width: 100px;
+  width: 115px;
   font-size: 13px;
-  gap: 5px;
+  gap: 2px;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
-  padding: 5px 0;
   top: 85%;
   right: 50px;
+  border-radius: 4px;
 
+
+  .user-menu-item-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3px;
+    transition: 0.15s;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.12), 0 2px 2px rgba(0, 0, 0, 0.12);
+    font-weight: 500;
+
+    &.top {
+      border-top: 1px solid #cbcbcb;
+    }
+
+    &.active-item {
+      &:hover {
+        background-color: #dae2ec;
+        cursor: pointer;
+      }
+
+      &:active {
+        padding-left: 6px;
+      }
+
+    }
+
+  }
 
   .user-menu-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 5px;
+    padding: 0 8px;
+    height: 20px;
     transition: 0.15s;
+    cursor: pointer;
+
 
     &:hover {
       background-color: #dae2ec;

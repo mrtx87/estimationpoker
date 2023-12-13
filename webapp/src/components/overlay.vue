@@ -12,6 +12,7 @@
             <CreateRoom v-if="overlayId === DISPLAY_OVERLAY_STATE.CREATE_ROOM"></CreateRoom>
             <room-settings v-bind:roomSettings="roomSettings"
                            v-if="overlayId === DISPLAY_OVERLAY_STATE.ROOM_SETTINGS"></room-settings>
+            <prompt v-if="overlayId === DISPLAY_OVERLAY_STATE.PROMPT"></prompt>
         </div>
     </div>
 </template>
@@ -26,10 +27,12 @@ import Dsgvo from "@/components/dsgvo.vue";
 import JoiningRoom from "@/components/joining-room.vue";
 import CreateRoom from "@/components/create-room.vue";
 import RoomSettings from "@/components/room-settings.vue";
+import Prompt from "@/components/prompt.vue";
 
 export default {
     name: "Overlay",
     components: {
+        Prompt,
         RoomSettings,
         CreateRoom,
         JoiningRoom,

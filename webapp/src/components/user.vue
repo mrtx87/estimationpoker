@@ -260,16 +260,17 @@ export default {
   text-align: center;
   display: flex;
   background-color: #adc7dc;
-  width: 85px;
-  height: 30px;
+  width: 115%;
+  min-height: 25px;
   border-radius: 3px;
   justify-content: center;
   align-items: center;
-  color: white;
-  font-weight: bold;
+  color: black;
+  font-weight: 400;
   box-shadow: rgb(0 0 0 / 41%) 2.4px 2.4px 3.2px;
-  font-size: 13px;
-  word-break: break-all;
+  font-size: 12px;
+  word-break: break-word;
+  padding: 2px;
 }
 
 @media only screen and (max-width: 1000px) {
@@ -281,7 +282,7 @@ export default {
     }
 
     .user-name {
-        font-size: 11px !important;
+      font-size: 11px !important;
     }
   }
   .header-user {

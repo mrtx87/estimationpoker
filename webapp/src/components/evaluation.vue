@@ -96,7 +96,7 @@ export default {
                 semanticDescription = 'none';
             }
 
-            if (deviation < 1) {
+            if (deviation > 0 && deviation < 1) {
                 semanticDescription = 'small';
             }
 
@@ -104,8 +104,12 @@ export default {
                 semanticDescription = 'medium';
             }
 
-            if (deviation >= 2) {
+            if (deviation >= 2 && deviation < 3) {
                 semanticDescription = 'large';
+            }
+
+            if (deviation > 3) {
+                semanticDescription = 'extreme';
             }
 
             return this.estimation.valueOptionsId !== tShirtVoteOptionId ? `deviation: ${deviation} (${semanticDescription})` : `deviation: ${semanticDescription}`;

@@ -1,31 +1,27 @@
 import {defineStore} from 'pinia';
 import {ConnectionState} from "@/services/websocket-service";
-import {APP_STATE, DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
+import {DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
 
 export const useAppStateStore = defineStore('AppStore', {
     state: () => {
         return {
-            _isOnRoomRoute: false,
             _toast: null,
+            _isOnRoomRoute: false,
             _roomId: '',
             _overlayId: DISPLAY_OVERLAY_STATE.NO_OVERLAY,
             _connectionState: ConnectionState.DISCONNECTED,
             //need to be reset
             _localUserId: '',
             _room: null,
-            _avatar: null,
-            _state: APP_STATE.NO_ROOM_ENTERED,
             _localVoteValue: '',
             _estimationHistory: [],
             _roomPreviews: [],
             _screenDimensions: {width: 0, height: 0},
-            _langKey: 'de'
+            _langKey: 'de',
+            _prompt: null
         }
     },
     actions: {
-        addAvatar(avatar: any) {
-            this._avatar = avatar;
-        },
         setOverlayId(overlayId: number) {
             this._overlayId = overlayId;
         },
@@ -34,9 +30,6 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setRoomId(roomId: string) {
             this._roomId = roomId;
-        },
-        setState(state: number) {
-            this._state = state;
         },
         setRoom(room: any) {
             this._room = room;
@@ -60,13 +53,12 @@ export const useAppStateStore = defineStore('AppStore', {
             this._isOnRoomRoute = value;
         },
         reset() {
-            this._localUserId = ''
-            this._room = null
-            this._avatar = null
-            this._state = APP_STATE.NO_ROOM_ENTERED
-            this._localVoteValue = ''
-            this._estimationHistory = []
-            this._roomPreviews = []
+            this._localUserId = '';
+            this._room = null;
+            this._localVoteValue = '';
+            this._estimationHistory = [];
+            this._roomPreviews = [];
+            this._prompt = null;
         },
         setRoomPreviews(roomPreviews: any) {
             this._roomPreviews = roomPreviews;
@@ -76,6 +68,9 @@ export const useAppStateStore = defineStore('AppStore', {
         },
         setLangKey(langKey: string) {
             this._langKey = langKey;
+        },
+        setPrompt(prompt: any) {
+            this._prompt = prompt;
         }
     },
     getters: {
@@ -84,11 +79,9 @@ export const useAppStateStore = defineStore('AppStore', {
         localUser: (state: any) => state._room && state._localUserId ? state._room.users.find((u: any) => u.id === state._localUserId) : null,
         room: (state: any) => state._room,
         users: (state: any) => state._room ? state._room.users : [],
-        avatar: (state: any) => state._avatar,
         overlayId: (state: any) => state._overlayId,
         connectionState: (state: any) => state._connectionState,
         roomId: (state: any) => state._roomId,
-        state: (state: any) => state._state,
         localVoteValue: (state: any) => state._localVoteValue,
         estimationHistory: (state: any) => state._estimationHistory,
         screenDimensions: (state: any) => state._screenDimensions,
@@ -111,6 +104,6 @@ export const useAppStateStore = defineStore('AppStore', {
         toast: (state: any) => state._toast,
         roomPreviews: (state: any) => state._roomPreviews,
         langKey: (state: any) => state._langKey,
-
+        prompt: (state: any) => state._prompt
     }
 });

@@ -7,7 +7,10 @@
             <div class="estimation-history-list-column bold">{{ tl8('estimation-history.deviation') }}</div>
             <div class="estimation-history-list-column bold">{{ tl8('estimation-history.name') }}</div>
             <div class="estimation-history-list-column bold displayLarge">{{ tl8('estimation-history.name') }}</div>
-            <div class="estimation-history-list-column bold displayLarge">{{ tl8('estimation-history.createdAt') }}</div>
+            <div class="estimation-history-list-column bold displayLarge">{{
+                tl8('estimation-history.createdAt')
+                }}
+            </div>
         </div>
         <div class="estimation-rows">
             <div class="estimation-history-row" v-for="eHistoryItem in estimationHistory" :key="eHistoryItem.id">
@@ -50,7 +53,7 @@ export default {
     },
     methods: {
         tl8(key) {
-          return languageService.t(key, this.appStore.langKey);
+            return languageService.t(key, this.appStore.langKey);
         },
         formatTime,
         formattedDate(date) {
@@ -77,6 +80,7 @@ export default {
   background-color: white;
   box-shadow: rgba(0, 0, 0, 0.15) 2.4px 2.4px 3.2px;
   width: 100%;
+  margin-top: 25px;
 
   .estimation-history-heading {
     border-bottom: 2px solid #d7d7d7;
