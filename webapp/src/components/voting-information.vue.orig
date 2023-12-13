@@ -4,8 +4,12 @@
         <general-input class="heading2"
                        v-bind:text="room?.currentEstimation.title"
                        v-bind:isDisabled="!isLocalUserModerator"
+<<<<<<< HEAD
                        v-bind:placeholder=" tl8('voting.information.name.for.estimation')"
+=======
+                       v-bind:placeholder="'Name der Schätzung'"
                        v-bind:validation="{message: tl8('validation.text.room.title'), isValid: (text) => text.length > 1 && text.length <= 40}"
+>>>>>>> tile_version
                        v-on:onTextInputChange="updateEstimationTitle($event)"></general-input>
 
         <div class="voting-info-row">

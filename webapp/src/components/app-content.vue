@@ -3,7 +3,8 @@
     <general-input class="heading1"
                    v-bind:text="room?.roomSettings.title"
                    v-bind:isDisabled="!isLocalUserModerator()"
-                   v-bind:placeholder=" tl8('header.room.name.placeholder') "
+                   v-bind:placeholder=" tl8('header.room.name.placeholder')"
+                   v-bind:validation="{message: tl8('validation.text.room.title'), isValid: (text) => text.length > 1 && text.length <= 40}"
                    v-on:onTextInputChange="changeRoomTitle($event)"></general-input>
     <voting-information></voting-information>
     <user-list></user-list>
@@ -28,8 +29,7 @@
           <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
                   class="button-activate" v-on:click="triggerResetVotes()"><img style="width:25px;"
               src="../assets/repeat.svg"><span>{{ tl8('app.content.btn.reset')}}</span></button>
-          <button :disabled="room?.currentEstimation.state !== VOTING_STATE.REVEALED"
-                  class="button-activate"
+          <button class="button-activate"
                   v-on:click="triggerNextEstimation()"><img style="width:25px;"
               src="../assets/estimationicon.svg"><span>{{ tl8('app.content.btn.new.estimation') }}</span>
           </button>

@@ -5,6 +5,7 @@ import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, ResponseMessageType} from "@/constant
 import {AppService} from "@/services/app-service";
 import {restService} from "@/services/rest-service";
 import {router} from "@/main";
+import {languageService} from "@/services/language";
 
 
 const MAX_RECONNECT_RETRIES = 3;
@@ -108,7 +109,7 @@ export class WebsocketService {
     }
 
     handleReconnect() {
-        if(!this.appService?.isOnRoomRoute()) {
+        if (!this.appService?.isOnRoomRoute()) {
             return;
         }
         if (this.reconnectRetryLeft()) {
@@ -183,6 +184,7 @@ export class WebsocketService {
             Logger.log(message);
             if (!message.type) {
                 Logger.error('Error: No Response Type received', message);
+                return;
             }
             switch (message.type) {
                 case ResponseMessageType.JOINED_ESTIMATION_SESSION:
@@ -241,8 +243,7 @@ export class WebsocketService {
                     const deletedUserId = message.data.userId;
                     const room = {...this.store.room}
                     const deletedUser = room.users.find((u: any) => u.id === deletedUserId);
-                    if(deletedUser.id === this.store.localUserId) {
-                        router.push(HOME_ROUTE);
+                    if (deletedUser.id === this.store.localUserId) {
                         this.store.reset();
                         router.push(HOME_ROUTE);
                         return this.store.toast.success(`Your User ${deletedUser.name} was successfully deleted!`);
@@ -250,6 +251,23 @@ export class WebsocketService {
                     room.users = room.users.filter((u: any) => u.id !== deletedUserId);
                     this.store.setRoom(room);
                     return this.store.toast.info(`User ${deletedUser.name} has been deleted`);
+                }
+                case ResponseMessageType.ACTION_UNKNOWN : {
+                    return this.store.toast.warning(languageService.t(message.type, this.store.langKey));
+                }
+                case ResponseMessageType.ERROR_PROCESSING_USER_VOTE :
+                case ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE :
+                case ResponseMessageType.ERROR_CHANGING_ROOM_SETTINGS :
+                case ResponseMessageType.ERROR_CHANGING_USER_NAME :
+                case ResponseMessageType.ERROR_CHANGING_AVATAR :
+                case ResponseMessageType.ERROR_CHANGING_ROLE :
+                case ResponseMessageType.ERROR_DELETING_USER :
+                case ResponseMessageType.ERROR_DELETING_ROOM :
+                case ResponseMessageType.ERROR_FINALIZING_JOIN :
+                case ResponseMessageType.ERROR_RESETTING_VOTES :
+                case ResponseMessageType.ERROR_REVEALING_VOTES :
+                case ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION : {
+                    return this.store.toast.error(languageService.t(message.type, this.store.langKey));
                 }
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);
