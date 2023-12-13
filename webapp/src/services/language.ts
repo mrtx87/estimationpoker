@@ -12,12 +12,15 @@ export class LanguageService {
     t(key: string, langKey: 'de' | 'en', vars?: any[]) {
         if (vars) {
             let replacedText = this.languages.get(langKey).texts[key];
+            if(!replacedText) {
+                return key;
+            }
             vars.forEach(variable => {
                 replacedText = replacedText.replace('{}', variable);
             });
             return replacedText;
         }
-        return this.languages.get(langKey).texts[key];
+        return this.languages.get(langKey).texts[key] || key;
     }
 
     private static initLanguageMap() {
