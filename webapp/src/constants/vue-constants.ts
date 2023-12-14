@@ -85,16 +85,16 @@ export const HOME_ROUTE = '/';
 
 /** VALUE TYPES AND COLORS **/
 
-export const COLOR_1 = '#EEF9FB';
+export const COLOR_1 = '#fff';
 export const COLOR_2 = '#BCE6F0';
-export const COLOR_3 = '#59C0D9';
-export const COLOR_4 = '#BCE784';
-export const COLOR_5 = '#90D733';
-export const COLOR_6 = '#FAF33E';
-export const COLOR_7 = '#E08115';
-export const COLOR_8 = '#DB5776';
-export const COLOR_9 = '#BA274A';
-export const COLOR_10 = '#651528';
+export const COLOR_3 = '#8ABEDD';
+export const COLOR_4 = '#AFDD85';
+export const COLOR_5 = '#78BF36';
+export const COLOR_6 = '#EFC960';
+export const COLOR_7 = '#DFA916';
+export const COLOR_8 = '#E97A71';
+export const COLOR_9 = '#E14B3D';
+export const COLOR_10 = '#7C1C13';
 export const COLOR_11 = '#22070D';
 export const COLOR_12 = '#AFAFAF';
 
