@@ -412,6 +412,7 @@ export class WebsocketControllerImpl {
                 valueByAmount.amount += 1;
             }
         }
+        valuesByAmount.sort(this.sortValuesByAmount);
         return valuesByAmount;
     }
 
@@ -421,6 +422,15 @@ export class WebsocketControllerImpl {
         return rounded / 100;
     }
 
+    private sortValuesByAmount(a: any, b: any) {
+        if (a.voteValue.numericValue < b.voteValue.numericValue) {
+            return -1;
+        }
+        if (a.voteValue.numericValue > b.voteValue.numericValue) {
+            return 1;
+        }
+        return 0;
+    }
 }
 
 export class WebsocketControllerEndpoint {
