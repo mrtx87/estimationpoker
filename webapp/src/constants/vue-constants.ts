@@ -83,24 +83,37 @@ export const DISPLAY_OVERLAY_STATE = {
 export const ROOM_ROUTE = '/estimations/room/';
 export const HOME_ROUTE = '/';
 
-/** VALUE TYPES **/
+/** VALUE TYPES AND COLORS **/
+
+export const COLOR_1 = '#EEF9FB';
+export const COLOR_2 = '#BCE6F0';
+export const COLOR_3 = '#59C0D9';
+export const COLOR_4 = '#BCE784';
+export const COLOR_5 = '#90D733';
+export const COLOR_6 = '#FAF33E';
+export const COLOR_7 = '#E08115';
+export const COLOR_8 = '#DB5776';
+export const COLOR_9 = '#BA274A';
+export const COLOR_10 = '#651528';
+export const COLOR_11 = '#22070D';
+export const COLOR_12 = '#AFAFAF';
 
 export const fibonacci = {
     id: 1,
     name: 'Fibonacci',
     values: [
-        {label: '0', color: '#3CA8F6', numericValue: 0},
-        {label: '1', color: '#29A0F5', numericValue: 1},
-        {label: '2', color: '#1597F4', numericValue: 2},
-        {label: '3', color: '#0B8DEA', numericValue: 3},
-        {label: '5', color: '#0A81D6', numericValue: 5},
-        {label: '8', color: '#0975C3', numericValue: 8},
-        {label: '13', color: '#086AAF', numericValue: 13},
-        {label: '21', color: '#075E9D', numericValue: 21},
-        {label: '34', color: '#065289', numericValue: 34},
-        {label: '55', color: '#054776', numericValue: 55},
-        {label: '89', color: '#04395E', numericValue: 89},
-        {label: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: COLOR_1, numericValue: 0},
+        {label: '1', color: COLOR_2, numericValue: 1},
+        {label: '2', color: COLOR_3, numericValue: 2},
+        {label: '3', color: COLOR_4, numericValue: 3},
+        {label: '5', color: COLOR_5, numericValue: 5},
+        {label: '8', color: COLOR_6, numericValue: 8},
+        {label: '13', color: COLOR_7, numericValue: 13},
+        {label: '21', color: COLOR_8, numericValue: 21},
+        {label: '34', color: COLOR_9, numericValue: 34},
+        {label: '55', color: COLOR_10, numericValue: 55},
+        {label: '89', color: COLOR_11, numericValue: 89},
+        {label: '?', color: COLOR_12, numericValue: -1}
     ]
 }
 
@@ -108,18 +121,18 @@ export const scrum = {
     id: 2,
     name: 'Scrum',
     values: [
-        {label: '0', color: '#3CA8F6', numericValue: 0},
-        {label: '0.5', color: '#29A0F5', numericValue: 0.5},
-        {label: '1', color: '#1597F4', numericValue: 1},
-        {label: '2', color: '#0B8DEA', numericValue: 2},
-        {label: '3', color: '#0A81D6', numericValue: 3},
-        {label: '5', color: '#0975C3', numericValue: 5},
-        {label: '8', color: '#086AAF', numericValue: 8},
-        {label: '13', color: '#075E9D', numericValue: 13},
-        {label: '20', color: '#065289', numericValue: 20},
-        {label: '40', color: '#054776', numericValue: 40},
-        {label: '100', color: '#04395E', numericValue: 100},
-        {label: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: COLOR_1, numericValue: 0},
+        {label: '0.5', color: COLOR_2, numericValue: 0.5},
+        {label: '1', color: COLOR_3, numericValue: 1},
+        {label: '2', color: COLOR_4, numericValue: 2},
+        {label: '3', color: COLOR_5, numericValue: 3},
+        {label: '5', color: COLOR_6, numericValue: 5},
+        {label: '8', color: COLOR_7, numericValue: 8},
+        {label: '13', color: COLOR_8, numericValue: 13},
+        {label: '20', color: COLOR_9, numericValue: 20},
+        {label: '40', color: COLOR_10, numericValue: 40},
+        {label: '100', color: COLOR_11, numericValue: 100},
+        {label: '?', color: COLOR_12, numericValue: -1}
     ]
 }
 
@@ -127,18 +140,18 @@ export const sequential = {
     id: 3,
     name: 'Sequentiell',
     values: [
-        {label: '0', color: '#3CA8F6', numericValue: 0},
-        {label: '1', color: '#29A0F5', numericValue: 1},
-        {label: '2', color: '#1597F4', numericValue: 2},
-        {label: '3', color: '#0B8DEA', numericValue: 3},
-        {label: '4', color: '#0A81D6', numericValue: 4},
-        {label: '5', color: '#0975C3', numericValue: 5},
-        {label: '6', color: '#086AAF', numericValue: 6},
-        {label: '7', color: '#075E9D', numericValue: 7},
-        {label: '8', color: '#065289', numericValue: 8},
-        {label: '9', color: '#054776', numericValue: 9},
-        {label: '10', color: '#04395E', numericValue: 10},
-        {label: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: COLOR_1, numericValue: 0},
+        {label: '1', color: COLOR_2, numericValue: 1},
+        {label: '2', color: COLOR_3, numericValue: 2},
+        {label: '3', color: COLOR_4, numericValue: 3},
+        {label: '4', color: COLOR_5, numericValue: 4},
+        {label: '5', color: COLOR_6, numericValue: 5},
+        {label: '6', color: COLOR_7, numericValue: 6},
+        {label: '7', color: COLOR_8, numericValue: 7},
+        {label: '8', color: COLOR_9, numericValue: 8},
+        {label: '9', color: COLOR_10, numericValue: 9},
+        {label: '10', color: COLOR_11, numericValue: 10},
+        {label: '?', color: COLOR_12, numericValue: -1}
     ]
 }
 
@@ -147,12 +160,12 @@ export const tshirt = {
     id: tShirtVoteOptionId,
     name: 'T-Shirt',
     values: [
-        {label: 'XS', color: '#3CA8F6', numericValue: 1},
-        {label: 'S', color: '#1597F4', numericValue: 2},
-        {label: 'M', color: '#0A81D6', numericValue: 3},
-        {label: 'L', color: '#086AAF', numericValue: 4},
-        {label: 'XL', color: '#065289', numericValue: 5},
-        {label: 'XXL', color: '#04395E', numericValue: 6},
+        {label: 'XS', color: COLOR_3, numericValue: 1},
+        {label: 'S', color: COLOR_4, numericValue: 2},
+        {label: 'M', color: COLOR_6, numericValue: 3},
+        {label: 'L', color: COLOR_8, numericValue: 4},
+        {label: 'XL', color: COLOR_10, numericValue: 5},
+        {label: 'XXL', color: COLOR_12, numericValue: 6},
         {label: '?', color: '#DAB785', numericValue: -1}
     ]
 }
@@ -161,29 +174,20 @@ export const t42 = {
     id: 5,
     name: 'Team 42',
     values: [
-        {label: '0', color: '#3CA8F6', numericValue: 0},
-        {label: '0.25', color: '#29A0F5', numericValue: 0.25},
-        {label: '0.5', color: '#1597F4', numericValue: 0.5},
-        {label: '1', color: '#0B8DEA', numericValue: 1},
-        {label: '2', color: '#0A81D6', numericValue: 2},
-        {label: '3', color: '#0975C3', numericValue: 3},
-        {label: '5', color: '#086AAF', numericValue: 5},
-        {label: '8', color: '#075E9D', numericValue: 8},
-        {label: '13', color: '#065289', numericValue: 13},
-        {label: '21', color: '#054776', numericValue: 21},
-        {label: '34', color: '#04395E', numericValue: 34},
-        {label: '?', color: '#DAB785', numericValue: -1}
+        {label: '0', color: COLOR_1, numericValue: 0},
+        {label: '0.25', color: COLOR_2, numericValue: 0.25},
+        {label: '0.5', color: COLOR_3, numericValue: 0.5},
+        {label: '1', color: COLOR_4, numericValue: 1},
+        {label: '2', color: COLOR_5, numericValue: 2},
+        {label: '3', color: COLOR_6, numericValue: 3},
+        {label: '5', color: COLOR_7, numericValue: 5},
+        {label: '8', color: COLOR_8, numericValue: 8},
+        {label: '13', color: COLOR_9, numericValue: 13},
+        {label: '21', color: COLOR_10, numericValue: 21},
+        {label: '34', color: COLOR_11, numericValue: 34},
+        {label: '?', color: COLOR_12, numericValue: -1}
     ]
 }
-
-export const chart_colors = [
-    '#3CA8F6',
-    '#1597F4',
-    '#0A81D6',
-    '#086AAF',
-    '#065289',
-    '#04395E',
-    '#DAB785']
 
 export const VALUE_TYPE_OPTIONS = [
     scrum, fibonacci, sequential, tshirt, t42
