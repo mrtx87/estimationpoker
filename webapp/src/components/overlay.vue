@@ -78,7 +78,7 @@ export default {
   left: 0;
   right: 0;
   background: #000000a6;
-  z-index: 99;
+  z-index: 25;
 }
 
 .overlay-container {

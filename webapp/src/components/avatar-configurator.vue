@@ -382,17 +382,17 @@ export default {
 }
 
 .avatar-hair {
-  z-index: 5000;
+  z-index: 20;
   width: 100%;
 }
 
 .avatar-head {
-  z-index: 4998;
+  z-index: 18;
   width: 100%;
 }
 
 .avatar-shirt {
-  z-index: 4999;
+  z-index: 19;
   width: 100%;
 }
 
@@ -401,7 +401,7 @@ export default {
   top: 3.5%;
   width: 100%;
   height: auto;
-  z-index: 3;
+  z-index: 2;
 }
 
 .avatar-head svg {

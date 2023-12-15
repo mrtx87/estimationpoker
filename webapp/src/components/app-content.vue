@@ -1,5 +1,5 @@
 <template>
-  <div class="app-content">
+  <div class="app-content" v-if="room">
     <general-input class="heading1"
                    v-bind:text="room?.roomSettings.title"
                    v-bind:isDisabled="!isLocalUserModerator()"

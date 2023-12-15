@@ -5,24 +5,31 @@ import {WebsocketService} from "@/services/websocket-service";
 import './assets/css/main.css';
 import {createPinia} from "pinia";
 import {createRouter, createWebHashHistory} from 'vue-router'
-import {ROOM_ROUTE} from "@/constants/vue-constants";
+import {HOME_ROUTE, ROOM_ROUTE} from "@/constants/vue-constants";
 import {AppService} from "@/services/app-service";
 import Toast, {PluginOptions} from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
+import RoomHistory from "@/components/room-history.vue";
+import AppContent from "@/components/app-content.vue";
 
 
 const routes = [
     {
-        path: `/`,
+        path: HOME_ROUTE,
         name: 'Estimation Poker',
-        component: App
+        component: RoomHistory
     },
     {
         path: `${ROOM_ROUTE}:roomId`,
         name: 'Estimation Poker',
-        component: App
+        component: AppContent
     },
+    {
+        path: '/:catchAll(.*)',
+        name: 'S9 Dokumentensuche',
+        component: RoomHistory
+    }
 ];
 
 export const router = createRouter({
