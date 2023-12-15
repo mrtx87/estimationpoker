@@ -6,7 +6,7 @@
                 <img v-if="!prompt?.crucial " src="../assets/ok_white.svg">
                 <img v-if="prompt?.crucial " src="../assets/warn.svg">
                 <span>confirm</span></div>
-            <div v-on:click="closeOverlay" class="button-activate small-btn invers">cancel</div>
+            <div v-on:click="closeOverlay" class="button-activate small-btn invers">{{ tl8('main.button.cancel') }}</div>
         </div>
     </div>
 </template>
@@ -15,6 +15,7 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
+import {languageService} from "@/services/language";
 
 export default {
     name: "prompt",
@@ -28,6 +29,9 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+            return languageService.t(key, this.appStore.langKey, vars);
+        },
         confirmAction() {
           this.prompt.confirmAction();
         },

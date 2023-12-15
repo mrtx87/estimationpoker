@@ -1,10 +1,10 @@
 export const german = {
     key: 'de',
     texts: {
-        'create.room.title' : 'Erstelle einen Raum',
-        'create.room.user.name.placeholder' : 'Dein Benutzername',
-        'create.room.room.title.placeholder' : 'Name des Raums eingeben',
-        'create.room.option.realtime.voting' : 'Beobachter dürfen die Spieler Schätzung in Echtzeit sehen?',
+        'create.room.title': 'Erstelle einen Raum',
+        'create.room.user.name.placeholder': 'Dein Benutzername',
+        'create.room.room.title.placeholder': 'Name des Raums eingeben',
+        'create.room.option.realtime.voting': 'Beobachter dürfen die Spieler Schätzung in Echtzeit sehen?',
         'create.room.btn.title': 'Raum erstellen',
         'create.room.btn.cancel': 'Abbrechen',
 
@@ -12,6 +12,7 @@ export const german = {
         'app.content.btn.new.estimation': 'Neue Schätzung',
         'app.content.btn.reset': 'Zurücksetzen',
         'app.content.btn.reveal': 'Aufdecken',
+        'app.content.invite.link': 'Einladungslink',
 
         'room.settings.title': 'Raum Einstellungen',
         'room.settings.real.time.voting': 'Möchten Sie, dass die Observer die Abstimmung anderer in Echtzeit sehen können?',
@@ -23,12 +24,13 @@ export const german = {
         'avatar.configurator.face': 'Kopf',
         'avatar.configurator.shirt': 'Shirt',
 
-        'estimation.history.completed.estimates': 'Abgeschlossene Schätzungen',
+        'estimation.history.completed.estimations': 'Abgeschlossene Schätzungen',
         'estimation.history.name': 'Name',
         'estimation.history.deviation': 'Abweichung',
         'estimation.history.votes': 'Stimmen',
         'estimation.history.time': 'Zeit',
         'estimation.history.createdAt': 'Erstellt am',
+        'estimation.history.avg.title': 'Durchschnitt',
 
         'validation.text.user.name': 'maximal 25 Zeichen',
         'validation.text.room.title': 'maximal 40 Zeichen',
@@ -65,7 +67,25 @@ export const german = {
         'room.history.date.of.creation': 'Datum der Erstellung',
         'room.history.join.btn': 'beitreten',
         'room.history.no.rooms.created.or.joined': 'Du hast bisher noch keine Räume erstellt oder betreten.',
-        ERROR_FINALIZING_JOIN: 'fgdfg'
 
+        'footer.impressum.title': 'Impressum',
+        'footer.datenschutz.title': 'Datenschutz',
+        'footer.cookie.policy.title': 'Cookie Richtlinien',
+
+        'impressum.owner': 'Eigentümer',
+        'impressum.address': 'Adresse',
+        'impressum.email': 'E-Mail',
+        'impressum.domain': 'Domain',
+
+        'join.room.text':'beitreten',
+        'join.room.title':'Raum beitreten',
+
+        'main.button.cancel': 'abbrechen',
+
+        'toast.warning.no.role.left': 'Du kannst nicht alle Rollen entfernen',
+        'toast.remove.user.message': 'Willst du deinen Benutzer wirklich löschen?',
+
+
+        ERROR_FINALIZING_JOIN: 'fgdfg',
     }
 }

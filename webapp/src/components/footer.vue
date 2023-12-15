@@ -1,9 +1,9 @@
 <template>
     <div class="footer-wrapper">
         <div class="footer">
-            <div class="footer-btn" v-on:click="openImpressumOnClick">Impressum</div>
-            <div class="footer-btn" v-on:click="openDatenschutzOnClick">Datenschutzerklärung</div>
-            <div class="footer-btn" v-on:click="openDsgvoOnClick">Cookie-Richtlinien</div>
+            <div class="footer-btn" v-on:click="openImpressumOnClick">{{ tl8('footer.impressum.title') }}</div>
+            <div class="footer-btn" v-on:click="openDatenschutzOnClick">{{ tl8('footer.datenschutz.title') }}</div>
+            <div class="footer-btn" v-on:click="openDsgvoOnClick">{{ tl8('footer.cookie.policy.title') }}</div>
         </div>
     </div>
 </template>
@@ -12,29 +12,31 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
-import Impressum from "@/components/impressum.vue";
-import Dsgvo from "@/components/dsgvo.vue";
+import {languageService} from "@/services/language";
 
 export default {
     name: "FooterVue",
     components: {},
     created() {
-        this.appState = useAppStateStore();
+        this.appStore = useAppStateStore();
     },
     data: function () {
         return {
-            appState: null,
+            appStore: null,
         }
     },
     methods: {
+        tl8(key, vars) {
+            return languageService.t(key, this.appStore.langKey, vars);
+        },
         openDatenschutzOnClick: function () {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DATENSCHUTZ);
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.DATENSCHUTZ);
         },
         openImpressumOnClick: function () {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.IMPRESSUM);
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.IMPRESSUM);
         },
         openDsgvoOnClick: function () {
-            this.appState.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
+            this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.DSGVO);
         },
     },
     computed: {}

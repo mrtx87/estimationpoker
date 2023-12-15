@@ -12,6 +12,7 @@ export const english = {
         'app.content.btn.new.estimation': 'new estimation',
         'app.content.btn.reset': 'reset',
         'app.content.btn.reveal': 'reveal',
+        'app.content.invite.link': 'invite link',
 
         'room.settings.title': 'Room settings',
         'room.settings.real.time.voting': 'Do you want observers to see other players voting in real time?',
@@ -23,15 +24,17 @@ export const english = {
         'avatar.configurator.face': 'Head',
         'avatar.configurator.shirt': 'Shirt',
 
-        'estimation.history.completed-estimates': 'Completed estimates',
+        'estimation.history.completed.estimations': 'Completed Estimations',
         'estimation.history.name': 'Name',
         'estimation.history.deviation': 'Deviation',
         'estimation.history.votes': 'Votes',
         'estimation.history.time': 'Time',
         'estimation.history.createdAt': 'created at',
+        'estimation.history.avg.title': 'average',
 
         'validation.text.user.name': '25 characters max',
         'validation.text.room.title': '40 characters max',
+
         'voting.information.estimation.underway': 'Estimation round in progress:',
         'voting.information.voters.count': '{} out of {} active participants have voted',
         'voting.information.evaluation.phase': 'Evaluation phase',
@@ -53,8 +56,8 @@ export const english = {
 
 
         'user.menu.roles': 'Roles',
-        'user.menu.edit.user': 'Edit User',
-        'user.menu.delete.user': 'delete User',
+        'user.menu.edit.user': 'edit user',
+        'user.menu.delete.user': 'delete user',
 
         'room.history.create.room': 'create Room',
         'room.history.last.time.visited.room': 'Recently visited rooms',
@@ -65,6 +68,23 @@ export const english = {
         'room.history.date.of.creation': 'Date of creation',
         'room.history.join.btn': 'join',
         'room.history.no.rooms.created.or.joined': 'You have not yet created or entered a room.',
+
+        'footer.impressum.title': 'Imprint',
+        'footer.datenschutz.title': 'Data Privacy',
+        'footer.cookie.policy.title':'Cookie Policy',
+
+        'impressum.owner': 'Owner',
+        'impressum.address': 'Address',
+        'impressum.email': 'E-Mail',
+        'impressum.domain': 'Domain',
+
+        'join.room.text':'join',
+        'join.room.title':'Join Room',
+
+        'main.button.cancel': 'cancel',
+
+        'toast.warning.no.role.left': 'You may not remove all roles',
+        'toast.remove.user.message': 'Do you really want to delete your User?',
 
 
     }

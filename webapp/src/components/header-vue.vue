@@ -5,7 +5,7 @@
             <div class="header-btns">
                 <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute"
                         v-on:click="createRoomOverlay()">
-                    <img src="../assets/cross.svg">{{ tl8('header.create.room')}}
+                    <img src="../assets/cross.svg">{{ tl8('header.create.room') }}
                 </button>
                 <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
                     <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
@@ -33,7 +33,6 @@ import User from "@/components/user.vue";
 import UserMenu from "@/components/user-menu.vue";
 import {vOnClickOutside} from "@vueuse/components/index";
 import {englishKey, germanKey, languageService} from "@/services/language";
-import {german} from "@/constants/language/de";
 import {getCookie, setCookie} from "@/services/cookie-service";
 
 export default {
@@ -56,14 +55,14 @@ export default {
     },
     methods: {
         tl8(key) {
-          return languageService.t(key, this.appStore.langKey);
+            return languageService.t(key, this.appStore.langKey);
         },
         initLanguageSetting() {
             let langKey = getCookie(LANG_COOKIE_KEY);
             if (!langKey) {
                 langKey = germanKey;
-                setCookie(LANG_COOKIE_KEY, langKey);
             }
+            setCookie(LANG_COOKIE_KEY, langKey);
             this.checked = langKey === englishKey;
             this.appStore.setLangKey(langKey);
         },

@@ -1,5 +1,5 @@
 import {VueCookieNext} from "vue-cookie-next";
-import {PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
+import {LANG_COOKIE_KEY, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
 
 
 export function getCookie(cookieKey: string): any {
@@ -8,7 +8,7 @@ export function getCookie(cookieKey: string): any {
 
 export function setCookie(cookieKey: string, cookieValue: string): void {
     const privacyConfirmed = VueCookieNext.getCookie(PRIVACY_POLICY_COOKIE_KEY);
-    if (privacyConfirmed || 1 == 1) {
+    if (privacyConfirmed) {
         VueCookieNext.setCookie(cookieKey, cookieValue, {
             path: '/',
             domain: 'localhost',
@@ -38,7 +38,7 @@ export function removeAllCookies(): void {
 }
 
 export function getRoomAuthenticationsFromCookies(): any[] {
-    return VueCookieNext.keys().filter(key => key !== PRIVACY_POLICY_COOKIE_KEY).map(roomId => {
+    return VueCookieNext.keys().filter(key => ![PRIVACY_POLICY_COOKIE_KEY, LANG_COOKIE_KEY].includes(key)).map(roomId => {
         const jwt = getCookie(roomId);
         return {roomId, token: jwt};
     });

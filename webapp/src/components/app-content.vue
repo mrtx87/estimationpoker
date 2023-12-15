@@ -42,7 +42,7 @@
           </button>
           <button class="button-activate" v-if="appStore.isOnRoomRoute" v-on:click="shareLink()"><img
               style="width:30px;" src="../assets/sharelink.svg">
-            <span>invite link</span>
+            <span>{{ tl8('app.content.invite.link') }}</span>
           </button>
         </div>
 

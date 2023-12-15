@@ -43,22 +43,22 @@ export default {
     },
     props: ['estimation'],
     created() {
-      this.appStore = useAppStateStore();
-      this.refreshInitOptions();
-      this.refreshEvaluationChart(this.estimation);
+        this.appStore = useAppStateStore();
+        this.refreshInitOptions();
+        this.refreshEvaluationChart(this.estimation);
     },
     watch: {
         estimation(nextEstimation, previousEstimation) {
-          this.refreshInitOptions();
-          this.refreshEvaluationChart(nextEstimation);
+            this.refreshInitOptions();
+            this.refreshEvaluationChart(nextEstimation);
         },
         screenDimensions(nextScreenDimensions, previousScreenDimensions) {
             this.refreshInitOptions();
             this.refreshEvaluationChart(this.estimation);
         },
         langKey(nextLangKey, previousLangKey) {
-          this.refreshInitOptions();
-          this.refreshEvaluationChart(this.estimation);
+            this.refreshInitOptions();
+            this.refreshEvaluationChart(this.estimation);
         }
     },
     data: function () {
@@ -74,7 +74,7 @@ export default {
     },
     methods: {
         tl8(key, vars) {
-          return languageService.t(key, this.appStore.langKey, vars);
+            return languageService.t(key, this.appStore.langKey, vars);
         },
         refreshEvaluationChart(nextEstimation) {
             if (nextEstimation) {
@@ -123,8 +123,8 @@ export default {
                 semanticDescription = this.tl8('evaluation.deviation.extreme');
             }
 
-            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? this.tl8('evaluation.get.deviation.text',[deviation,[semanticDescription]]) :
-                                                                           this.tl8('evaluation.get.deviation.text2',[semanticDescription]);
+            return this.estimation.valueOptionsId !== tShirtVoteOptionId ? this.tl8('evaluation.get.deviation.text', [deviation, semanticDescription]) :
+                this.tl8('evaluation.get.deviation.text2', [semanticDescription]);
         },
 
     },
@@ -133,7 +133,7 @@ export default {
             return this.appStore?.screenDimensions;
         },
         langKey() {
-         return this.appStore?.langKey;
+            return this.appStore?.langKey;
         }
     }
 };

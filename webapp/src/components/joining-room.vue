@@ -1,13 +1,16 @@
 <template>
     <div class="join-room-wrapper">
-        <div class="join-room-heading">Raum beitreten</div>
+        <div class="join-room-heading">{{ tl8('join.room.title') }}</div>
         <div class="input-elem-container">
-            <input type=text v-model="userNameInput" placeholder="Dein Benutzername">
-            <div v-if="userNameTooLong" class="validation-message">maximal 25 Zeichen</div>
+            <input type=text v-model="userNameInput" :placeholder="tl8('create.room.user.name.placeholder')">
+            <div v-if="userNameTooLong" class="validation-message">{{ tl8('validation.text.user.name') }}</div>
         </div>
         <div class="join-room-buttons-panel">
-            <button class="button-activate" :disabled="!inputValid" v-on:click="joinRoom()">Raum beitreten</button>
-            <button class="button-activate invers" v-on:click="cancel()">abbrechen</button>
+            <button class="button-activate" :disabled="!inputValid" v-on:click="joinRoom()">{{
+                tl8('join.room.text')
+                }}
+            </button>
+            <button class="button-activate invers" v-on:click="cancel()">{{ tl8('main.button.cancel') }}</button>
         </div>
     </div>
 </template>
@@ -21,6 +24,7 @@ import {getRandomAvatar, setCookie} from "@/services/cookie-service";
 import {router} from "@/main";
 import {GlobalPlayerCookie} from "@/model/global-player-cookie.model";
 import * as avatars from "@/assets/avatar/avatar-constants";
+import {languageService} from "@/services/language";
 
 export default {
     name: "Joining-Room",
@@ -35,6 +39,9 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+            return languageService.t(key, this.appStore.langKey, vars);
+        },
         joinRoom() {
             restService.sendPostRequest('/join-room', {
                 roomId: this.roomId,

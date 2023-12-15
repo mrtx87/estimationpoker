@@ -4,19 +4,19 @@
         <div class="impressum-title">Impressum</div>
         <div class="impressum">
             <div class="impressum-row">
-                <span class="impressum-row-title">Owner:</span>
+                <span class="impressum-row-title">{{tl8('impressum.owner')}}:</span>
                 <span>Patrick Beiersdörfer</span>
             </div>
             <div class="impressum-row">
-                <span class="impressum-row-title">Address:</span>
+                <span class="impressum-row-title">{{tl8('impressum.address')}}:</span>
                 <span>10245 Berlin Palmkernzeile 7</span>
             </div>
             <div class="impressum-row">
-                <span class="impressum-row-title">E-Mail:</span>
+                <span class="impressum-row-title">{{tl8('impressum.email')}}:</span>
                 <span>contact@curview.net</span>
             </div>
             <div class="impressum-row">
-                <span class="impressum-row-title">Domain:</span>
+                <span class="impressum-row-title">{{tl8('impressum.domain')}}:</span>
                 <span>??????.net</span>
             </div>
         </div>
@@ -27,6 +27,7 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE} from "@/constants/vue-constants";
+import {languageService} from "@/services/language";
 
 export default {
     name: "Impressum",
@@ -40,6 +41,9 @@ export default {
         }
     },
     methods: {
+        tl8(key, vars) {
+            return languageService.t(key, this.appStore.langKey, vars);
+        },
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);
         },

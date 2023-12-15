@@ -49,7 +49,7 @@ export default {
         },
         openDeleteUserPrompt() {
             this.appStore.setPrompt({
-                question: 'Do you really want to delete your User?',
+                question: this.tl8('toast.remove.user.message'),
                 crucial: true,
                 confirmAction: this.sendDeleteUser.bind(this)
             });
@@ -62,7 +62,7 @@ export default {
             const currentRoles = this.user.roles;
             if (currentRoles.includes(role)) {
                 if (currentRoles.length === 1) {
-                    this.appStore.toast.warning(`Du kannst nicht alle Rollen entfernen`);
+                    this.appStore.toast.warning(this.tl8('toast.warning.no.role.left'));
                     return;
                 }
                 const updatesRoles = currentRoles.filter(r => r !== role);
