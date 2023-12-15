@@ -16,6 +16,17 @@ export const english = {
         'app.content.btn.reveal': 'reveal',
         'app.content.invite.link': 'invite link',
 
+        'dsgvo.cookie.guidelines': 'Cookie guidelines',
+        'dsgvo.privacy': 'Your privacy is important to us',
+        'dsgvo.text1': 'In order to use EstimationPoker, you must agree to the use of first-party cookies.',
+        'dsgvo.text2': 'We only use these cookies on this website for the following purposes:',
+        'dsgvo.text3': 'Information about visited and created rooms',
+        'dsgvo.text4': 'Saving the selected language',
+        'dsgvo.text5': 'By confirming, you allow the use of these cookies and thus also the storage in the local memory of your browser.',
+        'dsgvo.text6': 'All stored data will be deleted upon revocation. As a result, access to saved rooms is lost.',
+        'dsgvo.confirm.btn': 'Accept',
+        'dsgvo.decline.btn': 'Reject',
+
         'room.settings.title': 'Room settings',
         'room.settings.real.time.voting': 'Do you want observers to see other players voting in real time?',
         'room.settings.save': 'save',

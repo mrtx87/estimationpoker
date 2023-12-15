@@ -16,6 +16,17 @@ export const german = {
         'app.content.btn.reveal': 'Aufdecken',
         'app.content.invite.link': 'Einladungslink',
 
+        'dsgvo.cookie.guidelines': 'Cookie Richtlinien',
+        'dsgvo.privacy': 'Ihre Privatsphäre ist uns wichtig',
+        'dsgvo.text1': 'Damit Sie EstimationPoker nutzen können, müssen Sie der Verwendung von First-Party-Cookies zustimmen.',
+        'dsgvo.text2': 'Wir verwenden diese Cookies nur auf dieser Website für folgende Zwecke:',
+        'dsgvo.text3': 'Informationen über besuchte und erstelle Räume',
+        'dsgvo.text4': 'Speicherung des ausgewählten Sprache',
+        'dsgvo.text5': 'Durch die Bestätigung erlauben Sie die Verwendung dieser Cookies und damit auch die Speicherung im lokalen Speicher ihres Browsers.',
+        'dsgvo.text6': 'Bei Widerruf werden alle gespeicherten Daten gelöscht. Dadurch geht der Zugang zu gespeicherten Räumen verloren.',
+        'dsgvo.confirm.btn': 'Annehmen',
+        'dsgvo.decline.btn': 'Ablehnen',
+
         'room.settings.title': 'Raum Einstellungen',
         'room.settings.real.time.voting': 'Möchten Sie, dass die Observer die Abstimmung anderer in Echtzeit sehen können?',
         'room.settings.save': 'speichern',

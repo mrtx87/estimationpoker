@@ -1,22 +1,21 @@
 <template>
     <div class="dsgvo-wrapper">
-        <div class="dsgvo-title">Cookie Richtlinien</div>
-        <div class="dsgvo-subtitle">Ihre Privatsphäre ist uns wichtig</div>
+        <div class="dsgvo-title">{{ tl8('dsgvo.cookie.guidelines') }}</div>
+        <div class="dsgvo-subtitle">{{ tl8('dsgvo.privacy') }}</div>
         <div class="dsgvo">
-            <p>Damit Sie EstimationPoker nutzen können, müssen Sie der Verwendung von
-                First-Party-Cookies zustimmen. </p>
-            <p>Wir verwenden diese Cookies nur auf dieser Website für folgende Zwecke:</p>
+            <p>{{ tl8('dsgvo.text1') }} </p>
+            <p>{{ tl8('dsgvo.text2') }} </p>
             <ul>
-                <li>Informationen über besuchte und erstelle Räume</li>
-                <li>Speicherung des ausgewählten Sprache</li>
+                <li>{{ tl8('dsgvo.text3') }} </li>
+                <li>{{ tl8('dsgvo.text4') }} </li>
             </ul>
-            <p>Durch die Bestätigung erlauben Sie die Verwendung dieser Cookies und damit auch die Speicherung im lokalen Speicher ihres Browsers.</p>
-            <p>Bei Widerruf werden alle gespeicherten Daten gelöscht. Dadurch geht der Zugang zu gespeicherten Räumen verloren.</p>
+            <p>{{ tl8('dsgvo.text5') }} </p>
+            <p>{{ tl8('dsgvo.text6') }} </p>
 
         </div>
         <div class="dsgvo-btn-panel">
-            <button class="button-activate" v-on:click="confirmDSGVO()">confirm</button>
-            <button class="button-activate" v-on:click="declineDGSVO()">decline</button>
+            <button class="button-activate" v-on:click="confirmDSGVO()">{{ tl8('dsgvo.confirm.btn') }}</button>
+            <button class="button-activate" v-on:click="declineDGSVO()">{{ tl8('dsgvo.decline.btn') }}</button>
         </div>
 
     </div>
@@ -28,6 +27,7 @@ import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
 import {getCookie, removeAllCookies, setCookie, setPrivacyCookie} from "@/services/cookie-service";
 import {router} from "@/main";
+import {languageService} from "@/services/language";
 
 export default {
     name: "Dsgvo",
@@ -41,6 +41,9 @@ export default {
         }
     },
     methods: {
+        tl8(key) {
+          return languageService.t(key, this.appStore.langKey);
+        },
         confirmDSGVO() {
           const cookie = getCookie(PRIVACY_POLICY_COOKIE_KEY);
           if (cookie) {
