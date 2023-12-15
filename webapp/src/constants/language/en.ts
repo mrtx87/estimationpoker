@@ -1,3 +1,5 @@
+import {ResponseMessageType} from "@/constants/vue-constants";
+
 export const english = {
     key: 'en',
     texts: {
@@ -86,6 +88,22 @@ export const english = {
         'toast.warning.no.role.left': 'You may not remove all roles',
         'toast.remove.user.message': 'Do you really want to delete your User?',
 
+        [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} has entered the room',
+        [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'You have entered the room',
+        [ResponseMessageType.USER_DISCONNECTED]: '{} has left the room',
+        [ResponseMessageType.USER_DELETED]: 'User {} has been deleted!',
+        [ResponseMessageType.ACTION_UNKNOWN]: 'This Aktion is unknown!',
+        [ResponseMessageType.ERROR_PROCESSING_USER_VOTE]: 'Error on processing vote',
+        [ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE]: 'Error when changing the title of the estimation round',
+        [ResponseMessageType.ERROR_CHANGING_ROOM_SETTINGS]: 'Error when changing the room settings',
+        [ResponseMessageType.ERROR_CHANGING_USER]: 'Error when changing the user',
+        [ResponseMessageType.ERROR_CHANGING_ROLE]: 'Error when changing the user\'s role',
+        [ResponseMessageType.ERROR_DELETING_USER]: 'Error when deleting the user',
+        [ResponseMessageType.ERROR_DELETING_ROOM]: 'Error when deleting the room',
+        [ResponseMessageType.ERROR_FINALIZING_JOIN]: 'Error when entering the room',
+        [ResponseMessageType.ERROR_RESETTING_VOTES]: 'Error when resetting the votes',
+        [ResponseMessageType.ERROR_REVEALING_VOTES]: 'Error when revealing the votes',
+        [ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION]: 'Error when generating the next estimation round',
 
     }
 }

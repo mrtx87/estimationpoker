@@ -90,7 +90,7 @@ export const german = {
         [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} hat den Raum betreten',
         [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'Du hast den Raum betreten',
         [ResponseMessageType.USER_DISCONNECTED]: '{} hat den Raum verlassen',
-        [ResponseMessageType.USER_DELETED]: 'User {} has been deleted!',
+        [ResponseMessageType.USER_DELETED]: 'User {} wurde gelöscht!',
         [ResponseMessageType.ACTION_UNKNOWN]: 'Diese Aktion ist leider nicht bekannt!',
         [ResponseMessageType.ERROR_PROCESSING_USER_VOTE]: 'Fehler beim Verarbeiten des Votes',
         [ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE]: 'Fehler beim Ändern des Titels der Schätzrunde',
