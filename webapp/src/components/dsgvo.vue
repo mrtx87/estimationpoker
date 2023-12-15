@@ -26,7 +26,7 @@
 
 import {useAppStateStore} from "@/stores/app-state";
 import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, PRIVACY_POLICY_COOKIE_KEY} from "@/constants/vue-constants";
-import {getCookie, removeAllCookies, setCookie} from "@/services/cookie-service";
+import {getCookie, removeAllCookies, setCookie, setPrivacyCookie} from "@/services/cookie-service";
 import {router} from "@/main";
 
 export default {
@@ -42,11 +42,12 @@ export default {
     },
     methods: {
         confirmDSGVO() {
-            if (getCookie(PRIVACY_POLICY_COOKIE_KEY)) {
+          const cookie = getCookie(PRIVACY_POLICY_COOKIE_KEY);
+          if (cookie) {
                 this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)
                 return;
             }
-            setCookie(PRIVACY_POLICY_COOKIE_KEY, 'true');
+            setPrivacyCookie();
             this.$appService.initApp();
         },
         declineDGSVO() {

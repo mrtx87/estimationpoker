@@ -24,8 +24,8 @@ export function refreshRoomCookie(roomId: string) {
     setCookie(roomId, token);
 }
 
-export function setPrivacyCookie(cookieKey: string, cookieValue: string): void {
-    VueCookieNext.setCookie(cookieKey, cookieValue)
+export function setPrivacyCookie(): void {
+    VueCookieNext.setCookie(PRIVACY_POLICY_COOKIE_KEY, 'true')
 }
 
 export function removeCookie(cookieKey: string): void {
