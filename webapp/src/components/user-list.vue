@@ -101,7 +101,7 @@ export default {
   justify-content: space-around;
   gap: 30px 40px;
   padding: 15px 0;
-  min-height: 25vh;
+  min-height: 20vh;
   width: 100%;
 
   .users-heading {

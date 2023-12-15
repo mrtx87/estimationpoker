@@ -1,11 +1,11 @@
 <template>
     <div class="header-wrapper">
         <div class="header">
-            <div>LOGO</div>
+            <img class="logo" src="../assets/logo.svg">
             <div class="header-btns">
                 <button class="button-activate small-btn" v-if="appStore.isOnRoomRoute"
                         v-on:click="createRoomOverlay()">
-                    <img src="../assets/cross.svg">{{ tl8('header.create.room') }}
+                    <img src="../assets/cross.svg"><span v-if="appStore.screenDimensions.width > 450">{{ tl8('header.create.room') }} </span>
                 </button>
                 <label :class="{ 'toggle': !checked, 'toggle change-color': checked}">
                     <input type="checkbox" v-on:click="onCheckedChange($event.target.checked)" v-bind:checked="checked">
@@ -116,6 +116,7 @@ export default {
   background-color: transparent;
   justify-content: space-between;
   max-width: 1400px;
+  padding: 5px;
 
   .header-btns {
     display: flex;
@@ -235,6 +236,12 @@ export default {
 .toggle input:checked ~ .labels::before {
   opacity: 1;
   transform: translateX(calc(var(--width) - var(--height)));
+}
+
+.logo {
+  min-width: 100px;
+  width: 10vw;
+  max-width: 150px;
 }
 
 
