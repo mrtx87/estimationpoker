@@ -9,6 +9,7 @@ import {languageService} from "@/services/language";
 
 
 const MAX_RECONNECT_RETRIES = 3;
+
 export class WebsocketService {
     retries = 0;
     wsConnection: WebSocket | null = null;
@@ -17,9 +18,10 @@ export class WebsocketService {
 
     pingTimeout: any;
 
-    tl8(key:string, vars: any = null) {
+    tl8(key: string, vars: any = null) {
         return languageService.t(key, this.store.langKey, vars);
     }
+
     registerStore(appStore: any): void {
         this.store = appStore;
     }
@@ -240,14 +242,18 @@ export class WebsocketService {
                     if (deletedUser.id === this.store.localUserId) {
                         this.store.reset();
                         router.push(HOME_ROUTE);
-                        return this.store.toast.warning(this.tl8(message.type), [deletedUser.name]);
+                        return this.store.toast.warning(this.tl8(message.type, [deletedUser.name]));
                     }
                     room.users = room.users.filter((u: any) => u.id !== deletedUserId);
                     this.store.setRoom(room);
-                    return this.store.toast.warning(this.tl8(message.type), [deletedUser.name]);
+                    return this.store.toast.warning(this.tl8(message.type, [deletedUser.name]));
                 }
                 case ResponseMessageType.ACTION_UNKNOWN : {
                     return this.store.toast.warning(this.tl8(message.type));
+                }
+                case ResponseMessageType.UNKNOWN_USER: {
+                    router.push(HOME_ROUTE);
+                    return this.store.toast.error(this.tl8(message.type));
                 }
                 case ResponseMessageType.ERROR_PROCESSING_USER_VOTE :
                 case ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE :

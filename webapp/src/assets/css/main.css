@@ -232,7 +232,7 @@ body {
     border: none;
     outline: none;
     cursor: pointer;
-    z-index: 100;
+    z-index: 1;
 }
 
 .plain-button-with-image {

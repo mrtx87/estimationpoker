@@ -2,8 +2,7 @@
     <div class="app-wrapper">
         <overlay v-if="appStore.overlayId > DISPLAY_OVERLAY_STATE.NO_OVERLAY"></overlay>
         <HeaderVue></HeaderVue>
-        <app-content v-if="isOnRoomRoute"></app-content>
-        <room-history v-else></room-history>
+        <router-view/>
         <Footer></Footer>
     </div>
 </template>
@@ -18,15 +17,10 @@ import Overlay from "@/components/overlay.vue";
 import {restService} from "@/services/rest-service";
 import Footer from "@/components/footer.vue";
 import {useToast} from "vue-toastification";
-import AppContent from "@/components/app-content.vue";
-import RoomHistory from "@/components/room-history.vue";
-
 
 export default {
     name: "App",
     components: {
-        RoomHistory,
-        AppContent,
         HeaderVue,
         Overlay,
         Footer,
