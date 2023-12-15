@@ -29,7 +29,6 @@ export function wait(ms: number, data: any) {
 export class RestService {
     appState: any;
     headerConfig= {};
-    logoutStatusCodes =  [UNAUTHORIZED, FORBIDDEN];
     sendPostRequest(path: string, data: any, blocking = true, authorized = true) {
         if (blocking) {
             const loadingInterception = this.addLoadingInterception(path);
@@ -54,11 +53,7 @@ export class RestService {
     }
 
     errorHandling (error: any) {
-        const errorStatus = error?.response?.status;
         this.handleToastOnError(error);
-        if (this.logoutStatusCodes.includes(errorStatus)) {
-            //this.appState.onLogout();
-        }
         return Promise.reject(error);
     }
     errorHandlingOnBlockingResponse (loadingInterception: any, error: any) {
@@ -67,10 +62,8 @@ export class RestService {
     }
     handleToastOnError(error: any) {
         if (!error || !error.response) {
-            console.log(error)
             this.appState?.toast.error(SERVER_NOT_REACHABLE);
         } else if (error.response.data) {
-            console.log(error)
             this.appState?.toast.error(error.response.data);
         }
     }
@@ -106,7 +99,7 @@ export class RestService {
 
 }
 
-export const  restService = new RestService();
+export const restService = new RestService();
 
 function isOnMultipleToastByStatusBlacklist(errorCode: number) {
     return errorCode && ERROR_CODES_ALLOW_MULTIPLE_BLACKLIST.includes(errorCode);

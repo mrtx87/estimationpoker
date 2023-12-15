@@ -177,6 +177,12 @@ export class WebsocketService {
         this.store.toast.info(`${user.name} has left the room.`)
     }
 
+    updateRoom(message: any, updateMethod: (response: any, room: any) => void) {
+        const room = {...this.store.room};
+        updateMethod(message, room);
+        return this.store.setRoom(room);
+    }
+
     onReceiveMessage(response: { data: string; }): void {
         try {
             const message = JSON.parse(response.data);
@@ -194,35 +200,35 @@ export class WebsocketService {
                 case ResponseMessageType.ANOTHER_USER_JOINED_SESSION:
                     return this.onOtherUserJoinedRoom(message);
                 case ResponseMessageType.REVEALED_VOTES: {
-                    const room = {...this.store.room};
-                    room.currentEstimation = message.data;
-                    return this.store.setRoom(room);
+                    return this.updateRoom(message, (message, room) => {
+                        room.currentEstimation = message.data;
+                    });
                 }
                 case ResponseMessageType.RESETED_VOTES: {
-                    const room = {...this.store.room};
-                    room.currentEstimation = message.data;
-                    this.store.setLocalVoteValue('');
-                    return this.store.setRoom(room);
+                    return this.updateRoom(message, (message, room) => {
+                        room.currentEstimation = message.data;
+                        this.store.setLocalVoteValue('');
+                    });
                 }
                 case ResponseMessageType.NEXT_ESTIMATION: {
-                    const room = {...this.store.room};
-                    room.currentEstimation = message.data;
-                    this.store.setLocalVoteValue('');
-                    restService.sendPostRequest('/estimation-history', null)
-                        .then(request => this.store.setEstimationHistory(request.data))
-                    return this.store.setRoom(room);
+                    return this.updateRoom(message, (message, room) => {
+                        room.currentEstimation = message.data;
+                        this.store.setLocalVoteValue('');
+                        restService.sendPostRequest('/estimation-history', null)
+                            .then(request => this.store.setEstimationHistory(request.data));
+                    });
                 }
                 case ResponseMessageType.ESTIMATION_TITLE_UPDATED: {
-                    const room = {...this.store.room};
-                    room.currentEstimation.title = message.data.estimationTitle;
-                    return this.store.setRoom(room);
+                    return this.updateRoom(message, (message, room) => {
+                        room.currentEstimation.title = message.data.estimationTitle;
+                    });
                 }
                 case ResponseMessageType.CHANGED_USER_ROLE:
                 case ResponseMessageType.CHANGED_USER: {
-                    const updatedUser = message.data;
-                    const room = {...this.store.room};
-                    room.users = [...room.users.filter((u: any) => u.id !== message.data.id), updatedUser];
-                    return this.store.setRoom(room);
+                    return this.updateRoom(message, (message, room) => {
+                        const updatedUser = message.data;
+                        room.users = [...room.users.filter((u: any) => u.id !== message.data.id), updatedUser];
+                    });
                 }
                 case ResponseMessageType.UPDATED_ROOM_SETTINGS: {
                     const roomSettings = message.data;
@@ -230,14 +236,15 @@ export class WebsocketService {
                     return this.store.setRoom(room);
                 }
                 case ResponseMessageType.USER_VOTED: {
-                    const votes = message.data;
-                    const currentEstimation = this.store.room.currentEstimation;
-                    currentEstimation.votes = votes;
-                    const room = {...this.store.room}
-                    return this.store.setRoom(room);
+                    return this.updateRoom(message, (message, room) => {
+                        const votes = message.data;
+                        const currentEstimation = room.currentEstimation;
+                        currentEstimation.votes = votes;
+                    });
                 }
                 case ResponseMessageType.ROOM_NOT_EXISTING : {
-                    return this.store.toast.error('Dieser Raum existiert nicht mehr.');
+                    router.push(HOME_ROUTE);
+                    return this.store.toast.warning('Dieser Raum existiert nicht mehr.');
                 }
                 case ResponseMessageType.USER_DELETED: {
                     const deletedUserId = message.data.userId;
