@@ -7,15 +7,12 @@ import {
     getNotFoundErrorResponseHandling
 } from "../util/util";
 import {
-    ROOM_TO_BE_STORED_NOT_EXIST,
     DELETE_ROOM_ERROR,
-    ROOM_DOES_NOT_EXIST
+    ROOM_DOES_NOT_EXIST, ROOM_TO_BE_STORED_NOT_EXIST
 } from "../constants/error-texts";
 import {logger} from "../services/s9logger";
 import {EstimationPokerRoomMapper} from "../mapper/estimation-poker-mapper";
 import {INFO_ROOM_DELETED} from "../constants/logging-texts";
-import {RoomSettings} from "../model/room-settings";
-import {stringify} from "uuid/index";
 
 
 export class EstimationPokerRoomRepository {

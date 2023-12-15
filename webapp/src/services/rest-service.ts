@@ -1,4 +1,5 @@
 import axios from "axios";
+import {languageService} from "@/services/language";
 
 export function isLocalHost() {
     return window.location.href.includes('localhost:8080');
@@ -64,7 +65,7 @@ export class RestService {
         if (!error || !error.response) {
             this.appState?.toast.error(SERVER_NOT_REACHABLE);
         } else if (error.response.data) {
-            this.appState?.toast.error(error.response.data);
+            this.appState?.toast.error(this.tl8(error.response.data));
         }
     }
     responseInterception (loadingInterception: any, response: any) {
@@ -97,6 +98,10 @@ export class RestService {
         }
     }
 
+    tl8(key: string, vars: any = null) {
+        return languageService.t(key, this.appState.langKey, vars);
+    }
+
 }
 
 export const restService = new RestService();
@@ -112,17 +117,7 @@ function getLoadingText(path:string) {
 }
 
 /* error texts */
-/* eslint-disable */
-export const DOKUMENT_DOES_NOT_EXISTS = `Das Dokument existiert nicht mehr.`;
-export const SERVER_NOT_REACHABLE = `Der Server scheint nicht erreichbar. Versuche es bitte später nochmal.`;
-export const REGISTRATION_SUCCESS = (loggedInUser: any) => `Registrierung erfolgreich Herzlich Willkommen ${loggedInUser.name}.`;
-export const LOGIN_SUCCESS = (loggedInUser: any) => `Herzlich Willkommen ${loggedInUser.name}.`;
-export const DOCUMENT_CREATION_SUCCESS = `Das Dokument wurde erfolgreich angelegt.`;
-export const DOCUMENT_RESTORE_SUCCESS = `Das Dokument wurde erfolgreichwiederhergestellt.`;
-export const DOCUMENT_RELOAD_SUCCESS = `Das Dokument wurde erfolgreich aktualisiert.`;
-export const DOCUMENT_RELOAD_UNNECESSARY = `Das Dokument ist bereits auf dem neusten Stand.`;
-export const DOCUMENT_SAVE_SUCCESS = `Das Dokument wurde erfolgreich gespeichert.`;
-export const DOKUMENT_REMOVE_SUCCESS = `Das Dokument wurde erfolgreich gelöscht.`;
-export const ICON_SAVE_SUCCESS = `Das Icon wurde erfolgreich gespeichert.`;
-export const DOCUMENT_CLICK_OUTSIDE_OPEN_MENU_ON_EXISTING_CHANGES = `Du hast noch ungespeicherte Änderungen an deinem Icon!`;
+export const SERVER_NOT_REACHABLE = `The server does not seem to be available. Please try again later.`;
+export const TRYING_RECONNECT = `Trying to reconnect...`;
+
 

@@ -2,10 +2,7 @@ import {User} from "../model/user";
 
 import {v4 as UUID} from 'uuid';
 import {
-    ERROR_REFESHING_TOKEN, ERROR_WHILE_JOINING_ROOM,
-    ERROR_WHILE_USERS_REQUEST,
-    INVALID_TOKEN,
-    TOKEN_REQUIRED, USER_NOT_EXISTING, USER_TO_DELETE_NOT_EXISTS,
+    ERROR_WHILE_JOINING_ROOM, INVALID_TOKEN, TOKEN_REQUIRED, USER_NOT_EXISTING, USER_TO_DELETE_NOT_EXISTS,
 } from "../constants/error-texts";
 import {default_avatar, ROLE} from "../constants/global";
 import {
@@ -19,7 +16,6 @@ import {UserModel} from "../db/mongodb/db-schemas";
 
 
 const jwt = require("jsonwebtoken")
-const bcrypt = require('bcrypt');
 
 const userRepository = UserRepository.s9UserRepository;
 
@@ -61,16 +57,6 @@ export class UserService {
         }
     }
 
-
-    refreshToken(req: any, res?: any) {
-        try {
-            const userId = req.user.id;
-            return Promise.resolve(this.getSignedJwtToken(userId, 'TODO'));
-        } catch (e) {
-            return getInternalErrorErrorResponseHandling(e.message, ERROR_REFESHING_TOKEN).toPromise();
-        }
-    }
-
     createUser(userName: string, avatar: Avatar, roomId: string, roles = [ROLE.PLAYER]) {
         try {
             const dbUserModel = new UserModel(User.of({
@@ -90,7 +76,6 @@ export class UserService {
        return userRepository.updateUser(userUpdate)
            .then(User.of, e => getBadRequestErrorResponseHandling(USER_NOT_EXISTING));
     }
-
 
     getUser(userId: string) {
         return userRepository.getUser(userId).then(User.of);
@@ -117,28 +102,9 @@ export class UserService {
             return false;
         });
     }
-
-    isModerator(userId: string) {
-        return userRepository.getUser(userId).then(user => Promise.resolve(user?.roles.includes(ROLE.MODERATOR)));
-    }
-
     isAdmin(userId: string) {
         return userRepository.getUser(userId).then(user => Promise.resolve(user?.roles.includes('admin')));
     }
-
-    updateUserAvatar(userId: string, avatar: Avatar): PromiseLike<any> {
-        return userRepository.getUser(userId)
-            .then((foundUser: any) => {
-                if (!foundUser) {
-                    return getBadRequestErrorResponseHandling(ERROR_WHILE_USERS_REQUEST).toPromise();
-                }
-
-                foundUser.avatar = avatar;
-                return foundUser.save().then(() => foundUser.iconUrl);
-            });
-    }
-
-
     public getSignedJwtToken(userId: string, roomId: string) {
         return jwt.sign({username: userId, roomId: roomId}, process.env.JWT_KEY, {
             algorithm: "HS256"

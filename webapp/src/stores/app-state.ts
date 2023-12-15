@@ -1,5 +1,4 @@
 import {defineStore} from 'pinia';
-import {ConnectionState} from "@/services/websocket-service";
 import {DISPLAY_OVERLAY_STATE, Roles} from "@/constants/vue-constants";
 
 export const useAppStateStore = defineStore('AppStore', {
@@ -9,7 +8,6 @@ export const useAppStateStore = defineStore('AppStore', {
             _isOnRoomRoute: false,
             _roomId: '',
             _overlayId: DISPLAY_OVERLAY_STATE.NO_OVERLAY,
-            _connectionState: ConnectionState.DISCONNECTED,
             //need to be reset
             _localUserId: '',
             _room: null,
@@ -24,9 +22,6 @@ export const useAppStateStore = defineStore('AppStore', {
     actions: {
         setOverlayId(overlayId: number) {
             this._overlayId = overlayId;
-        },
-        setConnectionState(state: ConnectionState) {
-            this._connectionState = state;
         },
         setRoomId(roomId: string) {
             this._roomId = roomId;
@@ -80,7 +75,6 @@ export const useAppStateStore = defineStore('AppStore', {
         room: (state: any) => state._room,
         users: (state: any) => state._room ? state._room.users : [],
         overlayId: (state: any) => state._overlayId,
-        connectionState: (state: any) => state._connectionState,
         roomId: (state: any) => state._roomId,
         localVoteValue: (state: any) => state._localVoteValue,
         estimationHistory: (state: any) => state._estimationHistory,

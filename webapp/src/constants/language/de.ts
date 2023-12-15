@@ -1,3 +1,5 @@
+import {ResponseMessageType} from "@/constants/vue-constants";
+
 export const german = {
     key: 'de',
     texts: {
@@ -77,15 +79,29 @@ export const german = {
         'impressum.email': 'E-Mail',
         'impressum.domain': 'Domain',
 
-        'join.room.text':'beitreten',
-        'join.room.title':'Raum beitreten',
+        'join.room.text': 'beitreten',
+        'join.room.title': 'Raum beitreten',
 
         'main.button.cancel': 'abbrechen',
 
         'toast.warning.no.role.left': 'Du kannst nicht alle Rollen entfernen',
         'toast.remove.user.message': 'Willst du deinen Benutzer wirklich löschen?',
 
-
-        ERROR_FINALIZING_JOIN: 'fgdfg',
+        [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} hat den Raum betreten',
+        [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'Du hast den Raum betreten',
+        [ResponseMessageType.USER_DISCONNECTED]: '{} hat den Raum verlassen',
+        [ResponseMessageType.USER_DELETED]: 'User {} has been deleted!',
+        [ResponseMessageType.ACTION_UNKNOWN]: 'Diese Aktion ist leider nicht bekannt!',
+        [ResponseMessageType.ERROR_PROCESSING_USER_VOTE]: 'Fehler beim Verarbeiten des Votes',
+        [ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE]: 'Fehler beim Ändern des Titels der Schätzrunde',
+        [ResponseMessageType.ERROR_CHANGING_ROOM_SETTINGS]: 'Fehler beim Ändern der Raumeinstellungen',
+        [ResponseMessageType.ERROR_CHANGING_USER]: 'Fehler beim Ändern des Benutzers',
+        [ResponseMessageType.ERROR_CHANGING_ROLE]: 'Fehler beim Ändern der Rolle des Benutzers',
+        [ResponseMessageType.ERROR_DELETING_USER]: 'Fehler beim Löschen des Benutzers',
+        [ResponseMessageType.ERROR_DELETING_ROOM]: 'Fehler beim Löschen des Raums',
+        [ResponseMessageType.ERROR_FINALIZING_JOIN]: 'Fehler beim Betreten des Raums',
+        [ResponseMessageType.ERROR_RESETTING_VOTES]: 'Fehler beim Zurücksetzen der Votes',
+        [ResponseMessageType.ERROR_REVEALING_VOTES]: 'Fehler beim Aufdecken der Votes',
+        [ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION]: 'Fehler beim Erzeugen der nächsten Schätzrunde',
     }
 }

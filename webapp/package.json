@@ -25,8 +25,7 @@
     "vue-cookie-next": "^1.0.3",
     "vue-echarts": "^4.1.0",
     "vue-router": "4",
-    "vue-toastification": "^2.0.0-rc.5",
-    "vuex": "^4.0.0-0"
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

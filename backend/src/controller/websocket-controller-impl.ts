@@ -281,7 +281,7 @@ export class WebsocketControllerImpl {
             userService.updateUser(user);
             this.notifyAllUsersAboutUpdate(ResponseMessageType.CHANGED_USER, user, cachedRoom.connections, userId);
         } catch (e) {
-            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_AVATAR), connection);
+            websocketService.notifyUser(new BasicResponse(ResponseMessageType.ERROR_CHANGING_USER), connection);
             logger.error(e);
         }
     }

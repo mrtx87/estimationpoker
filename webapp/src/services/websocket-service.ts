@@ -3,22 +3,12 @@ import {isLocalHost, Logger} from "@/services/util";
 import {AuthenticatedRequest} from "@/model/authenticated-request.model";
 import {DISPLAY_OVERLAY_STATE, HOME_ROUTE, ResponseMessageType} from "@/constants/vue-constants";
 import {AppService} from "@/services/app-service";
-import {restService} from "@/services/rest-service";
+import {restService, SERVER_NOT_REACHABLE, TRYING_RECONNECT} from "@/services/rest-service";
 import {router} from "@/main";
 import {languageService} from "@/services/language";
 
 
 const MAX_RECONNECT_RETRIES = 3;
-
-export enum ConnectionState {
-    PREINIT,
-    CONNECTING = 1,
-    CONNECTED = 2,
-    DISCONNECTED = 3,
-    CONNECTION_NOT_POSSIBLE = 4,
-    RECONNECTING = 5,
-}
-
 export class WebsocketService {
     retries = 0;
     wsConnection: WebSocket | null = null;
@@ -27,6 +17,9 @@ export class WebsocketService {
 
     pingTimeout: any;
 
+    tl8(key:string, vars: any = null) {
+        return languageService.t(key, this.store.langKey, vars);
+    }
     registerStore(appStore: any): void {
         this.store = appStore;
     }
@@ -59,7 +52,6 @@ export class WebsocketService {
     onOpenConnection(e: any) {
         Logger.log("websocket successfully connected");
         this.retries = 0;
-        this.store.setConnectionState(ConnectionState.CONNECTED);
         if (this.store.roomId) {
             this.sendFinalizeJoinRequest(this.store.roomId);
         }
@@ -97,15 +89,13 @@ export class WebsocketService {
 
     onError(error: any): void {
         console.error("websocket server could not be reached");
-        this.store.setConnectionState(ConnectionState.CONNECTION_NOT_POSSIBLE);
-        this.handleReconnect();
+        this.wsConnection = null;
+        setTimeout(this.handleReconnect.bind(this), 1000);
     }
 
     onCloseConnection(): void {
         this.wsConnection = null;
         console.error("websocket connection closed");
-        this.store.setConnectionState(ConnectionState.DISCONNECTED);
-        this.handleReconnect();
     }
 
     handleReconnect() {
@@ -115,10 +105,10 @@ export class WebsocketService {
         if (this.reconnectRetryLeft()) {
             this.retries += 1;
             console.log("retry connecting... retries left:" + (MAX_RECONNECT_RETRIES - this.retries));
+            this.store.toast.info(TRYING_RECONNECT);
             this.establishConnection();
         } else {
-            this.store.setConnectionState(ConnectionState.CONNECTION_NOT_POSSIBLE);
-            console.error("connection to websocket server seems not possible at this time");
+            this.store.toast.error(SERVER_NOT_REACHABLE);
         }
     }
 
@@ -127,9 +117,6 @@ export class WebsocketService {
     }
 
     sendMessage(data: AuthenticatedRequest | any): void {
-        if (this.store.connectionState !== ConnectionState.CONNECTED) {
-            return;
-        }
         Logger.log('>>>', data)
         this.wsConnection?.send(JSON.stringify(data));
         this.initPing();
@@ -157,7 +144,7 @@ export class WebsocketService {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }
         restService.sendPostRequest('/estimation-history', null).then(request => this.store.setEstimationHistory(request.data));
-        this.store.toast.info(`${this.store.localUser.name} has joined the room.`)
+        this.store.toast.info(this.tl8(message.type));
     }
 
     onOtherUserJoinedRoom(message: any) {
@@ -166,7 +153,7 @@ export class WebsocketService {
         room.users = [...room.users.filter((u: any) => u.id !== joiningUser.id), joiningUser];
         room.connections = [...room.connections.filter((uid: any) => uid !== joiningUser.id), joiningUser.id];
         this.store.setRoom({...room});
-        this.store.toast.info(`${joiningUser.name} has joined the room.`)
+        this.store.toast.info(this.tl8(message.type, [joiningUser.name]));
     }
 
     onUserDisconnectRoom(message: any) {
@@ -174,7 +161,7 @@ export class WebsocketService {
         room.connections = room.connections.filter((uid: string) => uid !== message.sender);
         this.store.setRoom({...room});
         const user = this.store.getUser(message.sender);
-        this.store.toast.info(`${user.name} has left the room.`)
+        this.store.toast.info(this.tl8(message.type, [user.name]));
     }
 
     updateRoom(message: any, updateMethod: (response: any, room: any) => void) {
@@ -244,7 +231,7 @@ export class WebsocketService {
                 }
                 case ResponseMessageType.ROOM_NOT_EXISTING : {
                     router.push(HOME_ROUTE);
-                    return this.store.toast.warning('Dieser Raum existiert nicht mehr.');
+                    return this.store.toast.warning(this.tl8(message.type));
                 }
                 case ResponseMessageType.USER_DELETED: {
                     const deletedUserId = message.data.userId;
@@ -253,20 +240,19 @@ export class WebsocketService {
                     if (deletedUser.id === this.store.localUserId) {
                         this.store.reset();
                         router.push(HOME_ROUTE);
-                        return this.store.toast.success(`Your User ${deletedUser.name} was successfully deleted!`);
+                        return this.store.toast.warning(this.tl8(message.type), [deletedUser.name]);
                     }
                     room.users = room.users.filter((u: any) => u.id !== deletedUserId);
                     this.store.setRoom(room);
-                    return this.store.toast.info(`User ${deletedUser.name} has been deleted`);
+                    return this.store.toast.warning(this.tl8(message.type), [deletedUser.name]);
                 }
                 case ResponseMessageType.ACTION_UNKNOWN : {
-                    return this.store.toast.warning(languageService.t(message.type, this.store.langKey));
+                    return this.store.toast.warning(this.tl8(message.type));
                 }
                 case ResponseMessageType.ERROR_PROCESSING_USER_VOTE :
                 case ResponseMessageType.ERROR_CHANGING_ESTIMATION_TITLE :
                 case ResponseMessageType.ERROR_CHANGING_ROOM_SETTINGS :
-                case ResponseMessageType.ERROR_CHANGING_USER_NAME :
-                case ResponseMessageType.ERROR_CHANGING_AVATAR :
+                case ResponseMessageType.ERROR_CHANGING_USER :
                 case ResponseMessageType.ERROR_CHANGING_ROLE :
                 case ResponseMessageType.ERROR_DELETING_USER :
                 case ResponseMessageType.ERROR_DELETING_ROOM :
@@ -274,7 +260,7 @@ export class WebsocketService {
                 case ResponseMessageType.ERROR_RESETTING_VOTES :
                 case ResponseMessageType.ERROR_REVEALING_VOTES :
                 case ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION : {
-                    return this.store.toast.error(languageService.t(message.type, this.store.langKey));
+                    return this.store.toast.error(this.tl8(message.type));
                 }
                 default:
                     Logger.error('Error: Unknown Response Type: ' + message.type);
