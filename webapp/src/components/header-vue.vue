@@ -61,8 +61,8 @@ export default {
             let langKey = getCookie(LANG_COOKIE_KEY);
             if (!langKey) {
                 langKey = germanKey;
+                setCookie(LANG_COOKIE_KEY, langKey);
             }
-            setCookie(LANG_COOKIE_KEY, langKey);
             this.checked = langKey === englishKey;
             this.appStore.setLangKey(langKey);
         },
