@@ -38,17 +38,12 @@ export function startEstimationPokerServer() {
             'requiredConfig',
             'initAppSettings',
             'connectToDB',
-            //'registerSuperUser',
             'initWebsocketSettings'
         ]))
         .then(init => initAppSettings(init, app), abortStartupOnCriticalError)
         .then((init: InitAppProcess) => initWebsocketSettings(init, websocketServer, websocketController, estimationRoomService), abortStartupOnCriticalError)
         .then(connectToDB, abortStartupOnCriticalError)
-        //.then(cleanupService.initImageCleanup.bind(cleanupService), abortStartupOnCriticalError)
         .then(registerExitHandlers, abortStartupOnCriticalError)
-        //.then(updateSuperUserCredentials, abortStartupOnCriticalError)
-        //.then(addTestUsers, abortStartupOnCriticalError)
-        //.then(createTestRoom, abortStartupOnCriticalError)
         .then(printAppInitResult)
         .then(init => startWebServer(Number(process.env.PORT)));
 }
@@ -68,10 +63,14 @@ function startWebServer(port: number) {
 
 }
 
+var handleShutDown = false;
 /* app exit handling */
 function exitHandler(event: any) {
-    console.log('shutting down')
-
+    if(handleShutDown) {
+        return;
+    }
+    console.log('handle shutting down');
+    handleShutDown = true;
     estimationRoomCache.getAllRoomsFromCache()
         .forEach(estimationRoomService.storeCachedRoom);
 }

@@ -18,8 +18,6 @@ export class Steps {
         this.connectToDB = 0;
         this.requiredConfig = 0;
         this.registerSuperUser = 0;
-        this.registerTestUser = 0;
-        this.testDocuments = 0;
         this.initWebsocketSettings = 0;
         this.registerTestRoom = 0;
     }
