@@ -12,7 +12,7 @@ export function setCookie(cookieKey: string, cookieValue: string): void {
         VueCookieNext.setCookie(cookieKey, cookieValue, {
             path: '/',
             secure: 'true',
-            sameSite: 'true',
+            sameSite: 'Strict',
             expire: '365d'
         })
     }
