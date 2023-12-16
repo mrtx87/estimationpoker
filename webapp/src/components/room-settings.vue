@@ -1,7 +1,7 @@
 <template>
     <div class="room-settings-wrapper">
         <div class="large-heading">
-          {{ tl8('room.settings.title') }}
+            {{ tl8('room.settings.title') }}
         </div>
         <div class="input-elem-container">
             <input type="text" placeholder="Room Title" :disabled="localUserIsNotModerator" v-model="title">
@@ -14,7 +14,9 @@
                     {{ typeOption.name }}
                 </option>
             </select>
-            <div style="color:red; font-size: 12px;" v-if="differentValueOptionsSelected">{{ tl8('room.settings.active.after.next.estimation') }}</div>
+            <div style="color:red; font-size: 12px;" v-if="differentValueOptionsSelected">
+                {{ tl8('room.settings.active.after.next.estimation') }}
+            </div>
         </div>
         <div class="card-values">
             <vote-card class="settings-size" v-bind:disabled="true" v-bind:value="value"
@@ -30,7 +32,7 @@
                     :disabled="localUserIsNotModerator || !isValid()"
                     v-on:click="updateRoomSettings">
                 <img src="../assets/save.svg">
-                <span>{{ tl8('room.settings.save')}}</span>
+                <span>{{ tl8('room.settings.save') }}</span>
             </button>
             <button class="button-activate small-btn invers" v-if="!localUserIsNotModerator"
                     v-on:click="cancel">{{ tl8('room.settings.cancel') }}
@@ -77,7 +79,7 @@ export default {
     },
     methods: {
         tl8(key, vars) {
-          return languageService.t(key, this.appStore.langKey, vars);
+            return languageService.t(key, this.appStore.langKey, vars);
         },
         isValid() {
             return this.roomSettings.realtimeVoting !== this.realtimeVoting
@@ -137,6 +139,7 @@ export default {
     display: flex;
     gap: 10px;
     color: #777777;
+    align: center
   }
 
   .room-name-input {
