@@ -1,6 +1,6 @@
 <template>
     <div class="prompt-wrapper" v-if="prompt">
-        <div class="question-container">{{ prompt.question }}</div>
+        <div class="question-container">{{ tl8(prompt.question) }}</div>
         <div class="prompt-btn-panel">
             <div v-on:click="confirmAction" class="button-activate small-btn">
                 <img v-if="!prompt?.crucial " src="../assets/ok_white.svg">
@@ -34,6 +34,7 @@ export default {
         },
         confirmAction() {
           this.prompt.confirmAction();
+          this.closeOverlay();
         },
         closeOverlay: function () {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY)

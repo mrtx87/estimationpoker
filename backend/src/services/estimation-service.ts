@@ -7,6 +7,8 @@ import {Estimation} from "../model/estimation";
 import {EstimationTimer} from "../model/estimation-timer";
 import {EstimationModel} from "../db/mongodb/db-schemas";
 import {Evaluation} from "../model/evaluation";
+import {getNotFoundErrorResponseHandling} from "../util/util";
+import {ESTIMATION_STORED_NOT_EXIST, ROOM_TO_BE_STORED_NOT_EXIST} from "../constants/error-texts";
 
 export class EstimationService {
     private static INSTANCE: EstimationService = new EstimationService();
@@ -55,6 +57,9 @@ export class EstimationService {
 
     saveEstimation(estimation: Estimation) {
         EstimationModel.findOne({id: estimation.id}).then(foundEstimation => {
+            if(!foundEstimation){
+                return getNotFoundErrorResponseHandling(ESTIMATION_STORED_NOT_EXIST);
+            }
             this.updateEstimationSafe(foundEstimation, estimation);
             foundEstimation.save().then(e => e ? logger.info(`stored estimation: ${e.id} from room: ${e.roomId}`) : logger.error(`stored estimation missing`));
         });

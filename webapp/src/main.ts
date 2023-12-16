@@ -39,7 +39,7 @@ export const router = createRouter({
 
 const options = {
     position: "bottom-right",
-    timeout: 2000,
+    timeout: 3000,
     closeOnClick: true,
     pauseOnFocusLoss: true,
     pauseOnHover: true,

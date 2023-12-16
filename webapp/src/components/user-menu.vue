@@ -49,7 +49,7 @@ export default {
         },
         openDeleteUserPrompt() {
             this.appStore.setPrompt({
-                question: this.tl8('toast.remove.user.message'),
+                question: 'toast.remove.user.message',
                 crucial: true,
                 confirmAction: this.sendDeleteUser.bind(this)
             });

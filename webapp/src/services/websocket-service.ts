@@ -144,7 +144,9 @@ export class WebsocketService {
         if (joiningUserVote) {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }
-        restService.sendPostRequest('/estimation-history', null).then((request: { data: any; }) => this.store.setEstimationHistory(request.data));
+        restService.sendPostRequest('/estimation-history', null).then((request: {
+            data: any;
+        }) => this.store.setEstimationHistory(request.data));
         this.store.toast.info(this.tl8(message.type));
     }
 
@@ -171,7 +173,7 @@ export class WebsocketService {
         return this.store.setRoom(room);
     }
 
-    onReceiveMessage(response: { data: string; }): void {
+    onReceiveMessage(response: { data: any }): void {
         try {
             const message = JSON.parse(response.data);
             Logger.log('<<<');
@@ -229,6 +231,12 @@ export class WebsocketService {
                         const currentEstimation = room.currentEstimation;
                         currentEstimation.votes = votes;
                     });
+                }
+                case ResponseMessageType.ROOM_DELETED : {
+                    const room = this.store.room;
+                    const sender = room.users.find((u: any) => u.id === message.sender);
+                    router.push(HOME_ROUTE);
+                    return this.store.toast.info(this.tl8(message.type, [message.data.title, sender.name]), {timeout: 6000});
                 }
                 case ResponseMessageType.ROOM_NOT_EXISTING : {
                     router.push(HOME_ROUTE);

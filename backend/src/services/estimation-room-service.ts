@@ -94,6 +94,7 @@ export class EstimationRoomService {
         return estimationPokerRoomRepository.deleteRoom(cachedRoom.id)
             .then(success => {
                 if (success) {
+                    logger.info(`Room ${cachedRoom.id} deleted`);
                     estimationRoomCache.removeRoomFromCache(cachedRoom.id);
                     estimationService.deleteEstimations(cachedRoom.id);
                     userService.deleteUsers(cachedRoom.id);

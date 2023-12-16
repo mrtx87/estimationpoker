@@ -212,7 +212,7 @@ export class WebsocketControllerImpl {
         try {
             estimationRoomService.deleteRoom(cachedRoom).then(removeSuccess => {
                 if (removeSuccess) {
-                    websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, SYSTEM_USER_ID, {
+                    websocketService.notifyUsers(new BasicResponse(ResponseMessageType.ROOM_DELETED, userId, {
                         roomId: cachedRoom.id,
                         title: cachedRoom.roomSettings.title
                     }), cachedRoom.connections);

@@ -8,6 +8,7 @@ export const CREATE_ROOM_ERROR = 'Fehler beim Erstellen eines Raums.';
 export const DELETE_ROOM_ERROR = 'Fehler beim Löschen des Raums.';
 export const ROOM_DOES_NOT_EXIST = 'Der Raum existiert nicht mehr.';
 export const ROOM_TO_BE_STORED_NOT_EXIST = 'Der Raum an dem Du Anpassungen speichern wolltest existiert nicht mehr.';
+export const ESTIMATION_STORED_NOT_EXIST = 'Die Schätzung existiert nicht mehr.';
 export const USER_TO_DELETE_NOT_EXISTS = 'Der zu löschende User existiert nicht.';
 export const USER_NOT_EXISTING = 'Der User existiert nicht.';
 export const ERROR_USER_IS_NOT_ADMIN = 'Du hast keine Admin Berechtigung.';

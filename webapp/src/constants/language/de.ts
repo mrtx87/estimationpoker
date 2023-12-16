@@ -32,6 +32,7 @@ export const german = {
         'room.settings.save': 'speichern',
         'room.settings.cancel': 'abbrechen',
         'room.settings.active.after.next.estimation': 'Diese Änderung wird erst mit der nächsten Schätzung aktiv',
+        'room.settings.delete.room.btn':'Raum löschen',
 
         'avatar.configurator.hair': 'Haare',
         'avatar.configurator.face': 'Kopf',
@@ -97,6 +98,7 @@ export const german = {
 
         'toast.warning.no.role.left': 'Du kannst nicht alle Rollen entfernen',
         'toast.remove.user.message': 'Willst du deinen Benutzer wirklich löschen?',
+        'toast.delete.room.message': 'Willst du diesen Raum wirklich löschen?',
 
         [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} hat den Raum betreten',
         [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'Du hast den Raum betreten',
@@ -115,5 +117,6 @@ export const german = {
         [ResponseMessageType.ERROR_REVEALING_VOTES]: 'Fehler beim Aufdecken der Votes',
         [ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION]: 'Fehler beim Erzeugen der nächsten Schätzrunde',
         [ResponseMessageType.ROOM_NOT_EXISTING]: 'Dieser Raum existiert nicht mehr',
+        [ResponseMessageType.ROOM_DELETED]: 'Der Raum {} wurde von {} gelöscht.',
     }
 }

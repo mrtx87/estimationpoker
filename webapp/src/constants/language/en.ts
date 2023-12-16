@@ -32,6 +32,7 @@ export const english = {
         'room.settings.save': 'save',
         'room.settings.cancel': 'cancel',
         'room.settings.active.after.next.estimation': 'This change will become active with the next estimation',
+        'room.settings.delete.room.btn':'delete room',
 
         'avatar.configurator.hair': 'Hair',
         'avatar.configurator.face': 'Head',
@@ -97,7 +98,8 @@ export const english = {
         'main.button.cancel': 'cancel',
 
         'toast.warning.no.role.left': 'You may not remove all roles',
-        'toast.remove.user.message': 'Do you really want to delete your User?',
+        'toast.remove.user.message': 'Do you really want to delete your user?',
+        'toast.delete.room.message': 'Do you really want to delete this room?',
 
         [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} has entered the room',
         [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'You have entered the room',
@@ -116,6 +118,7 @@ export const english = {
         [ResponseMessageType.ERROR_REVEALING_VOTES]: 'Error when revealing the votes',
         [ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION]: 'Error when generating the next estimation round',
         [ResponseMessageType.ROOM_NOT_EXISTING]: 'This room does no longer exist',
+        [ResponseMessageType.ROOM_DELETED]: 'The room {} has been delete by {}.',
 
     }
 }

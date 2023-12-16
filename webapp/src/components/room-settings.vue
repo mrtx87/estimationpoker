@@ -28,18 +28,28 @@
             <span>{{ tl8('room.settings.real.time.voting') }}</span>
         </div>
         <div class="room-settings-buttons-panel">
-            <button class="button-activate small-btn" v-if="!localUserIsNotModerator"
-                    :disabled="localUserIsNotModerator || !isValid()"
-                    v-on:click="updateRoomSettings">
-                <img src="../assets/save.svg">
-                <span>{{ tl8('room.settings.save') }}</span>
-            </button>
-            <button class="button-activate small-btn invers" v-if="!localUserIsNotModerator"
-                    v-on:click="cancel">{{ tl8('room.settings.cancel') }}
-            </button>
-            <button class="button-activate small-btn" v-if="localUserIsNotModerator"
-                    v-on:click="cancel">ok
-            </button>
+            <div class="left-btns">
+                <button class="button-activate small-btn" v-if="!localUserIsNotModerator"
+                        :disabled="localUserIsNotModerator || !isValid()"
+                        v-on:click="updateRoomSettings">
+                    <img src="../assets/save.svg">
+                    <span>{{ tl8('room.settings.save') }}</span>
+                </button>
+                <button class="button-activate small-btn invers" v-if="!localUserIsNotModerator"
+                        v-on:click="cancel">{{ tl8('room.settings.cancel') }}
+                </button>
+                <button class="button-activate small-btn" v-if="localUserIsNotModerator"
+                        v-on:click="cancel">ok
+                </button>
+            </div>
+
+            <div v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator"
+                 class="right-btns">
+                <button class="button-activate small-btn" v-on:click="openDeleteRoomPrompt">
+                    <img src="../assets/warn.svg">
+                    {{ tl8('room.settings.delete.room.btn') }}
+                </button>
+            </div>
         </div>
 
     </div>
@@ -78,6 +88,17 @@ export default {
         }
     },
     methods: {
+        openDeleteRoomPrompt() {
+          this.appStore.setPrompt({
+              question: 'toast.delete.room.message',
+              crucial: true,
+              confirmAction: this.deleteRoom.bind(this)
+          });
+          this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.PROMPT);
+        },
+        deleteRoom() {
+            this.$websocketService.sendAuthenticatedRequest(RequestMessageType.DELETE_ROOM);
+        },
         tl8(key, vars) {
             return languageService.t(key, this.appStore.langKey, vars);
         },
@@ -163,6 +184,19 @@ export default {
     display: flex;
     gap: 15px;
     padding: 5px;
+
+    .left-btns {
+      display: flex;
+      justify-content: flex-start;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .right-btns {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
   }
 
 
