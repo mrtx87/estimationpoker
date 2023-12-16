@@ -11,7 +11,6 @@ export function setCookie(cookieKey: string, cookieValue: string): void {
     if (privacyConfirmed) {
         VueCookieNext.setCookie(cookieKey, cookieValue, {
             path: '/',
-            domain: 'localhost',
             secure: 'true',
             sameSite: 'true',
             expire: '365d'

@@ -31,21 +31,11 @@ export class RestService {
     appState: any;
     headerConfig= {};
     sendPostRequest(path: string, data: any, blocking = true, authorized = true) {
-        if (blocking) {
-            const loadingInterception = this.addLoadingInterception(path);
-            return axios.post(REST_BASE_PATH + path, data, authorized ? this.headerConfig : {})
-                .then(this.responseInterception.bind(this, loadingInterception), this.errorHandlingOnBlockingResponse.bind(this, loadingInterception));
-        }
         return axios.post(REST_BASE_PATH + path, data, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
     }
 
     sendGetRequest (path: string, blocking = true, authorized = true) {
-        if (blocking) {
-            const loadingInterception = this.addLoadingInterception(path);
-            return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
-                .then(this.responseInterception.bind(this, loadingInterception), this.errorHandlingOnBlockingResponse.bind(this, loadingInterception));
-        }
         return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
     }
@@ -57,36 +47,12 @@ export class RestService {
         this.handleToastOnError(error);
         return Promise.reject(error);
     }
-    errorHandlingOnBlockingResponse (loadingInterception: any, error: any) {
-        this.clearLoadingInterception(loadingInterception);
-        return this.errorHandling(error);
-    }
     handleToastOnError(error: any) {
         if (!error || !error.response) {
             this.appState?.toast.error(SERVER_NOT_REACHABLE);
         } else if (error.response.data) {
             this.appState?.toast.error(this.tl8(error.response.data));
         }
-    }
-    responseInterception (loadingInterception: any, response: any) {
-        this.clearLoadingInterception(loadingInterception);
-        return response;
-    }
-    addLoadingInterception (path: string, customMessage = null) {
-        const loadingInterception = {
-            timeoutId: 0,
-            message: customMessage || getLoadingText(path),
-            path: path,
-            id: Date.now()
-        };
-        loadingInterception.timeoutId = setTimeout(function () {
-            // this.appState.addLoadingInterception(loadingInterception);
-        }.bind(this), 25)
-        return loadingInterception;
-    }
-    clearLoadingInterception (loadingInterception: any) {
-
-        // TODO this.appState.removeLoadingInterception(loadingInterception);
     }
     setHeaderConfig (token: string) {
         if (token) {
