@@ -153,7 +153,6 @@ export class EstimationRoomService {
         const jwtToken = userService.getSignedJwtToken(user.id, roomId);
         return new InitValues({
             token: jwtToken,
-            user: user,
             roomId: roomId
         });
     }

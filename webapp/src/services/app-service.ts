@@ -81,9 +81,9 @@ export class AppService {
         router.push(HOME_ROUTE);
     }
 
-    processInitialJoinResponse(response: any) {
-        this.setRoomCookie(response.roomId, response.token);
-        router.push(ROOM_ROUTE + response.roomId);
+    processInitialJoinResponse(data: any) {
+        this.setRoomCookie(data.roomId, data.token);
+        router.push(ROOM_ROUTE + data.roomId);
     }
 
     setRoomCookie(roomId: string, token: string) {
