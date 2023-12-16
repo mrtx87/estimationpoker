@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="137" height="60.586" viewBox="0 0 137 60.586">
+    <g id="Gruppe_1" data-name="Gruppe 1" transform="translate(-0.957)">
+        <text id="ESTIMATION_" data-name="ESTIMATION " transform="translate(3.223 22.586)" fill="#faa" font-size="15" font-family="Bahnschrift" font-weight="700"><tspan x="0" y="0">ESTIMATION</tspan></text>
+        <text id="POKER" transform="translate(0.957 49.586)" fill="#faa" font-size="35" font-family="Arial-Black, Arial" font-weight="800"><tspan x="0" y="0">POKER</tspan></text>
+        <g id="Pfad_37" data-name="Pfad 37" transform="translate(87 1.717)">
+            <path id="Pfad_1" data-name="Pfad 1" d="M33,20.922H.25V1.583A1.335,1.335,0,0,1,1.583.25H31.666A1.335,1.335,0,0,1,33,1.583Z" fill="#fff"/>
+            <path id="Pfad_2" data-name="Pfad 2" d="M1.583.5A1.085,1.085,0,0,0,.5,1.583V20.672H32.75V1.583A1.084,1.084,0,0,0,31.666.5H1.583m0-.5H31.666A1.583,1.583,0,0,1,33.25,1.583V21.172H0V1.583A1.583,1.583,0,0,1,1.583,0Z" fill="#cfcfcf"/>
+        </g>
+        <g id="Pfad_38" data-name="Pfad 38" transform="matrix(0.961, 0.276, -0.276, 0.961, 100.305, 2.774)">
+            <path id="Pfad_3" data-name="Pfad 3" d="M.26,20.595.25,1.583A1.335,1.335,0,0,1,1.583.25H31.666A1.335,1.335,0,0,1,33,1.583V1.6l.588,9.439Z" fill="#fff"/>
+            <path id="Pfad_4" data-name="Pfad 4" d="M1.583.5A1.084,1.084,0,0,0,.5,1.583l.01,18.68,32.816-9.41-.576-9.27A1.084,1.084,0,0,0,31.666.5H1.583m0-.5H31.666A1.583,1.583,0,0,1,33.25,1.583l.6,9.64L.01,20.926,0,1.583A1.583,1.583,0,0,1,1.583,0Z" fill="#cfcfcf"/>
+        </g>
+        <g id="Pfad_39" data-name="Pfad 39" transform="matrix(0.819, 0.574, -0.574, 0.819, 114.293, 9)">
+            <path id="Pfad_5" data-name="Pfad 5" d="M.308,16.376.25,1.582A1.335,1.335,0,0,1,1.583.25H23.339Z" fill="#fff"/>
+            <path id="Pfad_6" data-name="Pfad 6" d="M1.583.5A1.084,1.084,0,0,0,.5,1.581L.556,15.9,22.546.5H1.583m0-.5H24.132L.06,16.855,0,1.583A1.583,1.583,0,0,1,1.583,0Z" fill="#cfcfcf"/>
+        </g>
+        <text id="_1" data-name="1" transform="translate(87.537 11)" fill="#7a8695" font-size="10" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0">1</tspan></text>
+        <text id="_3" data-name="3" transform="matrix(0.961, 0.276, -0.276, 0.961, 99.234, 11.456)" fill="#7a8695" font-size="10" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0">3</tspan></text>
+        <text id="_" data-name="?" transform="translate(109.756 17.447) rotate(35.025)" fill="#7a8695" font-size="10" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"><tspan x="0" y="0">?</tspan></text>
+    </g>
+</svg>
