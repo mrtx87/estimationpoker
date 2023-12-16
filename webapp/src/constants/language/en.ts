@@ -115,6 +115,7 @@ export const english = {
         [ResponseMessageType.ERROR_RESETTING_VOTES]: 'Error when resetting the votes',
         [ResponseMessageType.ERROR_REVEALING_VOTES]: 'Error when revealing the votes',
         [ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION]: 'Error when generating the next estimation round',
+        [ResponseMessageType.ROOM_NOT_EXISTING]: 'This room does no longer exist',
 
     }
 }

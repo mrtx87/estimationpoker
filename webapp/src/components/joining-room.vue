@@ -47,7 +47,11 @@ export default {
                 roomId: this.roomId,
                 userName: this.userNameInput,
                 avatar: this.$appService.getRandomAvatar()
-            }, false, false).then(this.$appService.onJoinRoomResponse.bind(this.$appService), this.$appService.onJoinRoomErrorResponse.bind(this.$appService));
+            }, false, false)
+                .then(
+                    this.$appService.onJoinRoomResponse.bind(this.$appService),
+                    this.$appService.onJoinRoomErrorResponse.bind(this.$appService)
+                );
         },
         cancel() {
             this.appStore.setOverlayId(DISPLAY_OVERLAY_STATE.NO_OVERLAY);

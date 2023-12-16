@@ -29,32 +29,39 @@ export function wait(ms: number, data: any) {
 
 export class RestService {
     appState: any;
-    headerConfig= {};
+    headerConfig = {};
+
     sendPostRequest(path: string, data: any, blocking = true, authorized = true) {
         return axios.post(REST_BASE_PATH + path, data, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
     }
 
-    sendGetRequest (path: string, blocking = true, authorized = true) {
+    sendGetRequest(path: string, blocking = true, authorized = true) {
         return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
     }
-    setAppState (appState: any) {
+
+    setAppState(appState: any) {
         this.appState = appState;
     }
 
-    errorHandling (error: any) {
+    errorHandling(error: any) {
         this.handleToastOnError(error);
         return Promise.reject(error);
     }
+
     handleToastOnError(error: any) {
         if (!error || !error.response) {
             this.appState?.toast.error(SERVER_NOT_REACHABLE);
-        } else if (error.response.data) {
+            return;
+        }
+        if (error.response.data) {
             this.appState?.toast.error(this.tl8(error.response.data));
+            return;
         }
     }
-    setHeaderConfig (token: string) {
+
+    setHeaderConfig(token: string) {
         if (token) {
             this.headerConfig = {
                 headers: {Authorization: `Bearer ${token}`}
@@ -75,7 +82,8 @@ export const restService = new RestService();
 function isOnMultipleToastByStatusBlacklist(errorCode: number) {
     return errorCode && ERROR_CODES_ALLOW_MULTIPLE_BLACKLIST.includes(errorCode);
 }
-function getLoadingText(path:string) {
+
+function getLoadingText(path: string) {
     switch (path) {
         default:
             return 'Daten werden geladen...';

@@ -114,5 +114,6 @@ export const german = {
         [ResponseMessageType.ERROR_RESETTING_VOTES]: 'Fehler beim Zurücksetzen der Votes',
         [ResponseMessageType.ERROR_REVEALING_VOTES]: 'Fehler beim Aufdecken der Votes',
         [ResponseMessageType.ERROR_GENERATING_NEXT_ESTIMATION]: 'Fehler beim Erzeugen der nächsten Schätzrunde',
+        [ResponseMessageType.ROOM_NOT_EXISTING]: 'Dieser Raum existiert nicht mehr',
     }
 }

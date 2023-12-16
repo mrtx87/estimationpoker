@@ -47,7 +47,7 @@ export class EstimationRoomService {
                 .createEstimationPokerRoom(estimationPokerRoom)
                 .then(newRoom => userService.createUser(createRoomRequest.userName, createRoomRequest.avatar, newRoom.id, [ROLE.MODERATOR])
                     .then(creator => estimationService.createEstimation(newRoom, initialEstimationId)
-                        .then(estimation => this.getJoinedUserResponse(newRoom.id, creator))));
+                        .then(estimation => this.getJoinedUserResponse(newRoom.id, creator.id))));
         } catch (error) {
             return getInternalErrorErrorResponseHandling(error, CREATE_ROOM_ERROR).toRejectedPromise();
         }
@@ -63,7 +63,7 @@ export class EstimationRoomService {
                     return userService.createUser(userName, avatar, roomId)
                         .then(joiningUser => {
                             estimationRoomCache.addUserToRoomIfCached(roomId, joiningUser);
-                            return this.getJoinedUserResponse(joiningRoom.id, joiningUser);
+                            return this.getJoinedUserResponse(joiningRoom.id, joiningUser.id);
                         }, e => e);
                 }, e => e);
         } catch (e) {
@@ -149,8 +149,8 @@ export class EstimationRoomService {
         return roomPreviewInfos;
     }
 
-    private getJoinedUserResponse(roomId: string, user: User) {
-        const jwtToken = userService.getSignedJwtToken(user.id, roomId);
+    private getJoinedUserResponse(roomId: string, userId: string) {
+        const jwtToken = userService.getSignedJwtToken(userId, roomId);
         return new InitValues({
             token: jwtToken,
             roomId: roomId
@@ -166,7 +166,7 @@ export class EstimationRoomService {
         if (dbRoom) {
             return dbRoom;
         }
-        return getErrorResponseHandling(ROOM_NOT_EXISTING, ResponseCode.CONFLICTING).toRejectedPromise();
+        return getErrorResponseHandling(ResponseMessageType.ROOM_NOT_EXISTING, ResponseCode.CONFLICTING).toRejectedPromise();
 
     }
 }
