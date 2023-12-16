@@ -82,6 +82,8 @@ export const english = {
         'room.history.date.of.creation': 'Date of creation',
         'room.history.join.btn': 'join',
         'room.history.no.rooms.created.or.joined': 'You have not yet created or entered a room.',
+        'room.history.remove.from.list' : 'remove',
+        'room.history.remove.from.list.question' : 'Remove this entry from the visited rooms and delete the link to your user?',
 
         'footer.impressum.title': 'Imprint',
         'footer.datenschutz.title': 'Data Privacy',
@@ -99,7 +101,7 @@ export const english = {
 
         'toast.warning.no.role.left': 'You may not remove all roles',
         'toast.remove.user.message': 'Do you really want to delete your user?',
-        'toast.delete.room.message': 'Do you really want to delete this room?',
+        'toast.delete.room.message': 'Do you really want to irrevocably delete this room?',
 
         [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} has entered the room',
         [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'You have entered the room',

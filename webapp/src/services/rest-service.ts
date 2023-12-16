@@ -31,14 +31,15 @@ export class RestService {
     appState: any;
     headerConfig = {};
 
-    sendPostRequest(path: string, data: any, blocking = true, authorized = true) {
+    sendPostRequest(path: string, data: any, authorized = true) {
         return axios.post(REST_BASE_PATH + path, data, authorized ? this.headerConfig : {})
             .then(response => response, this.errorHandling.bind(this));
     }
 
-    sendGetRequest(path: string, blocking = true, authorized = true) {
-        return axios.get(REST_BASE_PATH + path, authorized ? this.headerConfig : {})
-            .then(response => response, this.errorHandling.bind(this));
+    sendGetRequest(path: string, token: string) {
+        return axios.get(REST_BASE_PATH + path, token ? {
+            headers: {Authorization: `Bearer ${token}`}
+        } : {}).then(response => response, this.errorHandling.bind(this));
     }
 
     setAppState(appState: any) {
@@ -78,17 +79,6 @@ export class RestService {
 }
 
 export const restService = new RestService();
-
-function isOnMultipleToastByStatusBlacklist(errorCode: number) {
-    return errorCode && ERROR_CODES_ALLOW_MULTIPLE_BLACKLIST.includes(errorCode);
-}
-
-function getLoadingText(path: string) {
-    switch (path) {
-        default:
-            return 'Daten werden geladen...';
-    }
-}
 
 /* error texts */
 export const SERVER_NOT_REACHABLE = `The server does not seem to be available. Please try again later.`;

@@ -45,7 +45,7 @@
 
             <div v-if="!localUserIsNotModerator" :disabled="localUserIsNotModerator"
                  class="right-btns">
-                <button class="button-activate small-btn" v-on:click="openDeleteRoomPrompt">
+                <button class="button-activate crucial small-btn" v-on:click="openDeleteRoomPrompt">
                     <img src="../assets/warn.svg">
                     {{ tl8('room.settings.delete.room.btn') }}
                 </button>

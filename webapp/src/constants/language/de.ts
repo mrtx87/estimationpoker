@@ -81,6 +81,8 @@ export const german = {
         'room.history.date.of.creation': 'Datum der Erstellung',
         'room.history.join.btn': 'beitreten',
         'room.history.no.rooms.created.or.joined': 'Du hast bisher noch keine Räume erstellt oder betreten.',
+        'room.history.remove.from.list' : 'entfernen',
+        'room.history.remove.from.list.question' : 'Diesen Eintrag aus den besuchten Räumen entfernen und die Verknüpfung mit deinem Benutzer löschen?',
 
         'footer.impressum.title': 'Impressum',
         'footer.datenschutz.title': 'Datenschutz',
@@ -98,7 +100,8 @@ export const german = {
 
         'toast.warning.no.role.left': 'Du kannst nicht alle Rollen entfernen',
         'toast.remove.user.message': 'Willst du deinen Benutzer wirklich löschen?',
-        'toast.delete.room.message': 'Willst du diesen Raum wirklich löschen?',
+        'toast.delete.room.message': 'Willst du diesen Raum unwiderruflich löschen?',
+
 
         [ResponseMessageType.ANOTHER_USER_JOINED_SESSION]: '{} hat den Raum betreten',
         [ResponseMessageType.JOINED_ESTIMATION_SESSION]: 'Du hast den Raum betreten',

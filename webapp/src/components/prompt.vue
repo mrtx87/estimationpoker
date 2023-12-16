@@ -2,7 +2,7 @@
     <div class="prompt-wrapper" v-if="prompt">
         <div class="question-container">{{ tl8(prompt.question) }}</div>
         <div class="prompt-btn-panel">
-            <div v-on:click="confirmAction" class="button-activate small-btn">
+            <div v-on:click="confirmAction" class="button-activate small-btn" :class="{'crucial': prompt?.crucial}">
                 <img v-if="!prompt?.crucial " src="../assets/ok_white.svg">
                 <img v-if="prompt?.crucial " src="../assets/warn.svg">
                 <span>confirm</span></div>

@@ -17,7 +17,7 @@
   
         <div v-on:click="openDeleteUserPrompt()" class="user-menu-item-heading active-item">
             <span>{{ tl8('user.menu.delete.user') }}</span>
-            <img style="width:17px;" src="../assets/warn.svg">
+            <img style="width:17px;" src="../assets/warn_red.svg">
         </div>
     </div>
 </template>
