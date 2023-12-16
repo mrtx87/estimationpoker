@@ -39,7 +39,7 @@ export class EstimationPokerRoomRepository {
         const userId = request.user.id;
         return EstimationPokerRoomModel
             .findOne({id: roomId})
-            .then(documentModelToDelete =>
+            .then((documentModelToDelete: any) =>
                 this.executeRoomDeletion(userId, roomId, documentModelToDelete)
             );
     }
@@ -62,7 +62,7 @@ export class EstimationPokerRoomRepository {
 
     deleteRoom(roomId: string) {
         return this.getRoomById(roomId)
-            .then(foundRoomInDB => {
+            .then((foundRoomInDB: any) => {
                 if (foundRoomInDB) {
                     foundRoomInDB.delete();
                     return true;
