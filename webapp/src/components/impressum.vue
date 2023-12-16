@@ -17,7 +17,7 @@
             </div>
             <div class="impressum-row">
                 <span class="impressum-row-title">{{tl8('impressum.domain')}}:</span>
-                <span>??????.net</span>
+                <span>https://estimation-poker.online</span>
             </div>
         </div>
     </div>
