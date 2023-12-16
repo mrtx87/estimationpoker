@@ -112,11 +112,9 @@ export function hasRequiredAppConfig(init: InitAppProcess) {
         process.env.WEBAPP_ORIGIN,
         process.env.DB_CONFIG_URL,
         process.env.DB_CONFIG_DB_NAME,
-        process.env.DB_CONFIG_IMG_BUCKET,
         process.env.SYSTEM_URL,
         process.env.PORT,
-        process.env.JWT_KEY,
-        process.env.JWT_TOKEN_EXPIRY];
+        process.env.JWT_KEY];
 
     if (requiredConfigAttributes.every(isPresent)) {
         init.steps.requiredConfig = 1;
