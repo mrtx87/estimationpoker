@@ -6,7 +6,7 @@ export function isLocalHost() {
 }
 
 
-export const REST_BASE_PATH = isLocalHost() ? 'http://localhost:8085/em/api/rest' : 'https://v2202005121049117361.nicesrv.de/s9library/api/rest';// 2MB in bytes
+export const REST_BASE_PATH = isLocalHost() ? 'http://localhost:8085/em/api/rest' : 'https://v2202005121049117361.nicesrv.de/em/api/rest';// 2MB in bytes
 
 const UNAUTHORIZED = 401;
 const FORBIDDEN = 403;

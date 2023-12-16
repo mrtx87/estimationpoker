@@ -144,7 +144,7 @@ export class WebsocketService {
         if (joiningUserVote) {
             this.store.setLocalVoteValue(joiningUserVote.value)
         }
-        restService.sendPostRequest('/estimation-history', null).then(request => this.store.setEstimationHistory(request.data));
+        restService.sendPostRequest('/estimation-history', null).then((request: { data: any; }) => this.store.setEstimationHistory(request.data));
         this.store.toast.info(this.tl8(message.type));
     }
 
@@ -203,7 +203,7 @@ export class WebsocketService {
                         room.currentEstimation = message.data;
                         this.store.setLocalVoteValue('');
                         restService.sendPostRequest('/estimation-history', null)
-                            .then(request => this.store.setEstimationHistory(request.data));
+                            .then((request: { data: any; }) => this.store.setEstimationHistory(request.data));
                     });
                 }
                 case ResponseMessageType.ESTIMATION_TITLE_UPDATED: {

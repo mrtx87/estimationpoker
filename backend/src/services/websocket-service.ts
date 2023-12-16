@@ -1,5 +1,3 @@
-
-import {estimationPokerRoomRepository} from "../server";
 import {BasicResponse} from "../model/basic-response.model";
 
 export class WebsocketService {
